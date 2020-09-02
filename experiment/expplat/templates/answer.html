@@ -1,0 +1,21 @@
+
+<!--TODO: add Bootstrap -->
+
+<h1>ANSWER THE FOLLOWING QUESTIONS ON THE NEWS YOU READ</h1>
+<hr>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'expplat:result' %}" method="post">
+{% csrf_token %}
+{% for question in questions %}
+    <h3>{{ question.text }}</h3>
+    {% for choice in question.choice_set.all %}
+        <input type="radio" name="{{ question.question_code}}" id="{{ choice.id }}" value="{{ choice.value }}">
+        <label for="{{ choice.id }}">{{ choice.value }}</label><br>
+    {% endfor %}
+    <hr>
+{% endfor %}
+
+<input type="submit" value="Submit">
+</form>
