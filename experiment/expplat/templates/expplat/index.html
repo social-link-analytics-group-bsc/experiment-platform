@@ -1,6 +1,9 @@
 
-<!--TODO: add Bootstrap -->
+{% extends "base.html" %}
+{% block containercontent %}
 
 <h1>EXPERIMENT TITLE</h1>
 <p>[presentation page]</p>
 <a href="{% url 'expplat:read_news' %}">Next</a>
+
+{% endblock %}

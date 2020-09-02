@@ -1,7 +1,10 @@
 
-<!--TODO: add Bootstrap -->
+{% extends "base.html" %}
+{% block containercontent %}
 
 <h1>READING NEWS</h1>
 <!-- TODO: make the frame -->
 <p>News: {{doc}}</p>
 <a href="{% url target %}">Next</a>
+
+{% endblock %}
