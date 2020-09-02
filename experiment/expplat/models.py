@@ -1,3 +1,74 @@
+
 from django.db import models
 
-# Create your models here.
+
+class Experiment(models.Model):
+    experiment_code = models.CharField(max_length=5)
+    desc = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.experiment_code
+
+
+class News(models.Model):
+    fake = models.BooleanField() #TODO: change field to "is_fake"
+    topic = models.CharField(max_length=30)
+    doc = models.CharField(max_length=100)
+    source = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.doc
+
+
+class User(models.Model):
+    experiment_id = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    news_fake_id = models.ForeignKey(News, on_delete=models.CASCADE, related_name='fake_key')
+    news_true_id = models.ForeignKey(News, on_delete=models.CASCADE, related_name='true_key')
+    browser_language = models.CharField(max_length=2)
+    user_agent = models.CharField(max_length=20)
+    origin = models.CharField(max_length=50)
+    date_arrive = models.DateTimeField()
+    #TODO: add the other missing fields
+
+    def __str__(self):
+        return str(self.id)
+
+
+class QuestionType(models.Model):
+    type = models.CharField(max_length=100)
+    desc = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.type
+
+
+class Question(models.Model):
+    question_code = models.CharField(max_length=5)
+    text = models.CharField(max_length=100)
+    desc = models.CharField(max_length=100)
+    type = models.ForeignKey(QuestionType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.question_code
+
+
+class Choice(models.Model):
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+    value = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(self.question_id) + str(self.value)
+
+
+class QuestionExperiment(models.Model):
+    experiment_id = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.id)
+
+
+class Answer(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+    value = models.TextField()  #TODO: check whether TextField is the best type!
