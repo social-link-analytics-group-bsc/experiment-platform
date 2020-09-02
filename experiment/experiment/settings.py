@@ -74,6 +74,7 @@ WSGI_APPLICATION = 'experiment.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+#TODO: connect to MySQL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
