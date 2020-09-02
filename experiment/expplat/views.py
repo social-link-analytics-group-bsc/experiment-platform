@@ -49,8 +49,8 @@ def index(request):
     )
 
     # save in session the user_id to identify it in following steps
-    request.session['user_id'] = usr.id
     usr.save()
+    request.session['user_id'] = usr.id
 
     return render(request, 'expplat/index.html')
 
@@ -80,7 +80,8 @@ def answer(request):
     questions = Question.objects.all()
 
     #TODO: save time in user
-    usr = User.objects.filter(session_id=1)
+    user_id = request.session['user_id']
+    usr = User.objects.filter(id=user_id)[0]
 
     return render(request, 'expplat/answer.html', { 'questions': questions })
 
@@ -90,7 +91,8 @@ def result(request):
 
     #TODO: filter only the questions for this experiment
     questions = Question.objects.all()
-    usr = User.objects.filter(session_id=1)[0]
+    user_id = request.session['user_id']
+    usr = User.objects.filter(id=user_id)[0]
     for que in questions:
         ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
         ans.save()
