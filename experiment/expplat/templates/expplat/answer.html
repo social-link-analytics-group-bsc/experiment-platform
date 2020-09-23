@@ -1,24 +1,255 @@
 
-{% extends "base.html" %}
-{% block containercontent %}
+<!DOCTYPE html>
+<html lang="en">
 
-<h1>ANSWER THE FOLLOWING QUESTIONS ON THE NEWS YOU READ</h1>
-<hr>
+<head>
+	<title>experiment sample platform {% block title %}{% endblock %}</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+	<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
 
-<form action="{% url 'expplat:result' %}" method="post">
-{% csrf_token %}
-{% for question in questions %}
-    <h3>{{ question.text }}</h3>
-    {% for choice in question.choice_set.all %}
-        <input type="radio" name="{{ question.question_code}}" id="{{ choice.id }}" value="{{ choice.value }}">
-        <label for="{{ choice.id }}">{{ choice.value }}</label><br>
-    {% endfor %}
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+
+hr.tophr {
+  margin-top: 30px !important;
+}
+
+
+.jumbotron {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  margin-bottom: 0;
+  background-color: #fff;
+}
+@media (min-width: 768px) {
+  .jumbotron {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+.jumbotron p:last-child {
+  margin-bottom: 0;
+}
+
+.jumbotron h1 {
+  font-weight: 300;
+}
+
+.jumbotron .container {
+  max-width: 40rem;
+}
+
+.center-uri {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //border: 3px solid green;
+}
+
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer p {
+  margin-bottom: .25rem;
+}
+
+
+.bottom-uri {
+  margin-bottom: 10px !important;
+}
+
+
+
+</style>
+
+</head>
+
+<body>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap.bundle.min.js"></script>
+
+
+
+	<hr class="tophr">
+
+	<div class="container center-uri">
+
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Responda las siguientes preguntas segun las noticias que leyó anteriormente</h2>
+        </div>
+    </div>
     <hr>
-{% endfor %}
 
-<input type="submit" value="Submit">
-</form>
+    <div class="row">
+        <div class="col-sm-12">
 
-{% endblock %}
+            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+            <form action="{% url 'expplat:demo' %}" method="post">
+            {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <h3>Considera que la noticia <strong>{{news1.title}}</strong> es verdadera?</h3>
+                        {% for choice in quest1.choice_set.all %}
+                            <input required type="radio" name="{{ quest1.question_code}}" id="quest1_{{ choice.value }}" value="{{ choice.value }}">
+                            <label for="{{ quest1.question_code }}_{{ choice.value }}">{{ choice.value | capfirst }}</label>
+                        {% endfor %}
+
+                        <br>
+                    </div>
+                </div>
+                <div class="row d-none" id="justific1-no">
+                    <div class="col-sm-12">
+
+                        <p>Por favor justifique su respuesta: [ha dicho que no]</p>
+                        {% for quesno1 in quest1no %}
+                            <input type="checkbox" name="{{ quesno1.question_code}}" id="{{ quesno1.question_code }}" value="off">
+                            <label for="{{ quesno1.question_code }}">{{ quesno1.text }}</label><br>
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <div class="row d-none" id="justific1-ys">
+                    <div class="col-sm-12">
+
+                        <p>Por favor justifique su respuesta: [ha dicho que si]</p>
+                        {% for quesys1 in quest1ys %}
+                            <input type="checkbox" name="{{ quesys1.question_code}}" id="{{ quesys1.question_code }}" value="off">
+                            <label for="{{ quesys1.question_code }}">{{ quesys1.text }}</label><br>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <h3>Considera que la noticia <strong>{{news2.title}}</strong> es verdadera?</h3>
+                        {% for choice in quest2.choice_set.all %}
+                            <input required type="radio" name="{{ quest2.question_code}}" id="quest2_{{ choice.value }}" value="{{ choice.value }}">
+                            <label for="{{ quest2.question_code }}_{{ choice.value }}">{{ choice.value | capfirst }}</label>
+                        {% endfor %}
+
+                        <br>
+                    </div>
+                </div>
+                <div class="row d-none" id="justific2-no">
+                    <div class="col-sm-12">
+
+                        <p>Por favor justifique su respuesta: [ha dicho que no]</p>
+                        {% for quesno2 in quest2no %}
+                            <input type="checkbox" name="{{ quesno2.question_code}}" id="{{ quesno2.question_code }}" value="off">
+                            <label for="{{ quesno2.question_code }}">{{ quesno2.text }}</label><br>
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <div class="row d-none" id="justific2-ys">
+                    <div class="col-sm-12">
+
+                        <p>Por favor justifique su respuesta: [ha dicho que si]</p>
+                        {% for quesys2 in quest2ys %}
+                            <input type="checkbox" name="{{ quesys2.question_code}}" id="{{ quesys2.question_code }}" value="off">
+                            <label for="{{ quesys2.question_code }}">{{ quesys2.text }}</label><br>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+                <hr>
+                <!--
+                <h3>noti 2 era verdadera?</h3>
+                {% for choice in quest2.choice_set.all %}
+                    <input type="radio" name="{{ quest2.question_code}}" id="{{ choice.id }}" value="{{ choice.value }}">
+                    <label for="{{ choice.id }}">{{ choice.value }}</label><br>
+                {% endfor %}
+
+            {% for question in questions %}
+                <h3>{{ question.text }}</h3>
+                {% for choice in question.choice_set.all %}
+                    <input type="radio" name="{{ question.question_code}}" id="{{ choice.id }}" value="{{ choice.value }}">
+                    <label for="{{ choice.id }}">{{ choice.value }}</label><br>
+                {% endfor %}
+                <hr>
+            {% endfor %}
+                -->
+
+            <input type="submit" value="Submit">
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $("#quest1_si").on("change",function(){
+            console.log("que si")
+            $("#justific1-ys").removeClass("d-none");
+            $("#justific1-no").addClass("d-none")
+        });
+        $("#quest1_no").on("change",function(){
+            console.log("que no")
+            $("#justific1-no").removeClass("d-none");
+            $("#justific1-ys").addClass("d-none")
+        });
+        $("#quest2_si").on("change",function(){
+            console.log("que si")
+            $("#justific2-ys").removeClass("d-none");
+            $("#justific2-no").addClass("d-none")
+        });
+        $("#quest2_no").on("change",function(){
+            console.log("que no")
+            $("#justific2-no").removeClass("d-none");
+            $("#justific2-ys").addClass("d-none")
+        });
+    });
+
+</script>
+
+
+	</div>
+
+	<div class="footer text-center bottom-uri">
+		<hr>
+		<!--
+		<p class="text-muted"><small>This is a basic demo created by the social lynk analytics team. It is written in Python, using django. Basic CSS is provided by <a href="http://getbootstrap.com/">Bootstrap</a>.</p>
+		-->
+		<p style="display: {{moreread}};">Por favor cuando hayas leído el artículo pulsa <a href="{% url 'expplat:read_news' %}">siguiente</a>.</p>
+		<p style="display: {{moreans}};">Por favor cuando hayas leído el artículo pulsa <a href="{% url 'expplat:answer' %}">siguiente</a>.</p>
+	</div>
+
+
+</body>
+
+</html>
+
+
+

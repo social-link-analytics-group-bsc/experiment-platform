@@ -103,6 +103,7 @@ def index(request):
     request.session['news_true'] = true_new.id
     request.session['first_fake'] = first_fake
     request.session['state'] = "index"
+    request.session['experiment'] = exp
 
     # user instance is initiated and the news and other useful information is saved
     usr = User(
@@ -118,53 +119,200 @@ def index(request):
     usr.save()
     request.session['user_id'] = usr.id
 
-    return render(request, 'expplat/index.html')
+    return render(request, 'expplat/index.html', { 'moreread': 'none', 'moreans': 'none' })
 
 
 def read_news(request):
     if request.session['state'] == 'index':
         target = 'expplat:read_news'
+        moreread = 'block'
+        moreans = 'none'
         request.session['state'] = 'news1'
         new = News.objects.filter(id=request.session['new1'])[0]
     elif request.session['state'] == 'news1':
         target = 'expplat:answer'
+        moreread = 'none'
+        moreans = 'block'
         request.session['state'] = 'news2'
         new = News.objects.filter(id=request.session['new2'])[0]
     else:
         target = 'expplat:index'
         request.session['state'] = 'index'
 
+
     #TODO: prepare other description variables for the template (like title)
     doc = new.doc
-    return render(request, 'expplat/read_news.html', {'doc': doc, 'target': target })
+    article = "expplat/notis/" + doc
+    return render(request, 'expplat/read_news.html', {'doc': doc, 'target': target, 'moreread': moreread, 'moreans': moreans, 'article': article })
 
 
 def answer(request):
     request.session['state'] = 'answer'
-
-    #TODO: filter only the questions for this experiment
-    questions = Question.objects.all()
+    exp = request.session['experiment']
 
     #TODO: save time in user
     user_id = request.session['user_id']
     usr = User.objects.filter(id=user_id)[0]
 
-    return render(request, 'expplat/answer.html', { 'questions': questions })
+    fysno = Question.objects.filter(question_code='fysno')[0]
+    fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
+    fnox = Question.objects.filter(question_code__startswith="fno")
+
+    tysno = Question.objects.filter(question_code='tysno')[0]
+    tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
+    tnox = Question.objects.filter(question_code__startswith="tno")
+
+    if request.session['first_fake']:
+        quest1 = fysno
+        quest1ys = fysx
+        quest1no = fnox
+        quest2 = tysno
+        quest2ys = tysx
+        quest2no = tnox
+    else:
+        quest1 = tysno
+        quest1ys = tysx
+        quest1no = tnox
+        quest2 = fysno
+        quest2ys = fysx
+        quest2no = fnox
+
+    news1 = get_object_or_404(News, pk=request.session['new1'])
+    news2 = get_object_or_404(News, pk=request.session['new2'])
+
+    return render(request, 'expplat/answer.html', {
+        'quest1': quest1, 'quest1ys': quest1ys, 'quest1no': quest1no,
+        'quest2': quest2, 'quest2ys': quest2ys, 'quest2no': quest2no,
+        'news1': news1, 'news2': news2,
+        'moreread': 'none', 'moreans': 'none'
+    })
+
+
+def demo(request):
+
+    data = request.POST
+
+    exp = request.session['experiment']
+    user_id = request.session['user_id']
+    usr = User.objects.filter(id=user_id)[0]
+
+    fysno = Question.objects.filter(question_code='fysno')[0]
+    ans = Answer(user_id=usr, question_id=fysno, value=data['fysno'])
+    ans.save()
+
+    fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
+    fnox = Question.objects.filter(question_code__startswith="fno")
+    if data['fysno'] == 'si':
+        for que in fysx:
+            if que.question_code in data.keys():
+                ans = Answer(user_id=usr, question_id=que, value='checked')
+                ans.save()
+            else:
+                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                ans.save()
+        for que in fnox:
+            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
+            ans.save()
+    else:
+        for que in fysx:
+            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
+            ans.save()
+        for que in fnox:
+            if que.question_code in data.keys():
+                ans = Answer(user_id=usr, question_id=que, value='checked')
+                ans.save()
+            else:
+                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                ans.save()
+
+    tysno = Question.objects.filter(question_code='tysno')[0]
+    ans = Answer(user_id=usr, question_id=tysno, value=data['tysno'])
+    ans.save()
+
+    tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
+    tnox = Question.objects.filter(question_code__startswith="tno")
+    if data['tysno'] == 'si':
+        for que in tysx:
+            if que.question_code in data.keys():
+                ans = Answer(user_id=usr, question_id=que, value='checked')
+                ans.save()
+            else:
+                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                ans.save()
+        for que in tnox:
+            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
+            ans.save()
+    else:
+        for que in tysx:
+            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
+            ans.save()
+        for que in tnox:
+            if que.question_code in data.keys():
+                ans = Answer(user_id=usr, question_id=que, value='checked')
+                ans.save()
+            else:
+                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                ans.save()
+
+    dem = Question.objects.filter(question_code__startswith="dm")
+
+    return render(request, 'expplat/demo.html', {
+        'questions': dem,
+        'moreread': 'none', 'moreans': 'none'
+    })
 
 
 def result(request):
     data = request.POST
 
-    #TODO: filter only the questions for this experiment
-    questions = Question.objects.all()
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    print('data')
+    print(data)
+    print('')
+    print('')
+    print('')
+    print('')
+
+    exp = request.session['experiment']
     user_id = request.session['user_id']
     usr = User.objects.filter(id=user_id)[0]
-    for que in questions:
-        ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
-        ans.save()
+
+    dem = Question.objects.filter(question_code__startswith="dm")
+
+    for que in dem:
+        if que.question_code in data.keys():
+            ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
+            ans.save()
+        else:
+            value = '-'
+            if que.type == 'radio':
+                value = 'unchecked'
+            elif que.type == 'input':
+                value = data[que.question_code]
+            ans = Answer(user_id=usr, question_id=que, value=value)
+            ans.save()
 
     #TODO: get the correct news from session keys or user instance
-    news1 = get_object_or_404(News, pk=1)
-    news2 = get_object_or_404(News, pk=2)
+    news1 = get_object_or_404(News, pk=request.session['new1'])
+    if news1.is_fake:
+        news1.display_fake = 'block'
+        news1.display_true = 'none'
+    else:
+        news1.display_fake = 'none'
+        news1.display_true = 'block'
 
-    return render(request, 'expplat/result.html', { 'news1': news1, 'news2': news2 })
+    news2 = get_object_or_404(News, pk=request.session['new2'])
+    if news2.is_fake:
+        news2.display_fake = 'block'
+        news2.display_true = 'none'
+    else:
+        news2.display_fake = 'none'
+        news2.display_true = 'block'
+
+    return render(request, 'expplat/result.html', { 'news1': news1, 'news2': news2, 'moreread': 'none', 'moreans': 'none' })
