@@ -80,12 +80,14 @@ def index(request):
     first_new = allnews[first_int]
 
     # if the first article is fake, one from the true news is chosen and othewise if the first article is true
-    othernews = News.objects.filter(fake=(not first_new.fake))
+    othernews = News.objects.filter(is_fake=(not first_new.is_fake))
     second_int = rnd.randint(0, len(othernews)-1)
     second_new = othernews[second_int]
 
     # define the true and fake article that will be shown in the experiment
-    if first_new.fake:
+    if first_new.is_fake:
+        first_fake = True
+        first_true = False
         fake_new = first_new
         true_new = second_new
     else:
