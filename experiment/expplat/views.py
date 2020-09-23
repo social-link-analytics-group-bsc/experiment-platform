@@ -91,6 +91,8 @@ def index(request):
         fake_new = first_new
         true_new = second_new
     else:
+        first_fake = False
+        first_true = True
         fake_new = second_new
         true_new = first_new
 
@@ -99,12 +101,13 @@ def index(request):
     request.session['new2'] = second_new.id
     request.session['news_fake'] = fake_new.id
     request.session['news_true'] = true_new.id
+    request.session['first_fake'] = first_fake
     request.session['state'] = "index"
 
     # user instance is initiated and the news and other useful information is saved
     usr = User(
         experiment_id=exp,
-        news_fake_id=fake_new, news_true_id=true_new,
+        news_fake_id=fake_new, news_true_id=true_new, first_true=first_true,
         origin='bsc.es', #TODO: get user origin from "request"
         browser_language='ca', #TODO: get browser_language from "request"
         user_agent='firefox', #TODO: get user agent from "request"
