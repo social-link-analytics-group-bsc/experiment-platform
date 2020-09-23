@@ -1,9 +1,30 @@
 
 {% extends "base.html" %}
 {% block containercontent %}
+{% with moreread=moreread moreans=moreans %}
+{% endwith %}
 
-<h1>EXPERIMENT TITLE</h1>
-<p>[presentation page]</p>
-<a href="{% url 'expplat:read_news' %}">Next</a>
+<div class="text-center">
+    <div class="container">
+      <h1>Estudio de percepción de la información</h1>
+      <p class="lead text-muted">[introduction to the experiment][introduction to the experiment][introduction to the experiment][introduction to the experiment][introduction to the experiment]</p>
+      <p><a href="{% url 'expplat:read_news' %}" class="btn btn-secondary">Empezar</a></p>
+        <br><br>
+
+                {% load static %}
+        <div class="row">
+            <div class="col-sm-6">
+
+<img style="height: 120px; width: auto;" src="{% static "expplat/logo_nafarroa.jpg" %}">
+            </div>
+            <div class="col-sm-6">
+<img style="height: 120px; width: auto;" src="{% static "expplat/logo_bsc.jpg" %}">
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
 
 {% endblock %}
