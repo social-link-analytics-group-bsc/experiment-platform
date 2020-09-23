@@ -11,10 +11,11 @@ class Experiment(models.Model):
 
 
 class News(models.Model):
-    fake = models.BooleanField() #TODO: change field to "is_fake"
+    is_fake = models.BooleanField()
     topic = models.CharField(max_length=30)
-    doc = models.CharField(max_length=100)
+    doc = models.CharField(max_length=200)
     source = models.CharField(max_length=100)
+    title = models.CharField(max_length=300)
 
     def __str__(self):
         return self.doc
@@ -24,6 +25,7 @@ class User(models.Model):
     experiment_id = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     news_fake_id = models.ForeignKey(News, on_delete=models.CASCADE, related_name='fake_key')
     news_true_id = models.ForeignKey(News, on_delete=models.CASCADE, related_name='true_key')
+    first_true = models.BooleanField()
     browser_language = models.CharField(max_length=2)
     user_agent = models.CharField(max_length=20)
     origin = models.CharField(max_length=50)
