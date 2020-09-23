@@ -4,7 +4,68 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 import random as rnd
+import json
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer
+
+
+def inst(request):
+
+    exp = Experiment.objects.all()[0]
+
+    typeRadio = QuestionType(
+        type="radio",
+        desc="Radio options choose just one"
+    )
+    typeRadio.save()
+
+    typeBool = QuestionType(
+        type="bool",
+        desc="Checked/unchecked"
+    )
+    typeBool.save()
+
+    typeInput = QuestionType(
+        type="input",
+        desc="String input"
+    )
+    typeInput.save()
+
+    QueTypes = {
+        'radio': typeRadio,
+        'bool': typeBool,
+        'input': typeInput
+    }
+
+    with open('expplat/quest.json', encoding='utf-8') as json_file:
+        data = json.load(json_file)
+
+    for k in data.keys():
+        print(k)
+        print(data[k]['text'])
+        que = Question(
+            question_code=k,
+            text=data[k]['text'],
+            desc=data[k]['desc'],
+            type=QueTypes[data[k]['type']]
+        )
+        que.save()
+
+        queexp = QuestionExperiment(
+            experiment_id=exp,
+            question_id=que
+        )
+        queexp.save()
+
+        if data[k]['type'] in ['radio']:
+            for ch in data[k]['choices']:
+                cho = Choice(
+                    question_id=que,
+                    value=ch
+                )
+                cho.save()
+            print('ale')
+
+    return render(request, 'expplat/index.html', {'moreread': 'none', 'moreans': 'none'})
 
 
 # Create your views here.

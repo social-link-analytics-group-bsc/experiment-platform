@@ -1,0 +1,347 @@
+{
+  "fysno": {
+    "text": "Es la noticia verdadera?",
+    "desc":"",
+    "type": "radio",
+    "choices": ["si", "no"]
+  },
+  "fys01":  {
+    "text": "Recuerda haber leído la noticia anteriormente",
+    "desc": "",
+    "type": "bool"
+  },
+  "fys02": {
+    "text":"La fuente es conocida",
+    "desc": "",
+    "type": "bool"
+  },
+  "fys03":  {
+    "text": "La fuente es confiable",
+    "desc": "",
+    "type": "bool"
+  },
+  "fys04":  {
+    "text": "Desconoce la fuente pero el abordaje de la noticia es serio y profesional",
+    "desc": "",
+    "type": "bool"
+  },
+  "fys05": {
+    "text": "La imagen que acompaña al texto es real",
+    "desc": "",
+    "type": "bool"
+  },
+  "fys06": {
+    "text": "El título y texto son coherentes",
+    "desc": "",
+    "type": "bool"
+  },
+  "fys07": {
+    "text": "El estilo de la redacción es profesional",
+    "desc": "",
+    "type": "bool"
+  },
+  "fys08": {
+    "text": "El contenido concuerda con mis creencias",
+    "desc": "",
+    "type": "bool"
+  },
+  "fys09":  {
+    "text": "El contenido está alineado a mi ideología política",
+    "desc": "",
+    "type": "bool"
+  },
+  "fys10": {
+    "text": "Otro (explicar)",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno01": {
+    "text": "Recuerda haber leído alguna aclaración desmintiendo la noticia",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno02": {
+    "text": "El medio de publicación es desconocido",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno03": {
+    "text": "El medio de publicación es poco fiable",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno04": {
+    "text": "La fuente o las fuentes citadas en la noticia son desconocidas",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno05": {
+    "text": "La fuente o las fuentes citadas en la noticia son poco fiables",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno06": {
+    "text": "El título es sensacionalista",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno07": {
+    "text": "El título no se corresponde con el contenido",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno08": {
+    "text": "La imagen es sensacionalista o falsa",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno09": {
+    "text": "La imagen que acompaña el texto no refleja el contenido",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno10": {
+    "text": "El estilo de redacción es poco profesional",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno11": {
+    "text": "La información contextual es falsa",
+    "desc": "",
+    "type": "bool"
+  },
+  "fno12": {
+    "text": "Otro (explicar)",
+    "desc": "",
+    "type": "bool"
+  },
+  "tysno": {
+    "text": "Es la noticia verdadera?",
+    "desc": "",
+    "type": "radio",
+    "choices": ["si", "no"]
+  },
+  "tys01": {
+    "text": "Recuerda haber leído la noticia anteriormente",
+    "desc": "",
+    "type": "bool"
+  },
+  "tys02": {
+    "text": "La fuente es conocida",
+    "desc": "",
+    "type": "bool"
+  },
+  "tys03": {
+    "text": "La fuente es confiable",
+    "desc": "",
+    "type": "bool"
+  },
+  "tys04": {
+    "text": "Desconoce la fuente pero el abordaje de la noticia es serio y profesional",
+    "desc": "",
+    "type": "bool"
+  },
+  "tys05": {
+    "text": "La imagen que acompaña al texto es real",
+    "desc": "",
+    "type": "bool"
+  },
+  "tys06": {
+    "text": "El título y texto son coherentes",
+    "desc": "",
+    "type": "bool"
+  },
+  "tys07": {
+    "text": "El estilo de la redacción es profesional",
+    "desc": "",
+    "type": "bool"
+  },
+  "tys08": {
+    "text": "El contenido concuerda con mis creencias",
+    "desc": "",
+    "type": "bool"
+  },
+  "tys09": {
+    "text": "El contenido está alineado a mi ideología política",
+    "desc": "",
+    "type": "bool"
+  },
+  "tys10": {
+    "text": "Otro (explicar)",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno01": {
+    "text": "Recuerda haber leído alguna aclaración desmintiendo la noticia",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno02": {
+    "text": "El medio de publicación es desconocido",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno03": {
+    "text": "El medio de publicación es poco fiable",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno04": {
+    "text": "La fuente o las fuentes citadas en la noticia son desconocidas",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno05": {
+    "text": "La fuente o las fuentes citadas en la noticia son poco fiables",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno06": {
+    "text": "El título es sensacionalista",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno07": {
+    "text": "El título no se corresponde con el contenido",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno08": {
+    "text": "La imagen es sensacionalista o falsa",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno09": {
+    "text": "La imagen que acompaña el texto no refleja el contenido",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno10": {
+    "text": "El estilo de redacción es poco profesional",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno11": {
+    "text": "La información contextual es falsa",
+    "desc": "",
+    "type": "bool"
+  },
+  "tno12": {
+    "text": "Otro (explicar)",
+    "desc": "",
+    "type": "bool"
+  },
+  "yes01": {
+    "text": "Compartiré la noticia con familiares y amigos",
+    "desc": "",
+    "type": "bool"
+  },
+  "yes02": {
+    "text": "Publicaré la noticia en mis redes sociales",
+    "desc": "",
+    "type": "bool"
+  },
+  "yes03": {
+    "text": "Consultar otras fuentes complementarias antes de compartir o publicar la noticia",
+    "desc": "",
+    "type": "bool"
+  },
+  "yes04": {
+    "text": "Aplicaré a mi vida lo aprendido en la noticia (si corresponde)",
+    "desc": "",
+    "type": "bool"
+  },
+  "yes05": {
+    "text": "No realizaré ninguna acción",
+    "desc": "",
+    "type": "bool"
+  },
+  "dmgen": {
+    "text": "Género",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Femenino", "Masculino", "No binario", "Prefiero no decir"]
+  },
+  "dmage": {
+    "text": "Edad",
+    "desc": "",
+    "type": "input"
+  },
+  "dmprv": {
+    "text": "Provincia de residencia",
+    "desc": "",
+    "type": "input"
+  },
+  "dmedu": {
+    "text": "¿Cuál es el máximo nivel educativo alcanzado?",
+    "desc": "",
+    "type": "radio",
+    "choices": ["No tiene estudios educación formal", "Primaria", "Secundaria", "Universitaria", "PostGrado", "No sabe/No contesta"]
+  },
+  "dmpro": {
+    "text": "Profesión",
+    "desc": "",
+    "type": "input"
+  },
+  "dmjob": {
+    "text": "¿Cuál de las siguientes describe mejor tu situación actual de empleo?",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Contrato a tiempo parcial", "Contratado a tiempo parcial o por horas", "Autónomo o por cuenta propia", "Desempleado", "Estudiante", "Jubilado", "No sabe/No contesta"]
+  },
+  "dm7tv": {
+    "text": "TV Información",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
+  },
+  "dm7in": {
+    "text": "Internet Información",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
+  },
+  "dm7so": {
+    "text": "Redes Sociales: Twitter, Facebook,  Instagram otras",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
+  },
+  "dm7re": {
+    "text": "Lectura Libros",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
+  },
+  "dm7wa": {
+    "text": "Mensajes: WhatsApp",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
+  },
+  "dmtec": {
+    "text": "¿Cómo calificarías tu habilidad en el uso de tecnología?",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Básica", "Media", "Avanzada", "No sabe/No contesta"]
+  },
+  "dmsur": {
+    "text": "Estimativamente ¿cuánto tiempo pasas en Internet?",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Un par de veces a la semana o menos", "Menos de media hora al dia", "Entre media y una hora al dia", "Más de una pero menos de tres horas al dia", "Más de tres pero menos de cinco horas al dia", "Más de cinco per menos de diez horas al día", "Más de diez horas al dia", "No sabe/No contesta"]
+  },
+  "dmrel": {
+    "text": "¿Cómo se auto-definiría desde el punto de vista religioso? ",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Católico Practicante", "Católico no Practicante", "Otras Confesiones Cristianas", "Religiones Orientales", "Musulmanes", "No Creyentes/Ateos/Agnósticos", "No sabe/No contesta"]
+  },
+  "dmpol": {
+    "text": "¿Podría decir cuál es la orientación política por la cual siente más cercanía?",
+    "desc": "",
+    "type": "radio",
+    "choices": ["PSOE", "PP", "VOX", "Unidas Podemos", "Cs", "No sabe/No contesta"]
+  }
+}
+
