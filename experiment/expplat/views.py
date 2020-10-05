@@ -157,32 +157,38 @@ def answer(request):
     fysno = Question.objects.filter(question_code='fysno')[0]
     fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
     fnox = Question.objects.filter(question_code__startswith="fno")
+    fafx = Question.objects.filter(question_code__startswith="faf")
 
     tysno = Question.objects.filter(question_code='tysno')[0]
     tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
     tnox = Question.objects.filter(question_code__startswith="tno")
+    tafx = Question.objects.filter(question_code__startswith="taf")
 
     if request.session['first_fake']:
         quest1 = fysno
         quest1ys = fysx
         quest1no = fnox
+        quest1af = fafx
         quest2 = tysno
         quest2ys = tysx
         quest2no = tnox
+        quest2af = tafx
     else:
         quest1 = tysno
         quest1ys = tysx
         quest1no = tnox
+        quest1af = tafx
         quest2 = fysno
         quest2ys = fysx
         quest2no = fnox
+        quest2af = fafx
 
     news1 = get_object_or_404(News, pk=request.session['new1'])
     news2 = get_object_or_404(News, pk=request.session['new2'])
 
     return render(request, 'expplat/answer.html', {
-        'quest1': quest1, 'quest1ys': quest1ys, 'quest1no': quest1no,
-        'quest2': quest2, 'quest2ys': quest2ys, 'quest2no': quest2no,
+        'quest1': quest1, 'quest1ys': quest1ys, 'quest1no': quest1no, 'quest1af': quest1af,
+        'quest2': quest2, 'quest2ys': quest2ys, 'quest2no': quest2no, 'quest2af': quest2af,
         'news1': news1, 'news2': news2,
         'moreread': 'none', 'moreans': 'none'
     })
