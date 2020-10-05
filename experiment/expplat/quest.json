@@ -113,6 +113,31 @@
   "fno12": {
     "text": "Otro (explicar)",
     "desc": "",
+    "type": "input"
+  },
+  "faf01": {
+    "text": "Compartiré la noticia con familiares y amigos",
+    "desc": "",
+    "type": "bool"
+  },
+  "faf02": {
+    "text": "Publicaré la noticia en mis redes sociales",
+    "desc": "",
+    "type": "bool"
+  },
+  "faf03": {
+    "text": "Consultar otras fuentes complementarias antes de compartir o publicar la noticia",
+    "desc": "",
+    "type": "bool"
+  },
+  "faf04": {
+    "text": "Aplicaré a mi vida lo aprendido en la noticia (si corresponde)",
+    "desc": "",
+    "type": "bool"
+  },
+  "faf05": {
+    "text": "No realizaré ninguna acción",
+    "desc": "",
     "type": "bool"
   },
   "tysno": {
@@ -231,27 +256,27 @@
     "desc": "",
     "type": "bool"
   },
-  "yes01": {
+  "taf01": {
     "text": "Compartiré la noticia con familiares y amigos",
     "desc": "",
     "type": "bool"
   },
-  "yes02": {
+  "taf02": {
     "text": "Publicaré la noticia en mis redes sociales",
     "desc": "",
     "type": "bool"
   },
-  "yes03": {
+  "taf03": {
     "text": "Consultar otras fuentes complementarias antes de compartir o publicar la noticia",
     "desc": "",
     "type": "bool"
   },
-  "yes04": {
+  "taf04": {
     "text": "Aplicaré a mi vida lo aprendido en la noticia (si corresponde)",
     "desc": "",
     "type": "bool"
   },
-  "yes05": {
+  "taf05": {
     "text": "No realizaré ninguna acción",
     "desc": "",
     "type": "bool"
@@ -265,7 +290,8 @@
   "dmage": {
     "text": "Edad",
     "desc": "",
-    "type": "input"
+    "type": "radio",
+    "choices": ["Menos de 19 años inclusive", "20-29 años", "30-39 años", "40-49 años", "50-59 años", "60-69 años", "Más de 70 años inclusive"]
   },
   "dmprv": {
     "text": "Provincia de residencia",
@@ -279,9 +305,10 @@
     "choices": ["No tiene estudios educación formal", "Primaria", "Secundaria", "Universitaria", "PostGrado", "No sabe/No contesta"]
   },
   "dmpro": {
-    "text": "Profesión",
+    "text": "Rama de actividad professional",
     "desc": "",
-    "type": "input"
+    "type": "radio",
+    "choices": ["No estoy trabajando"]
   },
   "dmjob": {
     "text": "¿Cuál de las siguientes describe mejor tu situación actual de empleo?",
@@ -289,31 +316,43 @@
     "type": "radio",
     "choices": ["Contrato a tiempo parcial", "Contratado a tiempo parcial o por horas", "Autónomo o por cuenta propia", "Desempleado", "Estudiante", "Jubilado", "No sabe/No contesta"]
   },
-  "dm7tv": {
+  "dmrel": {
+    "text": "¿Cómo auto-definiría su punto de vista religioso? ",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Católico", "Evangélico o protestante", "Judío", "Islámico", "Budista", "No Creyente/Ateo/Agnóstico", "No sabe/No contesta"]
+  },
+  "dmpol": {
+    "text": "¿Podría decir cuál es la orientación política por la cual siente más cercanía?",
+    "desc": "",
+    "type": "radio",
+    "choices": ["Izquierda", "Centro", "Derecha", "Prefiere no decir"]
+  },
+  "ruttv": {
     "text": "TV Información",
     "desc": "",
     "type": "radio",
     "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
   },
-  "dm7in": {
+  "rutin": {
     "text": "Internet Información",
     "desc": "",
     "type": "radio",
     "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
   },
-  "dm7so": {
+  "rutso": {
     "text": "Redes Sociales: Twitter, Facebook,  Instagram otras",
     "desc": "",
     "type": "radio",
     "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
   },
-  "dm7re": {
+  "rutre": {
     "text": "Lectura Libros",
     "desc": "",
     "type": "radio",
     "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
   },
-  "dm7wa": {
+  "rutwa": {
     "text": "Mensajes: WhatsApp",
     "desc": "",
     "type": "radio",
@@ -324,24 +363,5 @@
     "desc": "",
     "type": "radio",
     "choices": ["Básica", "Media", "Avanzada", "No sabe/No contesta"]
-  },
-  "dmsur": {
-    "text": "Estimativamente ¿cuánto tiempo pasas en Internet?",
-    "desc": "",
-    "type": "radio",
-    "choices": ["Un par de veces a la semana o menos", "Menos de media hora al dia", "Entre media y una hora al dia", "Más de una pero menos de tres horas al dia", "Más de tres pero menos de cinco horas al dia", "Más de cinco per menos de diez horas al día", "Más de diez horas al dia", "No sabe/No contesta"]
-  },
-  "dmrel": {
-    "text": "¿Cómo se auto-definiría desde el punto de vista religioso? ",
-    "desc": "",
-    "type": "radio",
-    "choices": ["Católico Practicante", "Católico no Practicante", "Otras Confesiones Cristianas", "Religiones Orientales", "Musulmanes", "No Creyentes/Ateos/Agnósticos", "No sabe/No contesta"]
-  },
-  "dmpol": {
-    "text": "¿Podría decir cuál es la orientación política por la cual siente más cercanía?",
-    "desc": "",
-    "type": "radio",
-    "choices": ["PSOE", "PP", "VOX", "Unidas Podemos", "Cs", "No sabe/No contesta"]
   }
 }
-
