@@ -96,7 +96,7 @@ footer p {
 
     <div class="row">
         <div class="col-sm-12">
-            <h2>Responda las siguientes preguntas demográficas</h2>
+            <h2>Perfil sociodemográfico</h2>
         </div>
     </div>
     <hr>
@@ -106,21 +106,23 @@ footer p {
 
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-            <form action="{% url 'expplat:result' %}" method="post">
+            <form action="{% url 'expplat:rutina' %}" method="post">
             {% csrf_token %}
 
                 {% for que in questions %}
                 <div class="row">
                     <div class="col-sm-12">
 
-                        <!--
-                        -->
                         {% ifequal que.type|stringformat:"s" "radio" %}
-                            <h5>{{ que.text }}</h5>
+                            <div class="form-group">
+
+                            </div>
+                            <label for="{{ que.question_code }}">{{ que.text }}</label>
+                            <select class="form-control" name="{{ que.question_code}}" id="{{ que.question_code }}">
                             {% for choice in que.choice_set.all %}
-                                <input required type="radio" name="{{ que.question_code}}" id="{{ que.question_code }}_{{ choice.value }}" value="{{ choice.value }}">
-                                <label for="{{ que.question_code }}_{{ choice.value }}">{{ choice.value }}</label>
+                                <option value="{{ choice.value }}">{{ choice.value }}</option>
                             {% endfor %}
+                            </select>
                         {% endifequal %}
 
                         {% ifequal que.type|stringformat:"s" "input" %}
@@ -128,14 +130,14 @@ footer p {
                             <input required type="text" name="{{ que.question_code}}" id="{{ que.question_code }}">
                         {% endifequal %}
 
-                        <br><br>
+                        <br>
                     </div>
                 </div>
                 {% endfor %}
 
                 <hr>
 
-            <input type="submit" value="Submit">
+            <input type="submit" value="SIGUIENTE">
             </form>
 
         </div>
