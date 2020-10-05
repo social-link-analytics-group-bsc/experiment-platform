@@ -65,6 +65,20 @@ def inst(request):
                 cho.save()
             print('ale')
 
+
+    with open('expplat/news.json', encoding='utf-8') as json_file:
+        notis = json.load(json_file)
+
+    for n in notis:
+        new = News(
+            is_fake=n['is_fake'],
+            source=n['source'],
+            topic=n['topic'],
+            title=n['title'],
+            doc=n['doc']
+        )
+        new.save()
+
     return render(request, 'expplat/index.html', {'moreread': 'none', 'moreans': 'none'})
 
 
