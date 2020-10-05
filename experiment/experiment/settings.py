@@ -77,6 +77,14 @@ WSGI_APPLICATION = 'experiment.wsgi.application'
 #TODO: connect to MySQL
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'experiment',
+        'USER': 'expadmin',
+        'PASSWORD': 'asdf',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+    },
+    'altra': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
