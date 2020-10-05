@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>experiment sample platform {% block title %}{% endblock %}</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+	<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+
+hr.tophr {
+  margin-top: 30px !important;
+}
+
+
+.jumbotron {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  margin-bottom: 0;
+  background-color: #fff;
+}
+@media (min-width: 768px) {
+  .jumbotron {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+.jumbotron p:last-child {
+  margin-bottom: 0;
+}
+
+.jumbotron h1 {
+  font-weight: 300;
+}
+
+.jumbotron .container {
+  max-width: 40rem;
+}
+
+.center-uri {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //border: 3px solid green;
+}
+
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer p {
+  margin-bottom: .25rem;
+}
+
+
+.bottom-uri {
+  margin-bottom: 10px !important;
+}
+
+
+
+</style>
+
+</head>
+
+<body>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap.bundle.min.js"></script>
+
+
+	<hr class="tophr">
+
+	<div class="container center-uri">
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>¿Cuánto tiempo dedicas en tu rutina a...?</h2>
+        </div>
+    </div>
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+            <form action="{% url 'expplat:result' %}" method="post">
+            {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <table class="table">
+                          <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                {% for choice in first.choice_set.all %}
+                                    <th scope="col">{{ choice.value }}</th>
+                                {% endfor %}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for que in questions %}
+                            <tr>
+                                <th scope="row">{{ que.text }}</th>
+                                {% for choice in que.choice_set.all %}
+                                    <td class="text-center"><input class="form-check-input" required type="radio" name="{{ que.question_code}}" id="{{ que.question_code }}_{{ choice.value }}" value="{{ choice.value }}"></td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <hr>
+
+            <input type="submit" value="Siguiente">
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $("#quest1_si").on("change",function(){
+            console.log("que si")
+            $("#justific1-ys").removeClass("d-none");
+            $("#justific1-no").addClass("d-none")
+        });
+        $("#quest1_no").on("change",function(){
+            console.log("que no")
+            $("#justific1-no").removeClass("d-none");
+            $("#justific1-ys").addClass("d-none")
+        });
+        $("#quest2_si").on("change",function(){
+            console.log("que si")
+            $("#justific2-ys").removeClass("d-none");
+            $("#justific2-no").addClass("d-none")
+        });
+        $("#quest2_no").on("change",function(){
+            console.log("que no")
+            $("#justific2-no").removeClass("d-none");
+            $("#justific2-ys").addClass("d-none")
+        });
+    });
+
+</script>
+
+
+
+	</div>
+
+	<div class="footer text-center bottom-uri">
+		<hr>
+		<!--
+		<p class="text-muted"><small>This is a basic demo created by the social lynk analytics team. It is written in Python, using django. Basic CSS is provided by <a href="http://getbootstrap.com/">Bootstrap</a>.</p>
+		-->
+		<p style="display: {{moreread}};">Por favor cuando hayas leído el artículo pulsa <a href="{% url 'expplat:read_news' %}">siguiente</a>.</p>
+		<p style="display: {{moreans}};">Por favor cuando hayas leído el artículo pulsa <a href="{% url 'expplat:answer' %}">siguiente</a>.</p>
+	</div>
+
+
+</body>
+
+</html>
+
+

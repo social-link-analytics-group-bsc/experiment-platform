@@ -282,6 +282,43 @@ def demo(request):
     })
 
 
+def rutina(request):
+
+    data = request.POST
+
+    exp = request.session['experiment']
+    user_id = request.session['user_id']
+    usr = User.objects.filter(id=user_id)[0]
+
+    dem = Question.objects.filter(question_code__startswith="dm")
+
+    for que in dem:
+        if que.question_code in data.keys():
+            ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
+            ans.save()
+        else:
+            value = '-'
+            if que.type == 'radio':
+                value = 'unchecked'
+            elif que.type == 'input':
+                value = data[que.question_code]
+            ans = Answer(user_id=usr, question_id=que, value=value)
+            ans.save()
+
+    data = request.POST
+
+    exp = request.session['experiment']
+    user_id = request.session['user_id']
+    usr = User.objects.filter(id=user_id)[0]
+
+    rut = Question.objects.filter(question_code__startswith="rut")
+
+    return render(request, 'expplat/rutina.html', {
+        'questions': rut, 'first': rut[0],
+        'moreread': 'none', 'moreans': 'none'
+    })
+
+
 def result(request):
     data = request.POST
 
