@@ -40,8 +40,6 @@ def inst(request):
         data = json.load(json_file)
 
     for k in data.keys():
-        print(k)
-        print(data[k]['text'])
         que = Question(
             question_code=k,
             text=data[k]['text'],
@@ -320,21 +318,8 @@ def rutina(request):
 
 
 def result(request):
-    data = request.POST
 
-    print('')
-    print('')
-    print('')
-    print('')
-    print('')
-    print('')
-    print('')
-    print('data')
-    print(data)
-    print('')
-    print('')
-    print('')
-    print('')
+    data = request.POST
 
     exp = request.session['experiment']
     user_id = request.session['user_id']
