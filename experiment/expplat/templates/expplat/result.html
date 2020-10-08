@@ -1,35 +1,141 @@
 
-{% extends "base.html" %}
-{% block containercontent %}
-{% with moreread=moreread moreans=moreans %}
-{% endwith %}
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="container">
+<head>
+	<title>experiment sample platform {% block title %}{% endblock %}</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
 
-    <div class="row">
-        <h1>Gracias por su participación!</h1><br>
-    </div>
-    <br><br><br><br>
-    <div class="row">
-        <div class="col-md-8 col-sm-12">
-            <p>La noticia con el título: <strong>{{news1.title}}</strong></p>
-        </div>
-        <div class="col-md-4 col-sm-12">
-            <h3><span class="badge badge-success" style="display: {{news1.display_true}};">VERÍDICA</span></h3>
-            <h3><span class="badge badge-danger" style="display: {{news1.display_fake}};">FAKE</span></h3>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-md-8 col-sm-12">
-            <p>La noticia con el título: <strong>{{news2.title}}</strong></p>
-        </div>
-        <div class="col-md-4 col-sm-12">
-            <h3><span class="badge badge-success" style="display: {{news2.display_true}};">VERÍDICA</span></h3>
-            <h3><span class="badge badge-danger" style="display: {{news2.display_fake}};">FAKE</span></h3>
-        </div>
-    </div>
+	<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
 
-</div>
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
 
-{% endblock %}
+
+hr.tophr {
+  margin-top: 30px !important;
+}
+
+
+.jumbotron {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  margin-bottom: 0;
+  background-color: #fff;
+}
+@media (min-width: 768px) {
+  .jumbotron {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+.jumbotron p:last-child {
+  margin-bottom: 0;
+}
+
+.jumbotron h1 {
+  font-weight: 300;
+}
+
+.jumbotron .container {
+  max-width: 40rem;
+}
+
+.center-uri {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //border: 3px solid green;
+}
+
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer p {
+  margin-bottom: .25rem;
+}
+
+
+.bottom-uri {
+  margin-bottom: 10px !important;
+}
+
+
+
+</style>
+
+</head>
+
+<body>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap.bundle.min.js"></script>
+
+
+
+	<hr class="tophr">
+
+	<div class="container center-uri">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1>Gracias por su participación!</h1>
+                    <br>
+                    <p>Esta encuesta se realiza en el marco del proyecto RRSSalud, financiado por la fundación BBVA. Durante la encuesta, usted fue invitado a leer dos noticias aleatorias; una de contenido verdadero y la otra de contenido falso. El propósito de la encuesta fue investigar el nivel de vulnerabilidad de las personas a las noticias falsas. Además, evaluar potenciales acciones posteriores a tomar a partir de las noticias leídas.</p>
+                    <p>Las noticias visualizadas se encuentran relacionadas con algún aspecto de la pandemia COVID-19 y fueron extraídas de medios digitales de comunicación.</p>
+                    <p>Si desea conocer más información sobre el proyecto de investigación y el experimento favor contactar con [] o bien puede visitar el sitio web [].</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-2 col-sm-12">
+                    <h3><span class="badge badge-success" style="display: {{news1.display_true}};">VERDADERA</span></h3>
+                    <h3><span class="badge badge-danger" style="display: {{news1.display_fake}};">FALSA</span></h3>
+                </div>
+                <div class="col-md-10 col-sm-12">
+                    <h3><strong>{{news1.title}}</strong></h3>
+                </div>
+                <div class="col-sm-12" style="display: {{news1.display_fake}};">
+                    <h6>Fue desmentida en: <a href="{{ news1.ver_doc }}">{{ news1.ver_title }}</a></h6>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-2 col-sm-12">
+                    <h3><span class="badge badge-success" style="display: {{news2.display_true}};">VERDADERA</span></h3>
+                    <h3><span class="badge badge-danger" style="display: {{news2.display_fake}};">FALSA</span></h3>
+                </div>
+                <div class="col-md-10 col-sm-12">
+                    <h3><strong>{{news2.title}}</strong></h3>
+                </div>
+                <div class="col-sm-12" style="display: {{news2.display_fake}};">
+                    <h6>Fue desmentida en: <a href="{{ news2.ver_doc }}">{{ news2.ver_title }}</a></h6>
+                </div>
+            </div>
+
+        </div>
+	</div>
+
+	<div class="footer text-center bottom-uri">
+		<hr>
+	</div>
+
+
+</body>
+
+</html>
