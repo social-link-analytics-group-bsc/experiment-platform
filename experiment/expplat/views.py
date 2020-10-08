@@ -73,7 +73,9 @@ def inst(request):
             source=n['source'],
             topic=n['topic'],
             title=n['title'],
-            doc=n['doc']
+            doc=n['doc'],
+            ver_doc=n['ver_doc'],
+            ver_title=n['ver_title']
         )
         new.save()
 
@@ -139,12 +141,14 @@ def read_news(request):
         target = 'expplat:read_news'
         moreread = 'block'
         moreans = 'none'
+        progress = 25
         request.session['state'] = 'news1'
         new = News.objects.filter(id=request.session['new1'])[0]
     elif request.session['state'] == 'news1':
         target = 'expplat:answer'
         moreread = 'none'
         moreans = 'block'
+        progress = 50
         request.session['state'] = 'news2'
         new = News.objects.filter(id=request.session['new2'])[0]
     else:
@@ -155,7 +159,7 @@ def read_news(request):
     #TODO: prepare other description variables for the template (like title)
     doc = new.doc
     article = "expplat/notis/" + doc
-    return render(request, 'expplat/read_news.html', {'doc': doc, 'target': target, 'moreread': moreread, 'moreans': moreans, 'article': article })
+    return render(request, 'expplat/read_news.html', {'doc': doc, 'target': target, 'moreread': moreread, 'moreans': moreans, 'progress': progress, 'article': article })
 
 
 def answer(request):
@@ -202,7 +206,7 @@ def answer(request):
         'quest1': quest1, 'quest1ys': quest1ys, 'quest1no': quest1no, 'quest1af': quest1af,
         'quest2': quest2, 'quest2ys': quest2ys, 'quest2no': quest2no, 'quest2af': quest2af,
         'news1': news1, 'news2': news2,
-        'moreread': 'none', 'moreans': 'none'
+        'moreread': 'none', 'moreans': 'none', 'progress': 75
     })
 
 
@@ -276,7 +280,7 @@ def demo(request):
 
     return render(request, 'expplat/demo.html', {
         'questions': dem,
-        'moreread': 'none', 'moreans': 'none'
+        'moreread': 'none', 'moreans': 'none', 'progress': 85
     })
 
 
@@ -313,7 +317,7 @@ def rutina(request):
 
     return render(request, 'expplat/rutina.html', {
         'questions': rut, 'first': rut[0],
-        'moreread': 'none', 'moreans': 'none'
+        'moreread': 'none', 'moreans': 'none', 'progress': 95
     })
 
 
