@@ -83,7 +83,7 @@ footer p {
 <body>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap.bundle.min.js"></script>
+	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="../bootstrap.bundle.min.js"></script>
 
     <div class="progress">
       <div class="progress-bar bg-info" style="width: {{ progress }}%" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -138,7 +138,7 @@ footer p {
                 {% endfor %}
 
                 <hr>
-                <input class="btn btn-primary" type="submit" value="SIGUIENTE">
+                <input class="btn btn-info" type="submit" value="SIGUIENTE">
 
             </form>
 
@@ -147,44 +147,10 @@ footer p {
 
 </div>
 
-<script>
-
-    $(document).ready(function () {
-        $("#quest1_si").on("change",function(){
-            console.log("que si")
-            $("#justific1-ys").removeClass("d-none");
-            $("#justific1-no").addClass("d-none")
-        });
-        $("#quest1_no").on("change",function(){
-            console.log("que no")
-            $("#justific1-no").removeClass("d-none");
-            $("#justific1-ys").addClass("d-none")
-        });
-        $("#quest2_si").on("change",function(){
-            console.log("que si")
-            $("#justific2-ys").removeClass("d-none");
-            $("#justific2-no").addClass("d-none")
-        });
-        $("#quest2_no").on("change",function(){
-            console.log("que no")
-            $("#justific2-no").removeClass("d-none");
-            $("#justific2-ys").addClass("d-none")
-        });
-    });
-
-</script>
-
-
-
 	</div>
 
 	<div class="footer text-center bottom-uri">
 		<hr>
-		<!--
-		<p class="text-muted"><small>This is a basic demo created by the social lynk analytics team. It is written in Python, using django. Basic CSS is provided by <a href="http://getbootstrap.com/">Bootstrap</a>.</p>
-		-->
-		<p style="display: {{moreread}};">Por favor cuando hayas leído el artículo pulsa <a href="{% url 'expplat:read_news' %}">siguiente</a>.</p>
-		<p style="display: {{moreans}};">Por favor cuando hayas leído el artículo pulsa <a href="{% url 'expplat:answer' %}">siguiente</a>.</p>
 	</div>
 
 

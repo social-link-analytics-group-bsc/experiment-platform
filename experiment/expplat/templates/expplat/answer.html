@@ -93,7 +93,7 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <p>Responda las siguientes preguntas segun las noticias que leyó anteriormente</p>
+                    <p>Responda las siguientes preguntas según las noticias que leyó anteriormente. Las preguntas marcadas con asterisco (*) són obligatorias.</p>
                 </div>
             </div>
 
@@ -112,7 +112,7 @@
                                 -->
                                 <h4><strong>{{news1.title}}</strong></h4>
                                 <hr>
-                                <p>Considera la noticia verdadera?</p>
+                                <p>Considera la noticia verdadera?*</p>
                                 {% for choice in quest1.choice_set.all %}
 
                                     <div class="form-check form-check-inline">
@@ -171,7 +171,7 @@
                                 -->
                                 <h4><strong>{{news2.title}}</strong></h4>
                                 <hr>
-                                <p>Considera que la noticia es verdadera?</p>
+                                <p>Considera que la noticia es verdadera?*</p>
                                 {% for choice in quest2.choice_set.all %}
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" required type="radio" name="{{ quest2.question_code}}" id="quest2_{{ choice.value }}" value="{{ choice.value }}">
@@ -220,7 +220,7 @@
                         <hr>
 
 
-                    <input class="btn btn-primary" type="submit" value="Siguiente">
+                    <input class="btn btn-info" type="submit" value="SIGUIENTE">
                     </form>
 
                 </div>
@@ -231,11 +231,6 @@
 
 	<div class="footer text-center bottom-uri">
 		<hr>
-		<!--
-		<p class="text-muted"><small>This is a basic demo created by the social lynk analytics team. It is written in Python, using django. Basic CSS is provided by <a href="http://getbootstrap.com/">Bootstrap</a>.</p>
-		-->
-		<p style="display: {{moreread}};">Por favor cuando hayas leído el artículo pulsa <a href="{% url 'expplat:read_news' %}">siguiente</a>.</p>
-		<p style="display: {{moreans}};">Por favor cuando hayas leído el artículo pulsa <a href="{% url 'expplat:answer' %}">siguiente</a>.</p>
 	</div>
 
     <script>
