@@ -119,8 +119,9 @@ footer p {
                             <div class="form-group">
 
                             </div>
-                            <label for="{{ que.question_code }}">{{ que.text }}</label>
-                            <select class="form-control" name="{{ que.question_code}}" id="{{ que.question_code }}">
+                            <label for="{{ que.question_code }}">{{ que.text }}*</label>
+                            <select required class="form-control" name="{{ que.question_code}}" id="{{ que.question_code }}">
+                                <option value="" disabled selected>-- SELECCIONE UNA OPCIÓN --</option>
                             {% for choice in que.choice_set.all %}
                                 <option value="{{ choice.value }}">{{ choice.value }}</option>
                             {% endfor %}
