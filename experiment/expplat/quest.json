@@ -285,7 +285,7 @@
     "text": "Género",
     "desc": "",
     "type": "radio",
-    "choices": ["Femenino", "Masculino", "No binario", "Prefiero no decir"]
+    "choices": ["Femenino", "Masculino", "No binario", "NS/NC"]
   },
   "dmage": {
     "text": "Edad",
@@ -296,72 +296,73 @@
   "dmprv": {
     "text": "Provincia de residencia",
     "desc": "",
-    "type": "input"
+    "type": "radio",
+    "choices": ["Fuera de España", "Albacete", "Alacant", "Almería", "Araba", "Asturias", "Ávila", "Badajoz", "Illes Balears", "Barcelona", "Bizkaia", "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castelló", "Ciudad Real", "Córdoba", "A Coruña", "Cuenca", "Gipuzkoa", "Girona", "Granada", "Guadalajara", "Huelva", "Huesca", "Jaén", "León", "Lleida", "Lugo", "Madrid", "Málaga", "Murcia", "Navarra", "Ourense", "Palencia", "Las Palmas", "Pontevedra", "La Rioja", "Salamanca", "Santa Cruz de Tenerife", "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "València", "Valladolid", "Zamora", "Zaragoza", "Ceuta", "Melilla"]
   },
   "dmedu": {
     "text": "¿Cuál es el máximo nivel educativo alcanzado?",
     "desc": "",
     "type": "radio",
-    "choices": ["No tiene estudios educación formal", "Primaria", "Secundaria", "Universitaria", "PostGrado", "No sabe/No contesta"]
+    "choices": ["No tiene estudios educación formal", "Primaria", "Secundaria", "Universitaria", "PostGrado", "NS/NC"]
   },
   "dmpro": {
     "text": "Rama de actividad professional",
     "desc": "",
     "type": "radio",
-    "choices": ["No estoy trabajando"]
+    "choices": ["No estoy trabajando", "Administración Pública y defensa", "Actividades artísticas, recreativas y de entretenimiento", "Actividades profesionales, científicas y técnicas", "Actividades administrativas y servicios auxiliares", "Actividades financieras y de seguros", "Agricultura y ganadería, silvicultura y pesca", "Actividades inmobiliarias", "Construcción", "Comercio" , "Empleo doméstico", "Educación", "Hostelería", "Industria", "Información y comunicaciones", "Minería", "Sanidad y servicios sociales", "Suministro de energía eléctrica, gas, vapor y aire acondicionado", "Suministro de agua y saneamiento", "Transporte"]
   },
   "dmjob": {
     "text": "¿Cuál de las siguientes describe mejor tu situación actual de empleo?",
     "desc": "",
     "type": "radio",
-    "choices": ["Contrato a tiempo parcial", "Contratado a tiempo parcial o por horas", "Autónomo o por cuenta propia", "Desempleado", "Estudiante", "Jubilado", "No sabe/No contesta"]
+    "choices": ["Contrato a tiempo parcial", "Contratado a tiempo parcial o por horas", "Autónomo o por cuenta propia", "Desempleado", "Estudiante", "Jubilado", "NS/NC"]
   },
   "dmrel": {
     "text": "¿Cómo auto-definiría su punto de vista religioso? ",
     "desc": "",
     "type": "radio",
-    "choices": ["Católico", "Evangélico o protestante", "Judío", "Islámico", "Budista", "No Creyente/Ateo/Agnóstico", "No sabe/No contesta"]
+    "choices": ["Católico", "Evangélico o protestante", "Judío", "Islámico", "Budista", "No Creyente/Ateo/Agnóstico", "NS/NC"]
   },
   "dmpol": {
     "text": "¿Podría decir cuál es la orientación política por la cual siente más cercanía?",
     "desc": "",
     "type": "radio",
-    "choices": ["Izquierda", "Centro", "Derecha", "Prefiere no decir"]
+    "choices": ["Izquierda", "Centro", "Derecha", "NS/NC"]
   },
   "ruttv": {
     "text": "TV Información",
     "desc": "",
     "type": "radio",
-    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
+    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "NS/NC"]
   },
   "rutin": {
     "text": "Internet Información",
     "desc": "",
     "type": "radio",
-    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
+    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "NS/NC"]
   },
   "rutso": {
     "text": "Redes Sociales: Twitter, Facebook,  Instagram otras",
     "desc": "",
     "type": "radio",
-    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
+    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "NS/NC"]
   },
   "rutre": {
     "text": "Lectura Libros",
     "desc": "",
     "type": "radio",
-    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
+    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "NS/NC"]
   },
   "rutwa": {
     "text": "Mensajes: WhatsApp",
     "desc": "",
     "type": "radio",
-    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "No sabe/No contesta"]
+    "choices": ["Diario", "Algunas veces en la semana", "Algunas veces al mes", "Algunas veces en los últimos 12 meses", "Nunca", "NS/NC"]
   },
   "dmtec": {
     "text": "¿Cómo calificarías tu habilidad en el uso de tecnología?",
     "desc": "",
     "type": "radio",
-    "choices": ["Básica", "Media", "Avanzada", "No sabe/No contesta"]
+    "choices": ["Básica", "Media", "Avanzada", "NS/NC"]
   }
 }
