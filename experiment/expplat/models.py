@@ -16,6 +16,8 @@ class News(models.Model):
     doc = models.CharField(max_length=200)
     source = models.CharField(max_length=100)
     title = models.CharField(max_length=300)
+    ver_doc = models.CharField(max_length=200)
+    ver_title = models.CharField(max_length=300)
 
     def __str__(self):
         return self.doc
