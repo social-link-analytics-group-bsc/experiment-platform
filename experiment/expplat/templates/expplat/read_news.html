@@ -1,9 +1,120 @@
 
-{% extends "base.html" %}
-{% block containercontent %}
-{% with doc=doc target=target moreread=moreread moreans=moreans %}
-{% endwith %}
 
-<iframe class="embed-responsive-item" style="width: 100%; height: 100%;" src="{{doc}}"></iframe>
+<!DOCTYPE html>
+<html lang="en">
 
-{% endblock %}
+<head>
+	<title>experiment sample platform {% block title %}{% endblock %}</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+	<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+
+hr.tophr {
+  margin-top: 30px !important;
+}
+
+
+.jumbotron {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  margin-bottom: 0;
+  background-color: #fff;
+}
+@media (min-width: 768px) {
+  .jumbotron {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+.jumbotron p:last-child {
+  margin-bottom: 0;
+}
+
+.jumbotron h1 {
+  font-weight: 300;
+}
+
+.jumbotron .container {
+  max-width: 40rem;
+}
+
+.center-uri {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  //border: 3px solid green;
+}
+
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer p {
+  margin-bottom: .25rem;
+}
+
+
+.bottom-uri {
+  margin-bottom: 10px !important;
+}
+
+
+
+</style>
+
+</head>
+
+<body>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap.bundle.min.js"></script>
+
+    <div class="progress">
+      <div class="progress-bar w-{{ progress }} bg-info" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+	<div class="text-center">
+		<div class="row">
+			<div class="col-sm-12">
+				<br>
+				<div class="alert alert-light" role="alert">
+					<p>Esta noticia fue publicada recientemente en un medio de comunicación digital. Favor leala completa para responder a la encuesta.</p>
+					<p style="display: {{moreread}};">Al terminar pulse <a href="{% url 'expplat:read_news' %}"><span class="badge badge-info">SIGUIENTE</span></a></p>
+					<p style="display: {{moreans}};">Al terminar pulse <a href="{% url 'expplat:answer' %}"><span class="badge badge-info">SIGUIENTE</span></a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<hr class="tophr">
+
+	<div class="container center-uri">
+		<iframe class="embed-responsive-item" style="width: 100%; height: 100%;" src="{{doc}}"></iframe>
+	</div>
+
+	<div class="footer text-center bottom-uri">
+		<hr>
+	</div>
+
+
+</body>
+
+</html>
