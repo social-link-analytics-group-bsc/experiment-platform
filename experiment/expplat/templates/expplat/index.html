@@ -1,30 +1,139 @@
 
-{% extends "base.html" %}
-{% block containercontent %}
-{% with moreread=moreread moreans=moreans %}
-{% endwith %}
 
-<div class="text-center">
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>experiment sample platform {% block title %}{% endblock %}</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+	<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+
+hr.tophr {
+  margin-top: 30px !important;
+}
+
+
+.jumbotron {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  margin-bottom: 0;
+  background-color: #fff;
+}
+@media (min-width: 768px) {
+  .jumbotron {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+.jumbotron p:last-child {
+  margin-bottom: 0;
+}
+
+.jumbotron h1 {
+  font-weight: 300;
+}
+
+.jumbotron .container {
+  max-width: 40rem;
+}
+
+.center-uri {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //border: 3px solid green;
+}
+
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer p {
+  margin-bottom: .25rem;
+}
+
+
+.bottom-uri {
+  margin-bottom: 10px !important;
+}
+
+
+
+</style>
+
+</head>
+
+<body>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap.bundle.min.js"></script>
+
+	<div class="text-center">
+		<div class="row">
+			<div class="col-sm-12">
+				<br>
+			</div>
+		</div>
+	</div>
+
+	<hr class="tophr">
+
+	<div class="container center-uri">
+		<div class="text-center">
     <div class="container">
-      <h1>Estudio de percepción de la información</h1>
-      <p class="lead text-muted">[introduction to the experiment][introduction to the experiment][introduction to the experiment][introduction to the experiment][introduction to the experiment]</p>
-      <p><a href="{% url 'expplat:read_news' %}" class="btn btn-secondary">Empezar</a></p>
+        <br>
+      <h1>Estudio sobre medios de comunicación digital</h1>
+		<p class="lead text-muted">El Barcelona Supercomputing Center junto a la Universidad de Navarra está realizando una investigación sobre medios de comunicación digital. Nos gustaría saber su opinión respecto a los contenidos para mejorar las herramientas actuales. La encuesta sólo le tomará [] minutos y sus respuestas son totalmente anónimas, la información proporcionada será utilizada únicamente para fines de la investigación.</p>
+		<p class="lead text-muted">Si tienes alguna pregunta sobre la encuesta, puede enviarnos un correo electrónico a <strong>algo@algo.com</strong>.</p>
+		<p class="lead text-muted">Su participación es muy valiosa para nosotros. Muchas gracias por su tiempo.</p>
+      <br>
+      <h1><a href="{% url 'expplat:read_news' %}" class="btn btn-info btn-lg">Empezar</a></h1>
         <br><br>
 
                 {% load static %}
         <div class="row">
+            <!--
+            <div class="col-sm-12">
+                <img style="height: 370px; width: auto;" src="{% static "expplat/logos.jpg" %}">
+            </div>
+            -->
             <div class="col-sm-6">
-
-<img style="height: 120px; width: auto;" src="{% static "expplat/logo_nafarroa.jpg" %}">
+                <img style="height: 120px; width: auto;" src="{% static "expplat/logo_nafarroa.jpg" %}">
             </div>
             <div class="col-sm-6">
-<img style="height: 120px; width: auto;" src="{% static "expplat/logo_bsc.jpg" %}">
-
+                <img style="height: 120px; width: auto;" src="{% static "expplat/logo_bsc.jpg" %}">
             </div>
         </div>
 
 
     </div>
 </div>
+	</div>
 
-{% endblock %}
+	<div class="footer text-center bottom-uri">
+		<hr>
+	</div>
+
+
+</body>
+
+</html>
