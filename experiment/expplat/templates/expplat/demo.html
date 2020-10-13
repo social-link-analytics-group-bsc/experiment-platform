@@ -120,7 +120,7 @@ footer p {
 
                             </div>
                             <label for="{{ que.question_code }}">{{ que.text }}*</label>
-                            <select required class="form-control" name="{{ que.question_code}}" id="{{ que.question_code }}">
+                            <select {% if que.required == True %}required{% endif %} class="form-control" name="{{ que.question_code}}" id="{{ que.question_code }}">
                                 <option value="" disabled selected>-- SELECCIONE UNA OPCIÓN --</option>
                             {% for choice in que.choice_set.all %}
                                 <option value="{{ choice.value }}">{{ choice.value }}</option>
@@ -130,7 +130,7 @@ footer p {
 
                         {% ifequal que.type|stringformat:"s" "input" %}
                             <h5>{{ que.text }}</h5>
-                            <input required type="text" name="{{ que.question_code}}" id="{{ que.question_code }}">
+                            <input {% if que.required == True %}required{% endif %} type="text" name="{{ que.question_code}}" id="{{ que.question_code }}">
                         {% endifequal %}
 
                         <br>

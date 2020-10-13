@@ -44,7 +44,8 @@ def inst(request):
             question_code=k,
             text=data[k]['text'],
             desc=data[k]['desc'],
-            type=QueTypes[data[k]['type']]
+            type=QueTypes[data[k]['type']],
+            required=data[k]['requested']
         )
         que.save()
 
