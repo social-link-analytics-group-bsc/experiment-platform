@@ -98,7 +98,7 @@ footer p {
                     <br>
                     <p>Esta encuesta se realiza en el marco del proyecto RRSSalud, financiado por la fundación BBVA. Durante la encuesta, usted fue invitado a leer dos noticias aleatorias; una de contenido verdadero y la otra de contenido falso. El propósito de la encuesta fue investigar el nivel de vulnerabilidad de las personas a las noticias falsas. Además, evaluar potenciales acciones posteriores a tomar a partir de las noticias leídas.</p>
                     <p>Las noticias visualizadas se encuentran relacionadas con algún aspecto de la pandemia COVID-19 y fueron extraídas de medios digitales de comunicación.</p>
-                    <p>Si desea conocer más información sobre el proyecto de investigación y el experimento favor contactar con [] o bien puede visitar el sitio web [].</p>
+                    <p>Si desea conocer más información sobre el proyecto de investigación y el experimento favor contactar con <strong>algo@algo.com</strong> o bien puede visitar el sitio web <a href="https://twitter.com/RRSSalud">rrssalud.com</a>.</p>
                 </div>
             </div>
             <hr>
@@ -125,6 +125,14 @@ footer p {
                 </div>
                 <div class="col-sm-12" style="display: {{news2.display_fake}};">
                     <h6>Fue desmentida en: <a href="{{ news2.ver_doc }}">{{ news2.ver_title }}</a></h6>
+                </div>
+            </div>
+            <hr>
+
+            {% load static %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <img style="height: 370px; width: auto;" src="{% static "expplat/logos.jpg" %}">
                 </div>
             </div>
 
