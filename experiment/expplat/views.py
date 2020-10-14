@@ -45,7 +45,7 @@ def inst(request):
             text=data[k]['text'],
             desc=data[k]['desc'],
             type=QueTypes[data[k]['type']],
-            required=data[k]['requested']
+            required=data[k]['required']
         )
         que.save()
 
