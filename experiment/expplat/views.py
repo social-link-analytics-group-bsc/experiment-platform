@@ -4,86 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 import random as rnd
-import json
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer
 
 
-def inst(request):
-
-    exp = Experiment.objects.all()[0]
-
-    typeRadio = QuestionType(
-        type="radio",
-        desc="Radio options choose just one"
-    )
-    typeRadio.save()
-
-    typeBool = QuestionType(
-        type="bool",
-        desc="Checked/unchecked"
-    )
-    typeBool.save()
-
-    typeInput = QuestionType(
-        type="input",
-        desc="String input"
-    )
-    typeInput.save()
-
-    QueTypes = {
-        'radio': typeRadio,
-        'bool': typeBool,
-        'input': typeInput
-    }
-
-    with open('expplat/quest.json', encoding='utf-8') as json_file:
-        data = json.load(json_file)
-
-    for k in data.keys():
-        que = Question(
-            question_code=k,
-            text=data[k]['text'],
-            desc=data[k]['desc'],
-            type=QueTypes[data[k]['type']],
-            required=data[k]['required']
-        )
-        que.save()
-
-        queexp = QuestionExperiment(
-            experiment_id=exp,
-            question_id=que
-        )
-        queexp.save()
-
-        if data[k]['type'] in ['radio']:
-            for ch in data[k]['choices']:
-                cho = Choice(
-                    question_id=que,
-                    value=ch
-                )
-                cho.save()
-            print('ale')
-
-
-    with open('expplat/news.json', encoding='utf-8') as json_file:
-        notis = json.load(json_file)
-
-    for n in notis:
-        new = News(
-            is_fake=n['is_fake'],
-            source=n['source'],
-            topic=n['topic'],
-            title=n['title'],
-            doc=n['doc'],
-            ver_doc=n['ver_doc'],
-            ver_title=n['ver_title']
-        )
-        new.save()
-
-    return render(request, 'expplat/index.html', {'moreread': 'none', 'moreans': 'none'})
-
-
-# Create your views here.
 def index(request):
 
     #TODO: how to choose the experiment? Env variable? Field of active experiment? Solve these deployment issues

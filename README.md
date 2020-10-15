@@ -9,6 +9,8 @@ Make sure you have MySQL instance running and a specific schema for the project.
 
 #### Migrate the database
 
+Run the following commands to create the database structure:
+
 ```
 python manage.py makemigrations expplat
 ```
@@ -17,22 +19,25 @@ python manage.py makemigrations expplat
 python manage.py migrate
 ```
 
+Create the super admin user that will access the database:
 ```
 python manage.py createsuperuser
 ```
 
-#### Create experiment and install initial data
+#### Load initial data
+
+Run the following command to load the initial data so that the platform can work:
+
+````
+python manage.py loaddata expplat
+````
+
+#### Visit the platform
+
+Activate the platform:
 
 ````
 python manage.py runserver
 ````
 
-Open you browser on the url provided in the terminal. You will see an error page, add ```/admin``` at the end of the url.
-
-Enter the username and password of the superuser created previously. Once inside the admin dashboard, create a new experiment.
-
-Now you can enter the web url adding ````/expplat/inst````. If the loading of initial data goes as expected, you will head to the index html.
-
-#### Visit the platform
-
-Finally everythin is prepared. Add to the url given in the terminal ````/expplat```` and follow the steps.
+Finally everything is prepared. Add to the url given in the terminal ````/expplat```` and follow the steps.
