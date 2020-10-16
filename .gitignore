@@ -127,5 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-.env.db
+.env.dev
 mysql
+.vscode
