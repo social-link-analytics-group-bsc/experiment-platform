@@ -1,6 +1,6 @@
 # Experiment Platform
 
-## Container Installation
+## Installation
 
 1. Install docker and docker-compose in your local machine. Check out the official installation [guidelines](https://docs.docker.com/install);
 2. Clone the repository `git clone https://github.com/social-link-analytics-group-bsc/experiment-platform.git`;
