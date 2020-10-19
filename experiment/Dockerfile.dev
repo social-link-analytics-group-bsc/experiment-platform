@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.6.5-alpine3.7
+FROM python:3.8-alpine3.12
 
 # set work directory
 WORKDIR /usr/src/app
@@ -9,13 +9,13 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install SO dependencies
-RUN apk --no-cache add --virtual build-dependencies \
-    py-mysqldb \
-    build-base \    
-    gcc \
-    libc-dev \
-    libffi-dev \
-    mariadb-dev
+# https://github.com/gliderlabs/docker-alpine/issues/181#issuecomment-444857401
+RUN apk add --no-cache mariadb-connector-c-dev ;\
+    apk add --no-cache --virtual .build-deps \
+        build-base \
+        mariadb-dev ;\
+    pip install mysqlclient;\
+    apk del .build-deps 
 
 # install app dependencies
 RUN pip install --upgrade pip
@@ -31,4 +31,4 @@ COPY ./ /usr/src/app/
 RUN chmod +x /usr/src/app/entrypoint.dev.sh
 
 # run entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.dev.sh"]
+ENTRYPOINT ["sh", "/usr/src/app/entrypoint.dev.sh"]
