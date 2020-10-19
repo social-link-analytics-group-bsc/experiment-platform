@@ -19,8 +19,8 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^je(k8w4y!azhi9+z(5%$=6j&rx)&7&qv9+=ma3%rwf(&edx9c'
+with open('experiment/expplat_secret_key.txt') as f:
+    SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -70,19 +70,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'experiment.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-#TODO: connect to MySQL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'experiment',
-        'USER': 'expadmin',
-        'PASSWORD': 'asdf',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
+        'OPTIONS': {
+            'read_default_file': 'experiment/expplat_db_conf.cnf',
+        },
     },
     'altra': {
         'ENGINE': 'django.db.backends.sqlite3',
