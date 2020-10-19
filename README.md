@@ -18,7 +18,7 @@ To stop containers run `docker-compose -f docker-compose.dev.yml down`
 
 ### Run container
 
-To run containers without building them `docker-compose -f docker-compsoe.dev.yml up`. The option `-d` can be include to run containers in background.
+To run containers without building them `docker-compose -f docker-compsoe.dev.yml up`. The option `-d` can be added to run containers in background.
 
 ### Clean-up
 
