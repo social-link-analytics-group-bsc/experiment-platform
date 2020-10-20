@@ -50,7 +50,7 @@ def index(request):
     request.session['news_true'] = true_new.id
     request.session['first_fake'] = first_fake
     request.session['state'] = "index"
-    request.session['experiment'] = exp
+    request.session['experiment'] = exp.experiment_code
 
     # user instance is initiated and the news and other useful information is saved
     usr = User(
