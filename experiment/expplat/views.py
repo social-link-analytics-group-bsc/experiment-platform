@@ -8,9 +8,29 @@ from .models import Experiment, News, User, QuestionType, Question, Choice, Ques
 from django.shortcuts import redirect
 from django.urls import reverse
 
+routes = {
+    'index': 'read_news',
+    'news1': 'read_news',
+    'news2': 'answer',
+    'answer': 'demo',
+    'demo': 'rutina',
+    'rutina': 'result',
+    'result': 'result'
+}
+
+
+def rightView(request, view):
+    return view == routes[request.session['state']]
+
 
 def noState(request):
     return redirect(reverse('expplat:index'))
+
+
+def goNextView(request):
+    dest = routes[request.session['state']]
+    print('lets go ' + 'expplat:' + dest)
+    return redirect(reverse('expplat:' + dest))
 
 
 def index(request):
@@ -89,8 +109,7 @@ def read_news(request):
         request.session['state'] = 'news2'
         new = News.objects.filter(id=request.session['new2'])[0]
     else:
-        target = 'expplat:index'
-        request.session['state'] = 'index'
+        return goNextView(request)
 
 
     #TODO: prepare other description variables for the template (like title)
@@ -101,10 +120,15 @@ def read_news(request):
 
 def answer(request):
 
+    viewState = 'answer'
+
     if 'state' not in request.session.keys():
         return noState(request)
 
-    request.session['state'] = 'answer'
+    if not rightView(request, viewState):
+        return goNextView(request)
+
+    request.session['state'] = viewState
     exp = request.session['experiment']
 
     #TODO: save time in user
@@ -153,11 +177,17 @@ def answer(request):
 
 def demo(request):
 
+    viewState = 'demo'
+
     if 'state' not in request.session.keys():
         return noState(request)
 
+    if not rightView(request, viewState):
+        return goNextView(request)
+
     data = request.POST
 
+    request.session['state'] = viewState
     exp = request.session['experiment']
     user_id = request.session['user_id']
     usr = User.objects.filter(id=user_id)[0]
@@ -230,12 +260,17 @@ def demo(request):
 
 def rutina(request):
 
+    viewState = 'rutina'
 
     if 'state' not in request.session.keys():
         return noState(request)
 
+    if not rightView(request, viewState):
+        return goNextView(request)
+
     data = request.POST
 
+    request.session['state'] = viewState
     exp = request.session['experiment']
     user_id = request.session['user_id']
     usr = User.objects.filter(id=user_id)[0]
@@ -271,11 +306,17 @@ def rutina(request):
 
 def result(request):
 
+    viewState = 'result'
+
     if 'state' not in request.session.keys():
         return noState(request)
 
+    if not rightView(request, viewState):
+        return goNextView(request)
+
     data = request.POST
 
+    request.session['state'] = viewState
     exp = request.session['experiment']
     user_id = request.session['user_id']
     usr = User.objects.filter(id=user_id)[0]
