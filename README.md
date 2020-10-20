@@ -10,5 +10,5 @@
 6. Set the configuration parameters of the database in `.env.db`;
 7. Set the `SECRET_KEY` as well as the configuration parameters of the database in `.env`;
 8. Build docker container `docker-compose -f docker-compose.yml up --build -d`. Once containers are fully created, you can watch the logs with `docker-compose -f docker-compose.yml logs -f`, to see for the containers to be fully initialized;
-9. Load initial data `docker-compose -f docker-compose.prod.yml exec app python manage.py loaddata expplat`;
+9. Load initial data `docker-compose -f docker-compose.yml exec app python manage.py loaddata expplat`;
 10. Go to `http://localhost:1550/expplat` to access the tool
