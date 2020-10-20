@@ -5,9 +5,18 @@ from django.urls import reverse
 from django.utils import timezone
 import random as rnd
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer
+from django.shortcuts import redirect
+from django.urls import reverse
+
+
+def noState(request):
+    return redirect(reverse('expplat:index'))
 
 
 def index(request):
+
+    if 'state' in request.session.keys():
+        request.session.flush()
 
     #TODO: how to choose the experiment? Env variable? Field of active experiment? Solve these deployment issues
     exp = Experiment.objects.all()[0]
@@ -61,6 +70,10 @@ def index(request):
 
 
 def read_news(request):
+
+    if 'state' not in request.session.keys():
+        return noState(request)
+
     if request.session['state'] == 'index':
         target = 'expplat:read_news'
         moreread = 'block'
@@ -87,6 +100,10 @@ def read_news(request):
 
 
 def answer(request):
+
+    if 'state' not in request.session.keys():
+        return noState(request)
+
     request.session['state'] = 'answer'
     exp = request.session['experiment']
 
@@ -135,6 +152,9 @@ def answer(request):
 
 
 def demo(request):
+
+    if 'state' not in request.session.keys():
+        return noState(request)
 
     data = request.POST
 
@@ -210,6 +230,10 @@ def demo(request):
 
 def rutina(request):
 
+
+    if 'state' not in request.session.keys():
+        return noState(request)
+
     data = request.POST
 
     exp = request.session['experiment']
@@ -246,6 +270,9 @@ def rutina(request):
 
 
 def result(request):
+
+    if 'state' not in request.session.keys():
+        return noState(request)
 
     data = request.POST
 
