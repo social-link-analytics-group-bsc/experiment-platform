@@ -5,9 +5,38 @@ from django.urls import reverse
 from django.utils import timezone
 import random as rnd
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer
+from django.shortcuts import redirect
+from django.urls import reverse
+
+routes = {
+    'index': 'read_news',
+    'news1': 'read_news',
+    'news2': 'answer',
+    'answer': 'demo',
+    'demo': 'rutina',
+    'rutina': 'result',
+    'result': 'result'
+}
+
+
+def rightView(request, view):
+    return view == routes[request.session['state']]
+
+
+def noState(request):
+    return redirect(reverse('expplat:index'))
+
+
+def goNextView(request):
+    dest = routes[request.session['state']]
+    print('lets go ' + 'expplat:' + dest)
+    return redirect(reverse('expplat:' + dest))
 
 
 def index(request):
+
+    if 'state' in request.session.keys():
+        request.session.flush()
 
     #TODO: how to choose the experiment? Env variable? Field of active experiment? Solve these deployment issues
     exp = Experiment.objects.all()[0]
@@ -41,7 +70,7 @@ def index(request):
     request.session['news_true'] = true_new.id
     request.session['first_fake'] = first_fake
     request.session['state'] = "index"
-    request.session['experiment'] = exp
+    request.session['experiment'] = exp.experiment_code
 
     # user instance is initiated and the news and other useful information is saved
     usr = User(
@@ -61,6 +90,10 @@ def index(request):
 
 
 def read_news(request):
+
+    if 'state' not in request.session.keys():
+        return noState(request)
+
     if request.session['state'] == 'index':
         target = 'expplat:read_news'
         moreread = 'block'
@@ -76,8 +109,7 @@ def read_news(request):
         request.session['state'] = 'news2'
         new = News.objects.filter(id=request.session['new2'])[0]
     else:
-        target = 'expplat:index'
-        request.session['state'] = 'index'
+        return goNextView(request)
 
 
     #TODO: prepare other description variables for the template (like title)
@@ -87,7 +119,16 @@ def read_news(request):
 
 
 def answer(request):
-    request.session['state'] = 'answer'
+
+    viewState = 'answer'
+
+    if 'state' not in request.session.keys():
+        return noState(request)
+
+    if not rightView(request, viewState):
+        return goNextView(request)
+
+    request.session['state'] = viewState
     exp = request.session['experiment']
 
     #TODO: save time in user
@@ -136,8 +177,17 @@ def answer(request):
 
 def demo(request):
 
+    viewState = 'demo'
+
+    if 'state' not in request.session.keys():
+        return noState(request)
+
+    if not rightView(request, viewState):
+        return goNextView(request)
+
     data = request.POST
 
+    request.session['state'] = viewState
     exp = request.session['experiment']
     user_id = request.session['user_id']
     usr = User.objects.filter(id=user_id)[0]
@@ -210,8 +260,17 @@ def demo(request):
 
 def rutina(request):
 
+    viewState = 'rutina'
+
+    if 'state' not in request.session.keys():
+        return noState(request)
+
+    if not rightView(request, viewState):
+        return goNextView(request)
+
     data = request.POST
 
+    request.session['state'] = viewState
     exp = request.session['experiment']
     user_id = request.session['user_id']
     usr = User.objects.filter(id=user_id)[0]
@@ -247,8 +306,17 @@ def rutina(request):
 
 def result(request):
 
+    viewState = 'result'
+
+    if 'state' not in request.session.keys():
+        return noState(request)
+
+    if not rightView(request, viewState):
+        return goNextView(request)
+
     data = request.POST
 
+    request.session['state'] = viewState
     exp = request.session['experiment']
     user_id = request.session['user_id']
     usr = User.objects.filter(id=user_id)[0]
