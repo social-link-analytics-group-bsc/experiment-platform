@@ -71,11 +71,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'experiment.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-#TODO: connect to MySQL
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('SQL_ENGINE'),
@@ -127,6 +122,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
 #if not DEBUG:
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -171,3 +167,5 @@ LOGGING = {
         }
     }
 }
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
