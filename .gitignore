@@ -60,8 +60,7 @@ coverage.xml
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-experiment/expplat_secret_key.txt
-experiment/expplat_db_conf.cnf
+static
 
 # Flask stuff:
 instance/
