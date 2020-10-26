@@ -1,4 +1,4 @@
-docker-compose.yml merge=ours
+experiment/docker-compose.yml merge=ours
 README merge=ours
-Dockerfile merge=ours
-entrypoint.sh merge=ours
+experiment/Dockerfile merge=ours
+experiment/entrypoint.sh merge=ours
