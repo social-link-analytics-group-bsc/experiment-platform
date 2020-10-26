@@ -23,7 +23,7 @@ def rightView(request, view):
     return view == routes[request.session['state']]
 
 
-def noState(request):
+def goIndex(request):
     return redirect(reverse('expplat:index'))
 
 
@@ -31,6 +31,24 @@ def goNextView(request):
     dest = routes[request.session['state']]
     print('lets go ' + 'expplat:' + dest)
     return redirect(reverse('expplat:' + dest))
+
+
+def saveAnswers(startQue, data, usr):
+
+    startQuestions = Question.objects.filter(question_code__startswith=startQue)
+
+    for que in startQuestions:
+        if que.question_code in data.keys():
+            ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
+            ans.save()
+        else:
+            value = '-'
+            if que.type == 'radio':
+                value = 'unchecked'
+            elif que.type == 'input':
+                value = data[que.question_code]
+            ans = Answer(user_id=usr, question_id=que, value=value)
+            ans.save()
 
 
 def index(request):
@@ -92,7 +110,9 @@ def index(request):
 def read_news(request):
 
     if 'state' not in request.session.keys():
-        return noState(request)
+        return goIndex(request)
+
+    usr = User.objects.filter(id=request.session['user_id'])[0]
 
     if request.session['state'] == 'index':
         target = 'expplat:read_news'
@@ -100,6 +120,7 @@ def read_news(request):
         moreans = 'none'
         progress = 25
         request.session['state'] = 'news1'
+        # usr['date_news1'] = timezone.now()
         new = News.objects.filter(id=request.session['new1'])[0]
     elif request.session['state'] == 'news1':
         target = 'expplat:answer'
@@ -107,10 +128,13 @@ def read_news(request):
         moreans = 'block'
         progress = 50
         request.session['state'] = 'news2'
+        # usr['date_new2'] = timezone.now()
         new = News.objects.filter(id=request.session['new2'])[0]
     else:
-        return goNextView(request)
+        return goIndex(request)
+        #return goNextView(request)
 
+    usr.save()
 
     #TODO: prepare other description variables for the template (like title)
     doc = new.doc
@@ -123,17 +147,18 @@ def answer(request):
     viewState = 'answer'
 
     if 'state' not in request.session.keys():
-        return noState(request)
+        return goIndex(request)
 
     if not rightView(request, viewState):
-        return goNextView(request)
+        return goIndex(request)
+        #return goNextView(request)
 
     request.session['state'] = viewState
     exp = request.session['experiment']
 
-    #TODO: save time in user
-    user_id = request.session['user_id']
-    usr = User.objects.filter(id=user_id)[0]
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+    # usr['date_answer'] = timezone.now()
+    # usr.save()
 
     fysno = Question.objects.filter(question_code='fysno')[0]
     fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
@@ -180,10 +205,15 @@ def demo(request):
     viewState = 'demo'
 
     if 'state' not in request.session.keys():
-        return noState(request)
+        return goIndex(request)
 
     if not rightView(request, viewState):
-        return goNextView(request)
+        return goIndex(request)
+        #return goNextView(request)
+
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+    # usr['date_demo'] = timezone.now()
+    # usr.save()
 
     data = request.POST
 
@@ -263,10 +293,15 @@ def rutina(request):
     viewState = 'rutina'
 
     if 'state' not in request.session.keys():
-        return noState(request)
+        return goIndex(request)
 
     if not rightView(request, viewState):
-        return goNextView(request)
+        return goIndex(request)
+        #return goNextView(request)
+
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+    # usr['date_rutina'] = timezone.now()
+    # usr.save()
 
     data = request.POST
 
@@ -275,26 +310,22 @@ def rutina(request):
     user_id = request.session['user_id']
     usr = User.objects.filter(id=user_id)[0]
 
-    dem = Question.objects.filter(question_code__startswith="dm")
+    saveAnswers("dm", data, usr)
 
-    for que in dem:
-        if que.question_code in data.keys():
-            ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
-            ans.save()
-        else:
-            value = '-'
-            if que.type == 'radio':
-                value = 'unchecked'
-            elif que.type == 'input':
-                value = data[que.question_code]
-            ans = Answer(user_id=usr, question_id=que, value=value)
-            ans.save()
-
-    data = request.POST
-
-    exp = request.session['experiment']
-    user_id = request.session['user_id']
-    usr = User.objects.filter(id=user_id)[0]
+    # dem = Question.objects.filter(question_code__startswith="dm")
+    #
+    # for que in dem:
+    #     if que.question_code in data.keys():
+    #         ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
+    #         ans.save()
+    #     else:
+    #         value = '-'
+    #         if que.type == 'radio':
+    #             value = 'unchecked'
+    #         elif que.type == 'input':
+    #             value = data[que.question_code]
+    #         ans = Answer(user_id=usr, question_id=que, value=value)
+    #         ans.save()
 
     rut = Question.objects.filter(question_code__startswith="rut")
 
@@ -309,10 +340,15 @@ def result(request):
     viewState = 'result'
 
     if 'state' not in request.session.keys():
-        return noState(request)
+        return goIndex(request)
 
     if not rightView(request, viewState):
-        return goNextView(request)
+        return goIndex(request)
+        #return goNextView(request)
+
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+    # usr['date_result'] = timezone.now()
+    # usr.save()
 
     data = request.POST
 
@@ -321,20 +357,22 @@ def result(request):
     user_id = request.session['user_id']
     usr = User.objects.filter(id=user_id)[0]
 
-    dem = Question.objects.filter(question_code__startswith="dm")
+    saveAnswers("rut", data, usr)
 
-    for que in dem:
-        if que.question_code in data.keys():
-            ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
-            ans.save()
-        else:
-            value = '-'
-            if que.type == 'radio':
-                value = 'unchecked'
-            elif que.type == 'input':
-                value = data[que.question_code]
-            ans = Answer(user_id=usr, question_id=que, value=value)
-            ans.save()
+    # dem = Question.objects.filter(question_code__startswith="dm")
+    #
+    # for que in dem:
+    #     if que.question_code in data.keys():
+    #         ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
+    #         ans.save()
+    #     else:
+    #         value = '-'
+    #         if que.type == 'radio':
+    #             value = 'unchecked'
+    #         elif que.type == 'input':
+    #             value = data[que.question_code]
+    #         ans = Answer(user_id=usr, question_id=que, value=value)
+    #         ans.save()
 
     #TODO: get the correct news from session keys or user instance
     news1 = get_object_or_404(News, pk=request.session['new1'])
