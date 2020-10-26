@@ -32,6 +32,12 @@ class User(models.Model):
     user_agent = models.CharField(max_length=20)
     origin = models.CharField(max_length=50)
     date_arrive = models.DateTimeField()
+    # date_news1 = models.DateTimeField()
+    # date_news1 = models.DateTimeField()
+    # date_answer = models.DateTimeField()
+    # date_demo = models.DateTimeField()
+    # date_rutina = models.DateTimeField()
+    # date_result = models.DateTimeField()
     #TODO: add the other missing fields
 
     def __str__(self):
