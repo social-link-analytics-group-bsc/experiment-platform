@@ -1,0 +1,4 @@
+docker-compose.yml merge=ours
+README merge=ours
+Dockerfile merge=ours
+entrypoint.sh merge=ours
