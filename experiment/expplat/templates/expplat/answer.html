@@ -151,7 +151,7 @@
                                 -->
                                 <h4><strong>{{news1.title}}</strong></h4>
                                 <hr>
-                                <p>Considera la noticia verdadera?*</p>
+                                <p>Considera la noticia verdadera?* (<a href="{{ news1.doc }}" target="_blank">volver a leer la noticia</a>)</p>
                                 {% for choice in quest1.choice_set.all %}
 
                                     <div class="form-check form-check-inline">
@@ -210,7 +210,7 @@
                                 -->
                                 <h4><strong>{{news2.title}}</strong></h4>
                                 <hr>
-                                <p>Considera que la noticia es verdadera?*</p>
+                                <p>Considera que la noticia es verdadera?* (<a href="{{ news2.doc }}" target="_blank">volver a leer la noticia</a>)</p>
                                 {% for choice in quest2.choice_set.all %}
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" required type="radio" name="{{ quest2.question_code}}" id="quest2_{{ choice.value }}" value="{{ choice.value }}">
