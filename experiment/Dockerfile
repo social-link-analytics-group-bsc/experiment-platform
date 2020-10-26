@@ -54,8 +54,8 @@ RUN pip install --no-cache /wheels/*
 
 RUN apt-get update & apt-get install -y netcat-openbsd libmariadb-dev
 
-# copy entrypoint.prod.sh
-COPY ./entrypoint.prod.sh $APP_HOME
+# copy entrypoint.sh
+COPY ./entrypoint.sh $APP_HOME
 
 # copy project
 COPY . $APP_HOME
@@ -71,6 +71,6 @@ USER app
 #RUN python manage.py migrate
 
 # add execution permission
-RUN chmod +x $APP_HOME/entrypoint.prod.sh
+RUN chmod +x $APP_HOME/entrypoint.sh
 
-ENTRYPOINT ["/home/app/web/entrypoint.prod.sh"]
+ENTRYPOINT ["/home/app/web/entrypoint.sh"]
