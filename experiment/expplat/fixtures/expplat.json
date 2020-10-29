@@ -161,7 +161,7 @@
   {"model": "expplat.choice", "pk": 66, "fields": {"question_id": 59, "value": "Valladolid"}},
   {"model": "expplat.choice", "pk": 67, "fields": {"question_id": 59, "value": "Zamora"}},
   {"model": "expplat.choice", "pk": 68, "fields": {"question_id": 59, "value": "Zaragoza"}},
-  {"model": "expplat.choice", "pk": 69, "fields": {"question_id": 60, "value": "No tiene estudios educación formal"}},
+  {"model": "expplat.choice", "pk": 69, "fields": {"question_id": 60, "value": "No tiene estudios en educación formal"}},
   {"model": "expplat.choice", "pk": 70, "fields": {"question_id": 60, "value": "Primaria"}},
   {"model": "expplat.choice", "pk": 71, "fields": {"question_id": 60, "value": "Secundaria"}},
   {"model": "expplat.choice", "pk": 72, "fields": {"question_id": 60, "value": "Universitaria"}},
