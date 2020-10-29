@@ -102,7 +102,7 @@
 
                     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-                    <form action="{% url 'expplat:demo' %}" method="post">
+                    <form id="formAnswer" action="{% url 'expplat:demo' %}" method="post">
                     {% csrf_token %}
 
                         <div class="row">
@@ -130,7 +130,7 @@
 
                                 <p>Por favor justifique su respuesta con una o varias opciones:</p>
                                 {% for quesno1 in quest1no %}
-                                    <input type="checkbox" name="{{ quesno1.question_code}}" id="{{ quesno1.question_code }}" value="off">
+                                    <input type="checkbox" name="no1" id="{{ quesno1.question_code }}" value="off">
                                     <label for="{{ quesno1.question_code }}">{{ quesno1.text }}</label><br>
                                 {% endfor %}
 
@@ -141,7 +141,7 @@
 
                                 <p>Por favor justifique su respuesta con una o varias opciones:</p>
                                 {% for quesys1 in quest1ys %}
-                                    <input type="checkbox" name="{{ quesys1.question_code}}" id="{{ quesys1.question_code }}" value="off">
+                                    <input type="checkbox" name="yes1" id="{{ quesys1.question_code }}" value="off">
                                     <label for="{{ quesys1.question_code }}">{{ quesys1.text }}</label><br>
                                 {% endfor %}
 
@@ -153,7 +153,7 @@
 
                                 <p>Qué acciones tomará después de leer la noticia?</p>
                                 {% for quesys1 in quest1af %}
-                                    <input type="checkbox" name="{{ quesys1.question_code}}" id="{{ quesys1.question_code }}" value="off">
+                                    <input type="checkbox" name="af1" id="{{ quesys1.question_code }}" value="off">
                                     <label for="{{ quesys1.question_code }}">{{ quesys1.text }}</label><br>
                                 {% endfor %}
 
@@ -187,7 +187,7 @@
 
                                 <p>Por favor justifique su respuesta con una o varias opciones:</p>
                                 {% for quesno2 in quest2no %}
-                                    <input type="checkbox" name="{{ quesno2.question_code}}" id="{{ quesno2.question_code }}" value="off">
+                                    <input type="checkbox" name="no2" id="{{ quesno2.question_code }}" value="off">
                                     <label for="{{ quesno2.question_code }}">{{ quesno2.text }}</label><br>
                                 {% endfor %}
 
@@ -198,7 +198,7 @@
 
                                 <p>Por favor justifique su respuesta con una o varias opciones:</p>
                                 {% for quesys2 in quest2ys %}
-                                    <input type="checkbox" name="{{ quesys2.question_code}}" id="{{ quesys2.question_code }}" value="off">
+                                    <input type="checkbox" name="yes2" id="{{ quesys2.question_code }}" value="off">
                                     <label for="{{ quesys2.question_code }}">{{ quesys2.text }}</label><br>
                                 {% endfor %}
 
@@ -210,7 +210,7 @@
 
                                 <p>Qué acciones tomará después de leer la noticia?</p>
                                 {% for quesys2 in quest2af %}
-                                    <input type="checkbox" name="{{ quesys2.question_code}}" id="{{ quesys2.question_code }}" value="off">
+                                    <input type="checkbox" name="af2" id="{{ quesys2.question_code }}" value="off">
                                     <label for="{{ quesys2.question_code }}">{{ quesys2.text }}</label><br>
                                 {% endfor %}
 
@@ -236,30 +236,95 @@
     <script>
 
         $(document).ready(function () {
+
+            const form = document.querySelector('#formAnswer');
+
+            var yes1selected = false
+            var no1selected = false
+            var yes2selected = false
+            var no1selected = false
+
+            function init(selected, group) {
+                console.log('init');
+                console.log(selected);
+                const checkboxes = form.querySelectorAll('input[name='+group+']');
+                console.log(checkboxes);
+                const checkboxLength = checkboxes.length;
+                console.log(checkboxLength);
+                const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
+                console.log('firstCheckbox');
+                console.log(firstCheckbox);
+                if (firstCheckbox) {
+                    for (let i = 0; i < checkboxLength; i++) { checkboxes[i].addEventListener('change', function(){checkValidity(selected, checkboxLength, checkboxes, firstCheckbox)} ); }
+                    checkValidity(selected, checkboxLength, checkboxes, firstCheckbox);
+                }
+            }
+
+            function checkValidity(selected, checkboxLength, checkboxes, firstCheckbox) {
+                console.log('----------------------------------------');
+                console.log('checkValidity');
+                console.log(selected);
+                console.log('checkboxLength: ', checkboxLength);
+                console.log(checkboxes);
+                console.log('firstCheckbox');
+                console.log(firstCheckbox);
+                const errorMessage = !isChecked(selected, checkboxLength, checkboxes) ? 'Com4 at least one checkbox must be selected.' : '';
+                firstCheckbox.setCustomValidity(errorMessage);
+                console.log('----------------------------------------');
+                console.log('----------------------------------------');
+            }
+
+            function isChecked(selected, checkboxLength, checkboxes) {
+                console.log('isChecked');
+                if(!selected){ console.log('not selected'); return true; }
+                for (let i = 0; i < checkboxLength; i++) { if (checkboxes[i].checked){ return true; }}
+                return false;
+            }
+
+            init(true, "af1");
+            init(true, "af2");
+
             $("#quest1_si").on("change",function(){
-                console.log("que si")
+                console.log("que si 1")
                 $("#justific1-ys").removeClass("d-none");
                 $("#justific1-no").addClass("d-none")
                 $("#justific1-af").removeClass("d-none");
+                yes1selected = true;
+                no1selected = false;
+                init(yes1selected, "yes1");
+                init(no1selected, "no1");
             });
             $("#quest1_no").on("change",function(){
-                console.log("que no")
+                console.log("que no 1")
                 $("#justific1-no").removeClass("d-none");
                 $("#justific1-ys").addClass("d-none")
                 $("#justific1-af").removeClass("d-none");
+                yes1selected = false;
+                no1selected = true;
+                init(yes1selected, "yes1");
+                init(no1selected, "no1");
             });
             $("#quest2_si").on("change",function(){
-                console.log("que si")
+                console.log("que si 2");
                 $("#justific2-ys").removeClass("d-none");
                 $("#justific2-no").addClass("d-none")
                 $("#justific2-af").removeClass("d-none");
+                yes2selected = true;
+                no2selected = false;
+                init(yes2selected, "yes2");
+                init(no2selected, "no2");
             });
             $("#quest2_no").on("change",function(){
-                console.log("que no")
+                console.log("que no 2");
                 $("#justific2-no").removeClass("d-none");
                 $("#justific2-ys").addClass("d-none")
                 $("#justific2-af").removeClass("d-none");
+                yes2selected = false;
+                no2selected = true;
+                init(yes2selected, "yes2");
+                init(no2selected, "no2");
             });
+
         });
 
     </script>

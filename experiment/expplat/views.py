@@ -114,15 +114,15 @@ def read_news(request):
 
     usr = User.objects.filter(id=request.session['user_id'])[0]
 
-    if request.session['state'] == 'index':
-        target = 'expplat:read_news'
+    if request.session['state'] in ['index', 'news2']:
+        target = 'expplat:read_news_2'
         moreread = 'block'
         moreans = 'none'
         progress = 25
         request.session['state'] = 'news1'
         # usr['date_news1'] = timezone.now()
         new = News.objects.filter(id=request.session['new1'])[0]
-    elif request.session['state'] == 'news1':
+    elif request.session['state'] in ['news1', 'answer']:
         target = 'expplat:answer'
         moreread = 'none'
         moreans = 'block'
@@ -149,8 +149,8 @@ def answer(request):
     if 'state' not in request.session.keys():
         return goIndex(request)
 
-    if not rightView(request, viewState):
-        return goIndex(request)
+    # if not rightView(request, viewState):
+    #     return goIndex(request)
         #return goNextView(request)
 
     request.session['state'] = viewState
@@ -207,78 +207,81 @@ def demo(request):
     if 'state' not in request.session.keys():
         return goIndex(request)
 
-    if not rightView(request, viewState):
-        return goIndex(request)
+    # if not rightView(request, viewState):
+    #     return goIndex(request)
         #return goNextView(request)
 
     usr = User.objects.filter(id=request.session['user_id'])[0]
     # usr['date_demo'] = timezone.now()
     # usr.save()
 
-    data = request.POST
-
-    request.session['state'] = viewState
-    exp = request.session['experiment']
-    user_id = request.session['user_id']
-    usr = User.objects.filter(id=user_id)[0]
-
-    fysno = Question.objects.filter(question_code='fysno')[0]
-    ans = Answer(user_id=usr, question_id=fysno, value=data['fysno'])
-    ans.save()
-
-    fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
-    fnox = Question.objects.filter(question_code__startswith="fno")
-    if data['fysno'] == 'si':
-        for que in fysx:
-            if que.question_code in data.keys():
-                ans = Answer(user_id=usr, question_id=que, value='checked')
-                ans.save()
-            else:
-                ans = Answer(user_id=usr, question_id=que, value='unchecked')
-                ans.save()
-        for que in fnox:
-            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
-            ans.save()
+    if len(request.POST.keys()) == 0:
+        print('here without post')
     else:
-        for que in fysx:
-            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
-            ans.save()
-        for que in fnox:
-            if que.question_code in data.keys():
-                ans = Answer(user_id=usr, question_id=que, value='checked')
-                ans.save()
-            else:
-                ans = Answer(user_id=usr, question_id=que, value='unchecked')
-                ans.save()
+        data = request.POST
 
-    tysno = Question.objects.filter(question_code='tysno')[0]
-    ans = Answer(user_id=usr, question_id=tysno, value=data['tysno'])
-    ans.save()
+        request.session['state'] = viewState
+        exp = request.session['experiment']
+        user_id = request.session['user_id']
+        usr = User.objects.filter(id=user_id)[0]
 
-    tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
-    tnox = Question.objects.filter(question_code__startswith="tno")
-    if data['tysno'] == 'si':
-        for que in tysx:
-            if que.question_code in data.keys():
-                ans = Answer(user_id=usr, question_id=que, value='checked')
+        fysno = Question.objects.filter(question_code='fysno')[0]
+        ans = Answer(user_id=usr, question_id=fysno, value=data['fysno'])
+        ans.save()
+
+        fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
+        fnox = Question.objects.filter(question_code__startswith="fno")
+        if data['fysno'] == 'si':
+            for que in fysx:
+                if que.question_code in data.keys():
+                    ans = Answer(user_id=usr, question_id=que, value='checked')
+                    ans.save()
+                else:
+                    ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                    ans.save()
+            for que in fnox:
+                ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
-            else:
-                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+        else:
+            for que in fysx:
+                ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
-        for que in tnox:
-            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
-            ans.save()
-    else:
-        for que in tysx:
-            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
-            ans.save()
-        for que in tnox:
-            if que.question_code in data.keys():
-                ans = Answer(user_id=usr, question_id=que, value='checked')
+            for que in fnox:
+                if que.question_code in data.keys():
+                    ans = Answer(user_id=usr, question_id=que, value='checked')
+                    ans.save()
+                else:
+                    ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                    ans.save()
+
+        tysno = Question.objects.filter(question_code='tysno')[0]
+        ans = Answer(user_id=usr, question_id=tysno, value=data['tysno'])
+        ans.save()
+
+        tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
+        tnox = Question.objects.filter(question_code__startswith="tno")
+        if data['tysno'] == 'si':
+            for que in tysx:
+                if que.question_code in data.keys():
+                    ans = Answer(user_id=usr, question_id=que, value='checked')
+                    ans.save()
+                else:
+                    ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                    ans.save()
+            for que in tnox:
+                ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
-            else:
-                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+        else:
+            for que in tysx:
+                ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
+            for que in tnox:
+                if que.question_code in data.keys():
+                    ans = Answer(user_id=usr, question_id=que, value='checked')
+                    ans.save()
+                else:
+                    ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                    ans.save()
 
     dem = Question.objects.filter(question_code__startswith="dm")
 
@@ -295,37 +298,40 @@ def rutina(request):
     if 'state' not in request.session.keys():
         return goIndex(request)
 
-    if not rightView(request, viewState):
-        return goIndex(request)
+    # if not rightView(request, viewState):
+    #     return goIndex(request)
         #return goNextView(request)
 
     usr = User.objects.filter(id=request.session['user_id'])[0]
     # usr['date_rutina'] = timezone.now()
     # usr.save()
 
-    data = request.POST
+    if len(request.POST.keys()) == 0:
+        print('here without post')
+    else:
+        data = request.POST
 
-    request.session['state'] = viewState
-    exp = request.session['experiment']
-    user_id = request.session['user_id']
-    usr = User.objects.filter(id=user_id)[0]
+        request.session['state'] = viewState
+        exp = request.session['experiment']
+        user_id = request.session['user_id']
+        usr = User.objects.filter(id=user_id)[0]
 
-    saveAnswers("dm", data, usr)
+        saveAnswers("dm", data, usr)
 
-    # dem = Question.objects.filter(question_code__startswith="dm")
-    #
-    # for que in dem:
-    #     if que.question_code in data.keys():
-    #         ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
-    #         ans.save()
-    #     else:
-    #         value = '-'
-    #         if que.type == 'radio':
-    #             value = 'unchecked'
-    #         elif que.type == 'input':
-    #             value = data[que.question_code]
-    #         ans = Answer(user_id=usr, question_id=que, value=value)
-    #         ans.save()
+        # dem = Question.objects.filter(question_code__startswith="dm")
+        #
+        # for que in dem:
+        #     if que.question_code in data.keys():
+        #         ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
+        #         ans.save()
+        #     else:
+        #         value = '-'
+        #         if que.type == 'radio':
+        #             value = 'unchecked'
+        #         elif que.type == 'input':
+        #             value = data[que.question_code]
+        #         ans = Answer(user_id=usr, question_id=que, value=value)
+        #         ans.save()
 
     rut = Question.objects.filter(question_code__startswith="rut")
 
@@ -342,37 +348,40 @@ def result(request):
     if 'state' not in request.session.keys():
         return goIndex(request)
 
-    if not rightView(request, viewState):
-        return goIndex(request)
+    # if not rightView(request, viewState):
+    #     return goIndex(request)
         #return goNextView(request)
 
     usr = User.objects.filter(id=request.session['user_id'])[0]
     # usr['date_result'] = timezone.now()
     # usr.save()
 
-    data = request.POST
+    if len(request.POST.keys()) == 0:
+        print('here without post')
+    else:
+        data = request.POST
 
-    request.session['state'] = viewState
-    exp = request.session['experiment']
-    user_id = request.session['user_id']
-    usr = User.objects.filter(id=user_id)[0]
+        request.session['state'] = viewState
+        exp = request.session['experiment']
+        user_id = request.session['user_id']
+        usr = User.objects.filter(id=user_id)[0]
 
-    saveAnswers("rut", data, usr)
+        saveAnswers("rut", data, usr)
 
-    # dem = Question.objects.filter(question_code__startswith="dm")
-    #
-    # for que in dem:
-    #     if que.question_code in data.keys():
-    #         ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
-    #         ans.save()
-    #     else:
-    #         value = '-'
-    #         if que.type == 'radio':
-    #             value = 'unchecked'
-    #         elif que.type == 'input':
-    #             value = data[que.question_code]
-    #         ans = Answer(user_id=usr, question_id=que, value=value)
-    #         ans.save()
+        # dem = Question.objects.filter(question_code__startswith="dm")
+        #
+        # for que in dem:
+        #     if que.question_code in data.keys():
+        #         ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
+        #         ans.save()
+        #     else:
+        #         value = '-'
+        #         if que.type == 'radio':
+        #             value = 'unchecked'
+        #         elif que.type == 'input':
+        #             value = data[que.question_code]
+        #         ans = Answer(user_id=usr, question_id=que, value=value)
+        #         ans.save()
 
     #TODO: get the correct news from session keys or user instance
     news1 = get_object_or_404(News, pk=request.session['new1'])
