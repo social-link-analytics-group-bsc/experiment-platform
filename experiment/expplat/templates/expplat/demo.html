@@ -127,7 +127,7 @@ footer p {
                             <div class="form-group">
 
                             </div>
-                            <label for="{{ que.question_code }}">{{ que.text }}*</label>
+                            <label for="{{ que.question_code }}">{{ que.text }}{% if que.required == True %}*{% endif %}</label>
                             <select {% if que.required == True %}required{% endif %} class="form-control" name="{{ que.question_code}}" id="{{ que.question_code }}">
                                 <option value="" disabled selected>-- SELECCIONE UNA OPCIÓN --</option>
                             {% for choice in que.choice_set.all %}
@@ -137,7 +137,7 @@ footer p {
                         {% endifequal %}
 
                         {% ifequal que.type|stringformat:"s" "input" %}
-                            <h5>{{ que.text }}</h5>
+                            <label for="{{ que.question_code }}">{{ que.text }}</label>
                             <input {% if que.required == True %}required{% endif %} type="text" name="{{ que.question_code}}" id="{{ que.question_code }}">
                         {% endifequal %}
 
