@@ -54,7 +54,7 @@ class QuestionType(models.Model):
 
 class Question(models.Model):
     question_code = models.CharField(max_length=5)
-    text = models.CharField(max_length=100)
+    text = models.CharField(max_length=200)
     desc = models.CharField(max_length=100)
     type = models.ForeignKey(QuestionType, on_delete=models.CASCADE)
     required = models.BooleanField(default=False)
