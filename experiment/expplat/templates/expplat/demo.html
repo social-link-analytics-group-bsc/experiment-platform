@@ -167,29 +167,37 @@ footer p {
             $("#dmedu").on("change",function(){
                 if($("#dmedu").val() == "Otro"){
                     $("#dmedo_div").removeClass("d-none");
+                    $("#dmedo").attr('required', true);
                 } else {
                     $("#dmedo_div").addClass("d-none");
+                    $("#dmedo").attr('required', false);
                 }
             });
             $("#dmpro").on("change",function(){
                 if($("#dmpro").val() == "Otro"){
                     $("#dmpoo_div").removeClass("d-none");
+                    $("#dmpoo").attr('required', true);
                 } else {
                     $("#dmpoo_div").addClass("d-none");
+                    $("#dmpoo").attr('required', false);
                 }
             });
             $("#dmjob").on("change",function(){
                 if($("#dmjob").val() == "Otro"){
                     $("#dmjoo_div").removeClass("d-none");
+                    $("#dmjoo").attr('required', true);
                 } else {
                     $("#dmjoo_div").addClass("d-none");
+                    $("#dmjoo").attr('required', false);
                 }
             });
             $("#dmrel").on("change",function(){
                 if($("#dmrel").val() == "Otro"){
                     $("#dmreo_div").removeClass("d-none");
+                    $("#dmreo").attr('required', true);
                 } else {
                     $("#dmreo_div").addClass("d-none");
+                    $("#dmreo").attr('required', false);
                 }
             });
         });
