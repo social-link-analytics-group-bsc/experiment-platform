@@ -51,6 +51,20 @@ def saveAnswers(startQue, data, usr):
             ans.save()
 
 
+def saveTimes(request, current):
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+    last_state = request.session['state']
+    fieldTime = 'time_' + last_state
+    fieldDate = 'date_' + last_state
+    fieldCurr = 'date_' + current
+    request.session[fieldCurr] = timezone.now()
+
+    timeSpent = request.session[fieldCurr] - request.session[fieldDate]
+
+    usr[fieldTime] = usr[fieldTime] + timeSpent.total_seconds()
+    usr.save()
+
+
 def index(request):
 
     if 'state' in request.session.keys():
@@ -89,6 +103,7 @@ def index(request):
     request.session['first_fake'] = first_fake
     request.session['state'] = "index"
     request.session['experiment'] = exp.experiment_code
+    request.session['date_index'] = timezone.now()
 
     # user instance is initiated and the news and other useful information is saved
     usr = User(
@@ -97,7 +112,14 @@ def index(request):
         origin='bsc.es', #TODO: get user origin from "request"
         browser_language='ca', #TODO: get browser_language from "request"
         user_agent='firefox', #TODO: get user agent from "request"
-        date_arrive=timezone.now()
+        date_arrive=timezone.now(),
+        time_index=0,
+        time_news1=0,
+        time_news2=0,
+        time_answer=0,
+        time_demo=0,
+        time_rutina=0,
+        time_result=0
     )
 
     # save in session the user_id to identify it in following steps
@@ -112,7 +134,6 @@ def read_news(request):
     if 'state' not in request.session.keys():
         return goIndex(request)
 
-    usr = User.objects.filter(id=request.session['user_id'])[0]
 
     if request.session['state'] in ['index', 'news2']:
         target = 'expplat:read_news_2'
@@ -120,7 +141,7 @@ def read_news(request):
         moreans = 'none'
         progress = 25
         request.session['state'] = 'news1'
-        # usr['date_news1'] = timezone.now()
+        saveTimes(request, 'news1')
         new = News.objects.filter(id=request.session['new1'])[0]
     elif request.session['state'] in ['news1', 'answer']:
         target = 'expplat:answer'
@@ -128,13 +149,12 @@ def read_news(request):
         moreans = 'block'
         progress = 50
         request.session['state'] = 'news2'
-        # usr['date_new2'] = timezone.now()
+        saveTimes(request, 'news2')
         new = News.objects.filter(id=request.session['new2'])[0]
     else:
         return goIndex(request)
         #return goNextView(request)
 
-    usr.save()
 
     #TODO: prepare other description variables for the template (like title)
     doc = new.doc
