@@ -88,7 +88,7 @@
   {"model": "expplat.question", "pk": 63, "fields": {"question_code": "dmpoo", "text": "Si ha seleccionado \"Otro\" en la pregunta anterior, escriba cuál es la actividad professional en la que trabaja:", "desc": "", "type": 3, "required": false}},
   {"model": "expplat.question", "pk": 64, "fields": {"question_code": "dmjob", "text": "¿Cuál de las siguientes opciones describe mejor tu situación actual de empleo?", "desc": "", "type": 1, "required": true}},
   {"model": "expplat.question", "pk": 65, "fields": {"question_code": "dmjoo", "text": "Si ha seleccionado \"Otro\" en la pregunta anterior, escriba cuál es su situación actual de empleo:", "desc": "", "type": 3, "required": false}},
-  {"model": "expplat.question", "pk": 66, "fields": {"question_code": "dmrel", "text": "¿Cómo auto-definiría su punto de vista religioso?", "desc": "", "type": 1, "required": false}},
+  {"model": "expplat.question", "pk": 66, "fields": {"question_code": "dmrel", "text": "¿Cómo autodefiniría su punto de vista religioso?", "desc": "", "type": 1, "required": false}},
   {"model": "expplat.question", "pk": 67, "fields": {"question_code": "dmreo", "text": "Si ha seleccionado \"Otro\" en la pregunta anterior, escriba cuál es su punto de vista religioso:", "desc": "", "type": 3, "required": false}},
   {"model": "expplat.question", "pk": 68, "fields": {"question_code": "dmpol", "text": "¿Podría decir cuál es la orientación política por la cual siente más cercanía?", "desc": "", "type": 1, "required": false}},
   {"model": "expplat.question", "pk": 69, "fields": {"question_code": "ruttv", "text": "TV Información", "desc": "", "type": 1, "required": true}},
