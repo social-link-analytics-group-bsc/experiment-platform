@@ -139,6 +139,11 @@
                                     <label for="{{ quesno1.question_code }}">{{ quesno1.text }}</label><br>
                                 {% endfor %}
 
+                                <div class="form-group d-none" id="{{ quest1no_otro.question_code }}_div">
+                                    <label for="{{ quest1no_otro.question_code }}">Explique por favor su justificación.</label>
+                                    <input class="form-control" type="text" name="{{ quest1no_otro.question_code }}" id="{{ quest1no_otro.question_code }}">
+                                </div>
+
                             </div>
                         </div>
                         <div class="row d-none" id="justific1-ys">
@@ -149,6 +154,11 @@
                                     <input type="checkbox" name="yes1" id="{{ quesys1.question_code }}" value="off">
                                     <label for="{{ quesys1.question_code }}">{{ quesys1.text }}</label><br>
                                 {% endfor %}
+
+                                <div class="form-group d-none" id="{{ quest1ys_otro.question_code }}_div">
+                                    <label for="{{ quest1ys_otro.question_code }}">Explique por favor su justificación.</label>
+                                    <input class="form-control" type="text" name="{{ quest1ys_otro.question_code }}" id="{{ quest1ys_otro.question_code }}">
+                                </div>
 
                             </div>
                         </div>
@@ -193,6 +203,11 @@
                                     <label for="{{ quesno2.question_code }}">{{ quesno2.text }}</label><br>
                                 {% endfor %}
 
+                                <div class="form-group d-none" id="{{ quest2no_otro.question_code }}_div">
+                                    <label for="{{ quest2no_otro.question_code }}">Explique por favor su justificación.</label>
+                                    <input class="form-control" type="text" name="{{ quest2no_otro.question_code }}" id="{{ quest2no_otro.question_code }}">
+                                </div>
+
                             </div>
                         </div>
                         <div class="row d-none" id="justific2-ys">
@@ -203,6 +218,11 @@
                                     <input type="checkbox" name="yes2" id="{{ quesys2.question_code }}" value="off">
                                     <label for="{{ quesys2.question_code }}">{{ quesys2.text }}</label><br>
                                 {% endfor %}
+
+                                <div class="form-group d-none" id="{{ quest2ys_otro.question_code }}_div">
+                                    <label for="{{ quest2ys_otro.question_code }}">Explique por favor su justificación.</label>
+                                    <input class="form-control" type="text" name="{{ quest2ys_otro.question_code }}" id="{{ quest2ys_otro.question_code }}">
+                                </div>
 
                             </div>
                         </div>
@@ -305,6 +325,43 @@
                 no2selected = true;
                 init(yes2selected, "yes2");
                 init(no2selected, "no2");
+            });
+
+            $("#tys10").on("change",function(){
+                if($("#tys10").is(":checked")){
+                    $("#tys10_div").removeClass("d-none");
+                    $("#tys10").attr('required', true);
+                } else {
+                    $("#tys10_div").addClass("d-none");
+                    $("#tys10").attr('required', false);
+                }
+            });
+            $("#tno12").on("change",function(){
+                if($("#tno12").is(":checked")){
+                    $("#tno12_div").removeClass("d-none");
+                    $("#tno12").attr('required', true);
+                } else {
+                    $("#tno12_div").addClass("d-none");
+                    $("#tno12").attr('required', false);
+                }
+            });
+            $("#fys10").on("change",function(){
+                if($("#fys10").is(":checked")){
+                    $("#fys10_div").removeClass("d-none");
+                    $("#fys10").attr('required', true);
+                } else {
+                    $("#fys10_div").addClass("d-none");
+                    $("#fys10").attr('required', false);
+                }
+            });
+            $("#fno12").on("change",function(){
+                if($("#fno12").is(":checked")){
+                    $("#fno12_div").removeClass("d-none");
+                    $("#fno12").attr('required', true);
+                } else {
+                    $("#fno12_div").addClass("d-none");
+                    $("#fno12").attr('required', false);
+                }
             });
 
         });

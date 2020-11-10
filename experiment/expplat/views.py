@@ -153,37 +153,49 @@ def answer(request):
     fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
     fnox = Question.objects.filter(question_code__startswith="fno")
     fafx = Question.objects.filter(question_code__startswith="faf")
+    fys10 = Question.objects.filter(question_code='fys10')[0]
+    fno12 = Question.objects.filter(question_code='fno12')[0]
 
     tysno = Question.objects.filter(question_code='tysno')[0]
     tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
     tnox = Question.objects.filter(question_code__startswith="tno")
     tafx = Question.objects.filter(question_code__startswith="taf")
+    tys10 = Question.objects.filter(question_code='tys10')[0]
+    tno12 = Question.objects.filter(question_code='tno12')[0]
 
     if request.session['first_fake']:
         quest1 = fysno
         quest1ys = fysx
+        quest1ys_otro = fys10
         quest1no = fnox
+        quest1no_otro = fno12
         quest1af = fafx
         quest2 = tysno
         quest2ys = tysx
+        quest2ys_otro = tys10
         quest2no = tnox
+        quest2no_otro = tno12
         quest2af = tafx
     else:
         quest1 = tysno
         quest1ys = tysx
+        quest1ys_otro = tys10
         quest1no = tnox
+        quest1no_otro = tno12
         quest1af = tafx
         quest2 = fysno
         quest2ys = fysx
+        quest2ys_otro = fys10
         quest2no = fnox
+        quest2no_otro = fno12
         quest2af = fafx
 
     news1 = get_object_or_404(News, pk=request.session['new1'])
     news2 = get_object_or_404(News, pk=request.session['new2'])
 
     return render(request, 'expplat/answer.html', {
-        'quest1': quest1, 'quest1ys': quest1ys, 'quest1no': quest1no, 'quest1af': quest1af,
-        'quest2': quest2, 'quest2ys': quest2ys, 'quest2no': quest2no, 'quest2af': quest2af,
+        'quest1': quest1, 'quest1ys': quest1ys, 'quest1ys_otro': quest1ys_otro, 'quest1no': quest1no, 'quest1no_otro': quest1no_otro, 'quest1af': quest1af,
+        'quest2': quest2, 'quest2ys': quest2ys, 'quest2ys_otro': quest2ys_otro, 'quest2no': quest2no, 'quest2no_otro': quest2no_otro, 'quest2af': quest2af,
         'news1': news1, 'news2': news2, 'progress': 75
     })
 
@@ -215,7 +227,10 @@ def demo(request):
         fnox = Question.objects.filter(question_code__startswith="fno")
         if data['fysno'] == 'si':
             for que in fysx:
-                if que.question_code in data.keys():
+                if que.question_code == 'fys10':
+                    ans = Answer(user_id=usr, question_id=que, value=data['fys10'])
+                    ans.save()
+                elif que.question_code in data.keys():
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
@@ -229,7 +244,10 @@ def demo(request):
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
             for que in fnox:
-                if que.question_code in data.keys():
+                if que.question_code == 'fno12':
+                    ans = Answer(user_id=usr, question_id=que, value=data['fno12'])
+                    ans.save()
+                elif que.question_code in data.keys():
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
@@ -244,7 +262,10 @@ def demo(request):
         tnox = Question.objects.filter(question_code__startswith="tno")
         if data['tysno'] == 'si':
             for que in tysx:
-                if que.question_code in data.keys():
+                if que.question_code == 'tys10':
+                    ans = Answer(user_id=usr, question_id=que, value=data['tys10'])
+                    ans.save()
+                elif que.question_code in data.keys():
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
@@ -258,7 +279,10 @@ def demo(request):
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
             for que in tnox:
-                if que.question_code in data.keys():
+                if que.question_code == 'tno12':
+                    ans = Answer(user_id=usr, question_id=que, value=data['tno12'])
+                    ans.save()
+                elif que.question_code in data.keys():
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
