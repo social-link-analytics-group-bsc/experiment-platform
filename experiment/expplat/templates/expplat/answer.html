@@ -330,37 +330,37 @@
             $("#tys10").on("change",function(){
                 if($("#tys10").is(":checked")){
                     $("#tys10_div").removeClass("d-none");
-                    $("#tys10").attr('required', true);
+                    $("#tys10_div").find("input").attr('required', true);
                 } else {
                     $("#tys10_div").addClass("d-none");
-                    $("#tys10").attr('required', false);
+                    $("#tys10_div").find("input").attr('required', false);
                 }
             });
             $("#tno12").on("change",function(){
                 if($("#tno12").is(":checked")){
                     $("#tno12_div").removeClass("d-none");
-                    $("#tno12").attr('required', true);
+                    $("#tno12_div").find("input").attr('required', true);
                 } else {
                     $("#tno12_div").addClass("d-none");
-                    $("#tno12").attr('required', false);
+                    $("#tno12_div").find("input").attr('required', false);
                 }
             });
             $("#fys10").on("change",function(){
                 if($("#fys10").is(":checked")){
                     $("#fys10_div").removeClass("d-none");
-                    $("#fys10").attr('required', true);
+                    $("#fys10_div").find("input").attr('required', true);
                 } else {
                     $("#fys10_div").addClass("d-none");
-                    $("#fys10").attr('required', false);
+                    $("#fys10_div").find("input").attr('required', false);
                 }
             });
             $("#fno12").on("change",function(){
                 if($("#fno12").is(":checked")){
                     $("#fno12_div").removeClass("d-none");
-                    $("#fno12").attr('required', true);
+                    $("#fno12_div").find("input").attr('required', true);
                 } else {
                     $("#fno12_div").addClass("d-none");
-                    $("#fno12").attr('required', false);
+                    $("#fno12_div").find("input").attr('required', false);
                 }
             });
 
