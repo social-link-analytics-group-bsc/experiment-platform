@@ -3,6 +3,7 @@
 <html lang="en">
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>experiment sample platform {% block title %}{% endblock %}</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
 	<script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
@@ -82,8 +83,6 @@ footer p {
   margin-bottom: 10px !important;
 }
 
-
-
 </style>
 
 </head>
@@ -102,59 +101,60 @@ footer p {
 	<div class="container center-uri">
 
 
-<div class="container">
+        <div class="container">
 
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>Perfil sociodemográfico</h2>
-        </div>
-    </div>
-    <hr>
-
-    <div class="row">
-        <div class="col-sm-12">
-
-            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
-            <form action="{% url 'expplat:rutina' %}" method="post">
-            {% csrf_token %}
-
-                {% for que in questions %}
-                <div class="row">
-                    <div class="col-sm-12">
-
-                        {% ifequal que.type|stringformat:"s" "radio" %}
-                            <div class="form-group">
-
-                            </div>
-                            <label for="{{ que.question_code }}">{{ que.text }}*</label>
-                            <select {% if que.required == True %}required{% endif %} class="form-control" name="{{ que.question_code}}" id="{{ que.question_code }}">
-                                <option value="" disabled selected>-- SELECCIONE UNA OPCIÓN --</option>
-                            {% for choice in que.choice_set.all %}
-                                <option value="{{ choice.value }}">{{ choice.value }}</option>
-                            {% endfor %}
-                            </select>
-                        {% endifequal %}
-
-                        {% ifequal que.type|stringformat:"s" "input" %}
-                            <h5>{{ que.text }}</h5>
-                            <input {% if que.required == True %}required{% endif %} type="text" name="{{ que.question_code}}" id="{{ que.question_code }}">
-                        {% endifequal %}
-
-                        <br>
-                    </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>Por favor, responda a las siguientes preguntas sobre Vd.</h2>
                 </div>
-                {% endfor %}
+            </div>
+            <hr>
 
-                <hr>
-                <input class="btn btn-info" type="submit" value="SIGUIENTE">
+            <div class="row">
+                <div class="col-sm-12">
 
-            </form>
+                    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+                    <form action="{% url 'expplat:rutina' %}" method="post">
+                    {% csrf_token %}
+
+                        {% for que in questions %}
+                        <div class="row">
+                            <div class="col-sm-12">
+
+                                {% ifequal que.type|stringformat:"s" "radio" %}
+                                    <div class="form-group">
+                                        <label for="{{ que.question_code }}">{{ que.text }}{% if que.required == True %}*{% endif %}</label>
+                                        <select {% if que.required == True %}required{% endif %} class="form-control" name="{{ que.question_code}}" id="{{ que.question_code }}">
+                                            <option value="" disabled selected>-- SELECCIONE UNA OPCIÓN --</option>
+                                        {% for choice in que.choice_set.all %}
+                                            <option value="{{ choice.value }}">{{ choice.value }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endifequal %}
+
+                                {% ifequal que.type|stringformat:"s" "input" %}
+                                    <div class="form-group d-none" id="{{ que.question_code }}_div">
+                                        <label for="{{ que.question_code }}">{{ que.text }}</label>
+                                        <input class="form-control" {% if que.required == True %}required{% endif %} type="text" name="{{ que.question_code}}" id="{{ que.question_code }}">
+                                    </div>
+                                {% endifequal %}
+
+                                <br>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <hr>
+                        <input class="btn btn-info" type="submit" value="SIGUIENTE">
+
+                    </form>
+
+                </div>
+            </div>
 
         </div>
-    </div>
-
-</div>
 
 	</div>
 
@@ -162,9 +162,49 @@ footer p {
 		<hr>
 	</div>
 
+    <script>
+
+        $(document).ready(function () {
+            $("#dmedu").on("change",function(){
+                if($("#dmedu").val() == "Otro"){
+                    $("#dmedo_div").removeClass("d-none");
+                    $("#dmedo").attr('required', true);
+                } else {
+                    $("#dmedo_div").addClass("d-none");
+                    $("#dmedo").attr('required', false);
+                }
+            });
+            $("#dmpro").on("change",function(){
+                if($("#dmpro").val() == "Otro"){
+                    $("#dmpoo_div").removeClass("d-none");
+                    $("#dmpoo").attr('required', true);
+                } else {
+                    $("#dmpoo_div").addClass("d-none");
+                    $("#dmpoo").attr('required', false);
+                }
+            });
+            $("#dmjob").on("change",function(){
+                if($("#dmjob").val() == "Otro"){
+                    $("#dmjoo_div").removeClass("d-none");
+                    $("#dmjoo").attr('required', true);
+                } else {
+                    $("#dmjoo_div").addClass("d-none");
+                    $("#dmjoo").attr('required', false);
+                }
+            });
+            $("#dmrel").on("change",function(){
+                if($("#dmrel").val() == "Otro"){
+                    $("#dmreo_div").removeClass("d-none");
+                    $("#dmreo").attr('required', true);
+                } else {
+                    $("#dmreo_div").addClass("d-none");
+                    $("#dmreo").attr('required', false);
+                }
+            });
+        });
+
+    </script>
 
 </body>
 
 </html>
-
-

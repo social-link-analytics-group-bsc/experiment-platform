@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>experiment sample platform {% block title %}{% endblock %}</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
 	<script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
@@ -115,12 +115,9 @@
 
                         <div class="row">
                             <div class="col-sm-12">
-                                <!--
-                                <h4>Considera que la noticia <strong>{{news1.title}}</strong> es verdadera?</h4>
-                                -->
                                 <h4><strong>{{news1.title}}</strong></h4>
                                 <hr>
-                                <p>Considera la noticia verdadera?* (<a href="{{ news1.doc }}" target="_blank">volver a leer la noticia</a>)</p>
+                                <p>¿Considera la noticia verdadera?* (<a href="{{ news1.doc }}" target="_blank">volver a leer la noticia</a>)</p>
                                 {% for choice in quest1.choice_set.all %}
 
                                     <div class="form-check form-check-inline">
@@ -136,22 +133,32 @@
                         <div class="row d-none" id="justific1-no">
                             <div class="col-sm-12">
 
-                                <p>Por favor justifique su respuesta con una o varias opciones:</p>
+                                <p>Por favor justifique su respuesta con <strong><u>una o varias opciones*</u></strong>:</p>
                                 {% for quesno1 in quest1no %}
                                     <input type="checkbox" name="no1" id="{{ quesno1.question_code }}" value="off">
                                     <label for="{{ quesno1.question_code }}">{{ quesno1.text }}</label><br>
                                 {% endfor %}
+
+                                <div class="form-group d-none" id="{{ quest1no_otro.question_code }}_div">
+                                    <label for="{{ quest1no_otro.question_code }}">Explique por favor su justificación.</label>
+                                    <input class="form-control" type="text" name="{{ quest1no_otro.question_code }}" id="{{ quest1no_otro.question_code }}">
+                                </div>
 
                             </div>
                         </div>
                         <div class="row d-none" id="justific1-ys">
                             <div class="col-sm-12">
 
-                                <p>Por favor justifique su respuesta con una o varias opciones:</p>
+                                <p>Por favor justifique su respuesta con <strong><u>una o varias opciones*</u></strong>:</p>
                                 {% for quesys1 in quest1ys %}
                                     <input type="checkbox" name="yes1" id="{{ quesys1.question_code }}" value="off">
                                     <label for="{{ quesys1.question_code }}">{{ quesys1.text }}</label><br>
                                 {% endfor %}
+
+                                <div class="form-group d-none" id="{{ quest1ys_otro.question_code }}_div">
+                                    <label for="{{ quest1ys_otro.question_code }}">Explique por favor su justificación.</label>
+                                    <input class="form-control" type="text" name="{{ quest1ys_otro.question_code }}" id="{{ quest1ys_otro.question_code }}">
+                                </div>
 
                             </div>
                         </div>
@@ -159,7 +166,7 @@
                         <div class="row d-none" id="justific1-af">
                             <div class="col-sm-12">
 
-                                <p>Qué acciones tomará después de leer la noticia?</p>
+                                <p>¿Qué acciones tomará después de leer la noticia?*</p>
                                 {% for quesys1 in quest1af %}
                                     <input type="checkbox" name="af1" id="{{ quesys1.question_code }}" value="off">
                                     <label for="{{ quesys1.question_code }}">{{ quesys1.text }}</label><br>
@@ -174,12 +181,9 @@
                         <div class="row">
                             <div class="col-sm-12">
 
-                                <!--
-                                <h4>Considera que la noticia <strong>{{news2.title}}</strong> es verdadera?</h4>
-                                -->
                                 <h4><strong>{{news2.title}}</strong></h4>
                                 <hr>
-                                <p>Considera que la noticia es verdadera?* (<a href="{{ news2.doc }}" target="_blank">volver a leer la noticia</a>)</p>
+                                <p>¿Considera que la noticia es verdadera?* (<a href="{{ news2.doc }}" target="_blank">volver a leer la noticia</a>)</p>
                                 {% for choice in quest2.choice_set.all %}
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" required type="radio" name="{{ quest2.question_code}}" id="quest2_{{ choice.value }}" value="{{ choice.value }}">
@@ -193,22 +197,32 @@
                         <div class="row d-none" id="justific2-no">
                             <div class="col-sm-12">
 
-                                <p>Por favor justifique su respuesta con una o varias opciones:</p>
+                                <p>Por favor justifique su respuesta con <strong><u>una o varias opciones*</u></strong>:</p>
                                 {% for quesno2 in quest2no %}
                                     <input type="checkbox" name="no2" id="{{ quesno2.question_code }}" value="off">
                                     <label for="{{ quesno2.question_code }}">{{ quesno2.text }}</label><br>
                                 {% endfor %}
+
+                                <div class="form-group d-none" id="{{ quest2no_otro.question_code }}_div">
+                                    <label for="{{ quest2no_otro.question_code }}">Explique por favor su justificación.</label>
+                                    <input class="form-control" type="text" name="{{ quest2no_otro.question_code }}" id="{{ quest2no_otro.question_code }}">
+                                </div>
 
                             </div>
                         </div>
                         <div class="row d-none" id="justific2-ys">
                             <div class="col-sm-12">
 
-                                <p>Por favor justifique su respuesta con una o varias opciones:</p>
+                                <p>Por favor justifique su respuesta con <strong><u>una o varias opciones*</u></strong>:</p>
                                 {% for quesys2 in quest2ys %}
                                     <input type="checkbox" name="yes2" id="{{ quesys2.question_code }}" value="off">
                                     <label for="{{ quesys2.question_code }}">{{ quesys2.text }}</label><br>
                                 {% endfor %}
+
+                                <div class="form-group d-none" id="{{ quest2ys_otro.question_code }}_div">
+                                    <label for="{{ quest2ys_otro.question_code }}">Explique por favor su justificación.</label>
+                                    <input class="form-control" type="text" name="{{ quest2ys_otro.question_code }}" id="{{ quest2ys_otro.question_code }}">
+                                </div>
 
                             </div>
                         </div>
@@ -216,7 +230,7 @@
                         <div class="row d-none" id="justific2-af">
                             <div class="col-sm-12">
 
-                                <p>Qué acciones tomará después de leer la noticia?</p>
+                                <p>¿Qué acciones tomará después de leer la noticia?*</p>
                                 {% for quesys2 in quest2af %}
                                     <input type="checkbox" name="af2" id="{{ quesys2.question_code }}" value="off">
                                     <label for="{{ quesys2.question_code }}">{{ quesys2.text }}</label><br>
@@ -253,15 +267,9 @@
             var no1selected = false
 
             function init(selected, group) {
-                console.log('init');
-                console.log(selected);
                 const checkboxes = form.querySelectorAll('input[name='+group+']');
-                console.log(checkboxes);
                 const checkboxLength = checkboxes.length;
-                console.log(checkboxLength);
                 const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
-                console.log('firstCheckbox');
-                console.log(firstCheckbox);
                 if (firstCheckbox) {
                     for (let i = 0; i < checkboxLength; i++) { checkboxes[i].addEventListener('change', function(){checkValidity(selected, checkboxLength, checkboxes, firstCheckbox)} ); }
                     checkValidity(selected, checkboxLength, checkboxes, firstCheckbox);
@@ -269,21 +277,11 @@
             }
 
             function checkValidity(selected, checkboxLength, checkboxes, firstCheckbox) {
-                console.log('----------------------------------------');
-                console.log('checkValidity');
-                console.log(selected);
-                console.log('checkboxLength: ', checkboxLength);
-                console.log(checkboxes);
-                console.log('firstCheckbox');
-                console.log(firstCheckbox);
                 const errorMessage = !isChecked(selected, checkboxLength, checkboxes) ? 'Com4 at least one checkbox must be selected.' : '';
                 firstCheckbox.setCustomValidity(errorMessage);
-                console.log('----------------------------------------');
-                console.log('----------------------------------------');
             }
 
             function isChecked(selected, checkboxLength, checkboxes) {
-                console.log('isChecked');
                 if(!selected){ console.log('not selected'); return true; }
                 for (let i = 0; i < checkboxLength; i++) { if (checkboxes[i].checked){ return true; }}
                 return false;
@@ -293,7 +291,6 @@
             init(true, "af2");
 
             $("#quest1_si").on("change",function(){
-                console.log("que si 1")
                 $("#justific1-ys").removeClass("d-none");
                 $("#justific1-no").addClass("d-none")
                 $("#justific1-af").removeClass("d-none");
@@ -303,7 +300,6 @@
                 init(no1selected, "no1");
             });
             $("#quest1_no").on("change",function(){
-                console.log("que no 1")
                 $("#justific1-no").removeClass("d-none");
                 $("#justific1-ys").addClass("d-none")
                 $("#justific1-af").removeClass("d-none");
@@ -313,7 +309,6 @@
                 init(no1selected, "no1");
             });
             $("#quest2_si").on("change",function(){
-                console.log("que si 2");
                 $("#justific2-ys").removeClass("d-none");
                 $("#justific2-no").addClass("d-none")
                 $("#justific2-af").removeClass("d-none");
@@ -323,7 +318,6 @@
                 init(no2selected, "no2");
             });
             $("#quest2_no").on("change",function(){
-                console.log("que no 2");
                 $("#justific2-no").removeClass("d-none");
                 $("#justific2-ys").addClass("d-none")
                 $("#justific2-af").removeClass("d-none");
@@ -331,6 +325,43 @@
                 no2selected = true;
                 init(yes2selected, "yes2");
                 init(no2selected, "no2");
+            });
+
+            $("#tys10").on("change",function(){
+                if($("#tys10").is(":checked")){
+                    $("#tys10_div").removeClass("d-none");
+                    $("#tys10_div").find("input").attr('required', true);
+                } else {
+                    $("#tys10_div").addClass("d-none");
+                    $("#tys10_div").find("input").attr('required', false);
+                }
+            });
+            $("#tno12").on("change",function(){
+                if($("#tno12").is(":checked")){
+                    $("#tno12_div").removeClass("d-none");
+                    $("#tno12_div").find("input").attr('required', true);
+                } else {
+                    $("#tno12_div").addClass("d-none");
+                    $("#tno12_div").find("input").attr('required', false);
+                }
+            });
+            $("#fys10").on("change",function(){
+                if($("#fys10").is(":checked")){
+                    $("#fys10_div").removeClass("d-none");
+                    $("#fys10_div").find("input").attr('required', true);
+                } else {
+                    $("#fys10_div").addClass("d-none");
+                    $("#fys10_div").find("input").attr('required', false);
+                }
+            });
+            $("#fno12").on("change",function(){
+                if($("#fno12").is(":checked")){
+                    $("#fno12_div").removeClass("d-none");
+                    $("#fno12_div").find("input").attr('required', true);
+                } else {
+                    $("#fno12_div").addClass("d-none");
+                    $("#fno12_div").find("input").attr('required', false);
+                }
             });
 
         });

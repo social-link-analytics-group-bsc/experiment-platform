@@ -32,13 +32,13 @@ class User(models.Model):
     user_agent = models.CharField(max_length=20)
     origin = models.CharField(max_length=50)
     date_arrive = models.DateTimeField()
-    # date_news1 = models.DateTimeField()
-    # date_news1 = models.DateTimeField()
-    # date_answer = models.DateTimeField()
-    # date_demo = models.DateTimeField()
-    # date_rutina = models.DateTimeField()
-    # date_result = models.DateTimeField()
-    #TODO: add the other missing fields
+    time_index = models.DecimalField(max_digits=5, decimal_places=0, default=0)
+    time_news1 = models.DecimalField(max_digits=5, decimal_places=0, default=0)
+    time_news2 = models.DecimalField(max_digits=5, decimal_places=0, default=0)
+    time_answer = models.DecimalField(max_digits=5, decimal_places=0, default=0)
+    time_demo = models.DecimalField(max_digits=5, decimal_places=0, default=0)
+    time_rutina = models.DecimalField(max_digits=5, decimal_places=0, default=0)
+    time_result = models.DecimalField(max_digits=5, decimal_places=0, default=0)
 
     def __str__(self):
         return str(self.id)
@@ -54,7 +54,7 @@ class QuestionType(models.Model):
 
 class Question(models.Model):
     question_code = models.CharField(max_length=5)
-    text = models.CharField(max_length=100)
+    text = models.CharField(max_length=200)
     desc = models.CharField(max_length=100)
     type = models.ForeignKey(QuestionType, on_delete=models.CASCADE)
     required = models.BooleanField(default=False)
