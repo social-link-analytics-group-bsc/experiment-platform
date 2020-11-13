@@ -107,17 +107,20 @@ footer p {
       <div class="progress-bar w-{{ progress }} bg-info" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
 
-	<div class="text-center">
+	<div class="">
 		<div class="row">
-			<div class="col-sm-12">
+      <div class="col-sm-3"></div>
+			<div class="col-sm-6">
 				<br>
-				<div class="alert alert-light" role="alert">
-					<p>Por favor aguarde a la carga completa de la web incrustada.</p>
-					<p>Esta noticia fue publicada recientemente en un medio de comunicación digital. Por favor, léala completa para responder a la encuesta.</p>
-					<h2 style="display: {{moreread}};">Al terminar de leer pulse <a href="{% url 'expplat:read_news_2' %}"><span class="badge badge-info">SIGUIENTE</span></a></h2>
-					<h2 style="display: {{moreans}};">Al terminar de leer pulse <a href="{% url 'expplat:answer' %}"><span class="badge badge-info">SIGUIENTE</span></a></h2>
+				<div class="">
+          <p class="lead">En el cuadro de más abajo se desplegará una noticia que fue <u>recientemente publicada en un medio de comunicación digital</u>. 
+          La carga de la noticia puede demorar unos segundos, <b>favor espere hasta que se cargue por completo</b>.</p>
+					<p class="lead">Lea completa la noticia antes de avanzar con la encuesta. Al terminar, pulse el botón siguiente.</p>
+					<h3 style="display: {{moreread}};" align="center"><a href="{% url 'expplat:read_news_2' %}"><span class="badge badge-info">Siguiente</span></a></h3>
+					<h3 style="display: {{moreans}};" align="center"><a href="{% url 'expplat:answer' %}"><span class="badge badge-info">Siguiente</span></a></h3>
 				</div>
-			</div>
+      </div>
+      <div class="col-sm-3"></div>
 		</div>
 	</div>
 
