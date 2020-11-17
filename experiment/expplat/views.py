@@ -233,7 +233,7 @@ def demo(request):
 
         fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
         fnox = Question.objects.filter(question_code__startswith="fno")
-        if data['fysno'] == 'si':
+        if data['fysno'] == 'sí':
             for que in fysx:
                 if que.question_code == 'fys10':
                     ans = Answer(user_id=usr, question_id=que, value=data['fys10'])
@@ -268,7 +268,7 @@ def demo(request):
 
         tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
         tnox = Question.objects.filter(question_code__startswith="tno")
-        if data['tysno'] == 'si':
+        if data['tysno'] == 'sí':
             for que in tysx:
                 if que.question_code == 'tys10':
                     ans = Answer(user_id=usr, question_id=que, value=data['tys10'])
