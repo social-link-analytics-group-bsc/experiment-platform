@@ -172,7 +172,7 @@
   {"model": "expplat.choice", "pk": 70, "fields": {"question_id": 62, "value": "Primaria"}},
   {"model": "expplat.choice", "pk": 71, "fields": {"question_id": 62, "value": "Secundaria"}},
   {"model": "expplat.choice", "pk": 72, "fields": {"question_id": 62, "value": "Formación Profesional"}},
-  {"model": "expplat.choice", "pk": 73, "fields": {"question_id": 62, "value": "Universitaria"}},
+  {"model": "expplat.choice", "pk": 73, "fields": {"question_id": 62, "value": "Grado/Licenciatura"}},
   {"model": "expplat.choice", "pk": 74, "fields": {"question_id": 62, "value": "Posgrado"}},
   {"model": "expplat.choice", "pk": 75, "fields": {"question_id": 62, "value": "Master"}},
   {"model": "expplat.choice", "pk": 76, "fields": {"question_id": 62, "value": "Doctorado"}},
