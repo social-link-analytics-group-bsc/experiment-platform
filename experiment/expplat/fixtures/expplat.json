@@ -86,7 +86,7 @@
   {"model": "expplat.question", "pk": 61, "fields": {"question_code": "dmprv", "text": "Provincia de residencia", "desc": "", "type": 1, "required": true}},
   {"model": "expplat.question", "pk": 62, "fields": {"question_code": "dmedu", "text": "¿Cuál es el máximo nivel educativo alcanzado?", "desc": "", "type": 1, "required": true}},
   {"model": "expplat.question", "pk": 63, "fields": {"question_code": "dmedo", "text": "Si ha seleccionado \"Otro\" en la pregunta anterior, escriba cuál es en us caso el máximo nivel educativo alcanzado:", "desc": "", "type": 3, "required": false}},
-  {"model": "expplat.question", "pk": 64, "fields": {"question_code": "dmpro", "text": "Rama de actividad professional", "desc": "", "type": 1, "required": true}},
+  {"model": "expplat.question", "pk": 64, "fields": {"question_code": "dmpro", "text": "Rama de actividad profesional", "desc": "", "type": 1, "required": true}},
   {"model": "expplat.question", "pk": 65, "fields": {"question_code": "dmpoo", "text": "Si ha seleccionado \"Otro\" en la pregunta anterior, escriba cuál es la actividad professional en la que trabaja:", "desc": "", "type": 3, "required": false}},
   {"model": "expplat.question", "pk": 66, "fields": {"question_code": "dmjob", "text": "¿Cuál de las siguientes opciones describe mejor su situación actual de empleo?", "desc": "", "type": 1, "required": true}},
   {"model": "expplat.question", "pk": 67, "fields": {"question_code": "dmjoo", "text": "Si ha seleccionado \"Otro\" en la pregunta anterior, escriba cuál es su situación actual de empleo:", "desc": "", "type": 3, "required": false}},
