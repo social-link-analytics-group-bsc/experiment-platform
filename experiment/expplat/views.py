@@ -3,9 +3,10 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 import time
 import random as rnd
-from .models import Experiment, News, User, Question, Answer
+from .models import Experiment, News, User, Question, Answer, ErrorTrack
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.http import HttpResponse as resp
 
 
 def goIndex():
@@ -137,6 +138,13 @@ def read_news(request):
     doc = new.doc
     article = "expplat/notis/" + doc
     return render(request, 'expplat/read_news.html', {'doc': doc, 'target': target, 'moreread': moreread, 'moreans': moreans, 'progress': progress, 'article': article })
+
+
+def notLoadNews(request):
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+    errTrack = ErrorTrack(user_id=usr, state=request.session['state'], error_cod=request.GET['error_cod'])
+    errTrack.save()
+    return resp("error tracked")
 
 
 def answer(request):

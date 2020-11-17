@@ -1,6 +1,6 @@
 
 from django.contrib import admin
-from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer
+from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer, ErrorTrack
 
 admin.site.register(Experiment)
 admin.site.register(News)
@@ -10,3 +10,4 @@ admin.site.register(Question)
 admin.site.register(Choice)
 admin.site.register(QuestionExperiment)
 admin.site.register(Answer)
+admin.site.register(ErrorTrack)

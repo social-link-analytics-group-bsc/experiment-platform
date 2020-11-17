@@ -83,3 +83,9 @@ class Answer(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     value = models.TextField()  #TODO: check whether TextField is the best type!
+
+
+class ErrorTrack(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    state = models.CharField(max_length=200)
+    error_cod = models.CharField(max_length=200)
