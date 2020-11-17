@@ -78,6 +78,11 @@ hr.tophr {
   //border: 3px solid green;
 }
 
+.center-but {
+  justify-content: center;
+  align-items: center;
+}
+
 footer {
   padding-top: 3rem;
   padding-bottom: 3rem;
@@ -100,8 +105,7 @@ footer p {
 
 <body>
 
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <div class="progress">
       <div class="progress-bar w-{{ progress }} bg-info" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -113,7 +117,7 @@ footer p {
 			<div class="col-sm-6">
 				<br>
 				<div class="">
-          <p class="lead">En el cuadro de más abajo se desplegará una noticia que fue <u>recientemente publicada en un medio de comunicación digital</u>. 
+          <p class="lead">En el cuadro de más abajo se desplegará una noticia que fue <u>recientemente publicada en un medio de comunicación digital</u>.
           La carga de la noticia puede demorar unos segundos, <b>favor espere hasta que se cargue por completo</b>.</p>
 					<p class="lead">Lea completa la noticia antes de avanzar con la encuesta. Al terminar, pulse el botón siguiente.</p>
 					<h3 style="display: {{moreread}};" align="center"><a href="{% url 'expplat:read_news_2' %}"><span class="badge badge-info">Siguiente</span></a></h3>
@@ -126,14 +130,41 @@ footer p {
 
 	<hr class="tophr">
 
-	<div class="container center-uri">
-		<iframe class="embed-responsive-item" style="width: 100%; height: 100%;" src="{{doc}}"></iframe>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="container center-uri">
+				<iframe class="embed-responsive-item" style="width: 100%; height: 100%;" src="{{doc}}"></iframe>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row center-but">
+		<div class="col-sm-10">
+			<button id="noLoadBut" type="button" class="btn btn-danger btn-block">He esperado unos segundos y la noticia no se ha cargado.</button>
+			<div class="alert alert-success d-none" role="alert" id="track_alert">
+				Se ha guardado el aviso. Prosiga con el experimento pulsando "Siguiente", próximamente tendrá la opción de volver a leer la noticia. Muchas gracias por su comprensión.
+			</div>
+		</div>
 	</div>
 
 	<div class="footer text-center bottom-uri">
 		<hr>
 	</div>
 
+   <script>
+        $(document).ready(function () {
+        	$("#noLoadBut").on("click",function(){
+        		$.ajax({
+        			url: "../notloadnews",
+        			data: { error_cod: "rn_noload" }
+				}).done(function() {
+					$("#track_alert").removeClass("d-none");
+					$("#noLoadBut").addClass("d-none");
+				});
+            });
+
+        });
+	</script>
 
 
 </body>
