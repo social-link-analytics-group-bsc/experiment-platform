@@ -85,13 +85,15 @@ def index(request):
     request.session['experiment'] = exp.experiment_code
     request.session['date_index'] = int(time.time())
 
+    lang = request.META.get('HTTP_ACCEPT_LANGUAGE')
+    agen = request.META.get('HTTP_USER_AGENT')
+
     # user instance is initiated and the news and other useful information is saved
     usr = User(
         experiment_id=exp,
         news_fake_id=fake_new, news_true_id=true_new, first_true=first_true,
-        origin='bsc.es', #TODO: get user origin from "request"
-        browser_language='ca', #TODO: get browser_language from "request"
-        user_agent='firefox', #TODO: get user agent from "request"
+        browser_language=lang[:2],
+        user_agent=agen,
         date_arrive=timezone.now(),
         time_index=0,
         time_news1=0,
