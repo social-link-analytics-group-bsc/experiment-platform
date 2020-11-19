@@ -95,6 +95,7 @@ def index(request):
         browser_language=lang[:2],
         user_agent=agen,
         date_arrive=timezone.now(),
+        date_finish=timezone.now(),
         time_index=0,
         time_news1=0,
         time_news2=0,
@@ -343,6 +344,10 @@ def result(request):
 
     saveTimes(request, viewState)
     request.session['state'] = viewState
+
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+    usr['date_finish'] = timezone.now()
+    usr.save()
 
     if len(request.POST.keys()) == 0:
         print('here without post')
