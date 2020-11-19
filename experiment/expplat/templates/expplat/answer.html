@@ -143,8 +143,8 @@
 
                                 <p>Por favor justifique su respuesta con <strong><u>una o varias opciones*</u></strong>:</p>
                                 {% for quesno1 in quest1no %}
-                                    <input type="checkbox" name="no1" id="{{ quesno1.question_code }}" value="off">
-                                    <label for="{{ quesno1.question_code }}">{{ quesno1.text }}</label><br>
+                                    <input type="checkbox" name="{{ quesno1.question_code }}" id="no1_{{ quesno1.question_code }}" value="off">
+                                    <label for="no1_{{ quesno1.question_code }}">{{ quesno1.text }}</label><br>
                                 {% endfor %}
 
                                 <div class="form-group d-none" id="{{ quest1no_otro.question_code }}_div">
@@ -159,8 +159,8 @@
 
                                 <p>Por favor justifique su respuesta con <strong><u>una o varias opciones*</u></strong>:</p>
                                 {% for quesys1 in quest1ys %}
-                                    <input type="checkbox" name="yes1" id="{{ quesys1.question_code }}" value="off">
-                                    <label for="{{ quesys1.question_code }}">{{ quesys1.text }}</label><br>
+                                    <input type="checkbox" name="{{ quesys1.question_code }}" id="yes1_{{ quesys1.question_code }}" value="off">
+                                    <label for="yes1_{{ quesys1.question_code }}">{{ quesys1.text }}</label><br>
                                 {% endfor %}
 
                                 <div class="form-group d-none" id="{{ quest1ys_otro.question_code }}_div">
@@ -176,8 +176,8 @@
 
                                 <p>¿Qué acciones tomaría después de leer la noticia?*</p>
                                 {% for quesys1 in quest1af %}
-                                    <input type="checkbox" name="af1" id="{{ quesys1.question_code }}" value="off">
-                                    <label for="{{ quesys1.question_code }}">{{ quesys1.text }}</label><br>
+                                    <input type="checkbox" name="{{ quesys1.question_code }}" id="af1_{{ quesys1.question_code }}" value="off">
+                                    <label for="af1_{{ quesys1.question_code }}">{{ quesys1.text }}</label><br>
                                 {% endfor %}
 
                             </div>
@@ -207,8 +207,8 @@
 
                                 <p>Por favor justifique su respuesta con <strong><u>una o varias opciones*</u></strong>:</p>
                                 {% for quesno2 in quest2no %}
-                                    <input type="checkbox" name="no2" id="{{ quesno2.question_code }}" value="off">
-                                    <label for="{{ quesno2.question_code }}">{{ quesno2.text }}</label><br>
+                                    <input type="checkbox" name="{{ quesno2.question_code }}" id="no2_{{ quesno2.question_code }}" value="off">
+                                    <label for="no2_{{ quesno2.question_code }}">{{ quesno2.text }}</label><br>
                                 {% endfor %}
 
                                 <div class="form-group d-none" id="{{ quest2no_otro.question_code }}_div">
@@ -223,8 +223,8 @@
 
                                 <p>Por favor justifique su respuesta con <strong><u>una o varias opciones*</u></strong>:</p>
                                 {% for quesys2 in quest2ys %}
-                                    <input type="checkbox" name="yes2" id="{{ quesys2.question_code }}" value="off">
-                                    <label for="{{ quesys2.question_code }}">{{ quesys2.text }}</label><br>
+                                    <input type="checkbox" name="{{ quesys2.question_code }}" id="yes2_{{ quesys2.question_code }}" value="off">
+                                    <label for="yes2_{{ quesys2.question_code }}">{{ quesys2.text }}</label><br>
                                 {% endfor %}
 
                                 <div class="form-group d-none" id="{{ quest2ys_otro.question_code }}_div">
@@ -240,8 +240,8 @@
 
                                 <p>¿Qué acciones tomaría después de leer la noticia?*</p>
                                 {% for quesys2 in quest2af %}
-                                    <input type="checkbox" name="af2" id="{{ quesys2.question_code }}" value="off">
-                                    <label for="{{ quesys2.question_code }}">{{ quesys2.text }}</label><br>
+                                    <input type="checkbox" name="{{ quesys2.question_code }}" id="af2_{{ quesys2.question_code }}" value="off">
+                                    <label for="af2_{{ quesys2.question_code }}">{{ quesys2.text }}</label><br>
                                 {% endfor %}
 
                             </div>
@@ -275,7 +275,7 @@
             var no1selected = false
 
             function init(selected, group) {
-                const checkboxes = form.querySelectorAll('input[name='+group+']');
+                const checkboxes = form.querySelectorAll('input[id^='+group+']');
                 const checkboxLength = checkboxes.length;
                 const firstCheckbox = checkboxLength > 0 ? checkboxes[0] : null;
                 if (firstCheckbox) {

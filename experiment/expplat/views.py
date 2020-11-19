@@ -19,6 +19,7 @@ def saveAnswers(startQue, data, usr):
 
     for que in startQuestions:
         if que.question_code in data.keys():
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
             ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
             ans.save()
         else:
@@ -27,6 +28,7 @@ def saveAnswers(startQue, data, usr):
                 value = 'unchecked'
             elif que.type == 'input':
                 value = data[que.question_code]
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
             ans = Answer(user_id=usr, question_id=que, value=value)
             ans.save()
 
@@ -231,6 +233,7 @@ def demo(request):
         usr = User.objects.filter(id=user_id)[0]
 
         fysno = Question.objects.filter(question_code='fysno')[0]
+        Answer.objects.filter(user_id=usr, question_id=fysno).delete()
         ans = Answer(user_id=usr, question_id=fysno, value=data['fysno'])
         ans.save()
 
@@ -239,33 +242,42 @@ def demo(request):
         if data['fysno'] == 'sí':
             for que in fysx:
                 if que.question_code == 'fys10':
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value=data['fys10'])
                     ans.save()
                 elif que.question_code in data.keys():
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='unchecked')
                     ans.save()
             for que in fnox:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
         else:
             for que in fysx:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
             for que in fnox:
-                if que.question_code == 'fno12':
+                if que.question_code == 'fno13':
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value=data['fno12'])
                     ans.save()
                 elif que.question_code in data.keys():
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='unchecked')
                     ans.save()
 
         tysno = Question.objects.filter(question_code='tysno')[0]
+        Answer.objects.filter(user_id=usr, question_id=tysno).delete()
         ans = Answer(user_id=usr, question_id=tysno, value=data['tysno'])
         ans.save()
 
@@ -274,29 +286,37 @@ def demo(request):
         if data['tysno'] == 'sí':
             for que in tysx:
                 if que.question_code == 'tys10':
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value=data['tys10'])
                     ans.save()
                 elif que.question_code in data.keys():
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='unchecked')
                     ans.save()
             for que in tnox:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
         else:
             for que in tysx:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
             for que in tnox:
-                if que.question_code == 'tno12':
+                if que.question_code == 'tno13':
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value=data['tno12'])
                     ans.save()
                 elif que.question_code in data.keys():
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='unchecked')
                     ans.save()
 
