@@ -1,5 +1,6 @@
 
 from django.db import models
+from django.utils import timezone
 
 
 class Experiment(models.Model):
@@ -30,8 +31,8 @@ class User(models.Model):
     first_true = models.BooleanField()
     browser_language = models.CharField(max_length=2)
     user_agent = models.CharField(max_length=200)
-    date_arrive = models.DateTimeField()
-    date_finish = models.DateTimeField()
+    date_arrive = models.DateTimeField(default=timezone.now)
+    date_finish = models.DateTimeField(default=timezone.now)
     time_index = models.DecimalField(max_digits=5, decimal_places=0, default=0)
     time_news1 = models.DecimalField(max_digits=5, decimal_places=0, default=0)
     time_news2 = models.DecimalField(max_digits=5, decimal_places=0, default=0)
