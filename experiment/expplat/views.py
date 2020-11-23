@@ -366,7 +366,7 @@ def result(request):
     request.session['state'] = viewState
 
     usr = User.objects.filter(id=request.session['user_id'])[0]
-    usr['date_finish'] = timezone.now()
+    setattr(usr, 'date_finish', timezone.now())
     usr.save()
 
     if len(request.POST.keys()) == 0:
