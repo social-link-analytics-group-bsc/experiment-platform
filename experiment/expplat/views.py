@@ -56,12 +56,13 @@ def index(request):
     exp = Experiment.objects.all()[0]
 
     # from all news, one article is taken randomly as the first article to be read
-    allnews = News.objects.all()
+    allnews = News.objects.filter(error=False)
     first_int = rnd.randint(0, len(allnews)-1)
     first_new = allnews[first_int]
 
     # if the first article is fake, one from the true news is chosen and othewise if the first article is true
-    othernews = News.objects.filter(is_fake=(not first_new.is_fake))
+    othernews = News.objects.filter(is_fake=(not first_new.is_fake), error=False)
+    print(othernews)
     second_int = rnd.randint(0, len(othernews)-1)
     second_new = othernews[second_int]
 
@@ -149,6 +150,44 @@ def notLoadNews(request):
     usr = User.objects.filter(id=request.session['user_id'])[0]
     errTrack = ErrorTrack(user_id=usr, state=request.session['state'], error_cod=request.GET['error_cod'])
     errTrack.save()
+    new = News.objects.filter(id=request.GET['new_id'])[0]
+    setattr(new, 'error', True)
+    new.save()
+    num = request.GET['num_new']
+
+    if str(num) == '1':
+        if usr.first_true:
+            allnews = News.objects.filter(is_fake=False, error=False)
+            first_int = rnd.randint(0, len(allnews) - 1)
+            first_new = allnews[first_int]
+            setattr(usr, 'news_true_id', first_new)
+            request.session['new1'] = first_new.id
+            request.session['news_true'] = first_new.id
+        else:
+            allnews = News.objects.filter(is_fake=True, error=False)
+            first_int = rnd.randint(0, len(allnews) - 1)
+            first_new = allnews[first_int]
+            setattr(usr, 'news_false_id', first_new)
+            request.session['new1'] = first_new.id
+            request.session['news_fake'] = first_new.id
+    else:
+        if usr.first_true:
+            allnews = News.objects.filter(is_fake=True, error=False)
+            second_int = rnd.randint(0, len(allnews) - 1)
+            second_new = allnews[second_int]
+            setattr(usr, 'news_false_id', second_new)
+            request.session['new2'] = second_new.id
+            request.session['news_true'] = second_new.id
+        else:
+            allnews = News.objects.filter(is_fake=False, error=False)
+            second_int = rnd.randint(0, len(allnews) - 1)
+            second_new = allnews[second_int]
+            setattr(usr, 'news_true_id', second_new)
+            request.session['new2'] = second_new.id
+            request.session['news_fake'] = second_new.id
+
+    usr.save()
+
     return resp("error tracked")
 
 

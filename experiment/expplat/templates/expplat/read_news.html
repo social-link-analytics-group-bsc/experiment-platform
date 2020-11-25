@@ -157,23 +157,6 @@ footer p {
 		<hr>
 	</div>
 
-	<div class="modal bd-example-modal-sm" tabindex="-1" role="dialog" id="myModal">
-		<div class="modal-dialog modal-sm" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Oh!, lamentamos lo sucedido.</h5>
-				</div>
-				<div class="modal-body">
-					<p>Favor prosiga con el experimento pulsando el botón <b>Siguiente</b>. Gracias por la comprensión.</p>
-				</div>
-				<div class="modal-footer">
-					<a style="display: {{moreread}};" align="center" href="{% url 'expplat:read_news_2' %}" class="btn btn-info btn-lg">Siguiente</a>
-					<a style="display: {{moreans}};" align="center" href="{% url 'expplat:answer' %}" class="btn btn-info btn-lg">Siguiente</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
    <script>
 
         $(document).ready(function () {
@@ -181,12 +164,14 @@ footer p {
         	$('#myModal').modal({ show: false})
 
         	$("#noLoadBut").on("click",function(){
+
+				num_new = window.location.href.substr(-2,1)
+
         		$.ajax({
         			url: "../notloadnews",
-        			data: { error_cod: "rn_noload" }
+        			data: { error_cod: "rn_noload", new_id: "{{ new_id }}", num_new: num_new }
 				}).done(function() {
-					$('#myModal').modal('show');
-					$("#noLoadBut").addClass("d-none");
+					window.location.reload(true)
 				});
             });
         });
