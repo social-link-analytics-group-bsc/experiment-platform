@@ -157,6 +157,22 @@ footer p {
 		<hr>
 	</div>
 
+	<div class="modal bd-example-modal-sm" tabindex="-1" role="dialog" id="myModal">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h5 class="modal-title">Oh!, lamentamos lo sucedido.</h5>
+					<br>
+					<p>Favor prosiga con el experimento cargando otra noticia. Gracias por la comprensión.</p>
+					<br>
+					<div class="text-center">
+						<button id="newNews" class="btn btn-info btn-lg">Cargar otra noticia</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
    <script>
 
         $(document).ready(function () {
@@ -171,7 +187,10 @@ footer p {
         			url: "../notloadnews",
         			data: { error_cod: "rn_noload", new_id: "{{ new_id }}", num_new: num_new }
 				}).done(function() {
-					window.location.reload(true)
+					$('#myModal').modal('show');
+					$("#newNews").on("click",function(){
+						window.location.reload(true)
+					});
 				});
             });
         });
