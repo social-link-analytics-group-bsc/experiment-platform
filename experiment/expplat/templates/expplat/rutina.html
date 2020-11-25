@@ -140,7 +140,7 @@
                                   <tbody>
                                     {% for que in questions %}
                                     <tr>
-                                        <th scope="row">{{ que.text }}</th>
+                                        <th scope="row">{{ que.text }}*</th>
                                         {% for choice in que.choice_set.all %}
                                             <td class="text-center"><input class="form-check-input" required type="radio" name="{{ que.question_code}}" id="{{ que.question_code }}_{{ choice.value }}" value="{{ choice.value }}"></td>
                                         {% endfor %}
