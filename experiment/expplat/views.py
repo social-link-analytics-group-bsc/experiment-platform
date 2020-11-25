@@ -115,35 +115,44 @@ def index(request):
     return render(request, 'expplat/index.html')
 
 
-def read_news(request):
+def read_news_1(request):
 
     if 'state' not in request.session.keys():
         return goIndex()
 
-    if request.session['state'] in ['index', 'news2']:
-        target = 'expplat:read_news_2'
-        moreread = 'block'
-        moreans = 'none'
-        progress = 25
-        saveTimes(request, 'news1')
-        request.session['state'] = 'news1'
-        new = News.objects.filter(id=request.session['new1'])[0]
-    elif request.session['state'] in ['news1', 'answer']:
-        target = 'expplat:answer'
-        moreread = 'none'
-        moreans = 'block'
-        progress = 50
-        saveTimes(request, 'news2')
-        request.session['state'] = 'news2'
-        new = News.objects.filter(id=request.session['new2'])[0]
-    else:
-        return goIndex()
+    saveTimes(request, 'news1')
+    request.session['state'] = 'news1'
 
+    target = 'expplat:read_news_2'
+    moreread = 'block'
+    moreans = 'none'
+    progress = 25
+    new = News.objects.filter(id=request.session['new1'])[0]
 
     #TODO: prepare other description variables for the template (like title)
     doc = new.doc
     article = "expplat/notis/" + doc
-    return render(request, 'expplat/read_news.html', {'doc': doc, 'target': target, 'moreread': moreread, 'moreans': moreans, 'progress': progress, 'article': article })
+    return render(request, 'expplat/read_news.html', {'doc': doc, 'new_id': new.id, 'target': target, 'moreread': moreread, 'moreans': moreans, 'progress': progress, 'article': article })
+
+
+def read_news_2(request):
+
+    if 'state' not in request.session.keys():
+        return goIndex()
+
+    saveTimes(request, 'news2')
+    request.session['state'] = 'news2'
+
+    target = 'expplat:answer'
+    moreread = 'none'
+    moreans = 'block'
+    progress = 50
+    new = News.objects.filter(id=request.session['new2'])[0]
+
+    #TODO: prepare other description variables for the template (like title)
+    doc = new.doc
+    article = "expplat/notis/" + doc
+    return render(request, 'expplat/read_news.html', {'doc': doc, 'new_id': new.id, 'target': target, 'moreread': moreread, 'moreans': moreans, 'progress': progress, 'article': article })
 
 
 def notLoadNews(request):
