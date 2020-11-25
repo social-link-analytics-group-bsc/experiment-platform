@@ -23,8 +23,12 @@ class AnsAdmin(admin.ModelAdmin):
         return obj.question_id.text
 
 
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ['id', 'is_fake', 'error', 'topic', 'title']
+    list_filter = ('is_fake', 'error')
+
 admin.site.register(Experiment)
-admin.site.register(News)
+admin.site.register(News, NewsAdmin)
 admin.site.register(User, UsersAdmin)
 admin.site.register(QuestionType)
 admin.site.register(Question)
