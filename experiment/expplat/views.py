@@ -102,7 +102,6 @@ def index(request):
         user_agent_os=request.user_agent.os.family,
         user_agent_device=request.user_agent.device.family,
         date_arrive=timezone.now(),
-        date_finish=timezone.now(),
         time_index=0,
         time_news1=0,
         time_news2=0,

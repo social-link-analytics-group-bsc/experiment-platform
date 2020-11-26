@@ -22,7 +22,7 @@ class News(models.Model):
     error = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.doc
+        return self.title
 
 
 class User(models.Model):
@@ -40,7 +40,7 @@ class User(models.Model):
     user_agent_os = models.CharField(max_length=200)
     user_agent_device = models.CharField(max_length=200)
     date_arrive = models.DateTimeField(default=timezone.now)
-    date_finish = models.DateTimeField(default=timezone.now)
+    date_finish = models.DateTimeField(null=True)
     time_index = models.DecimalField(max_digits=5, decimal_places=0, default=0)
     time_news1 = models.DecimalField(max_digits=5, decimal_places=0, default=0)
     time_news2 = models.DecimalField(max_digits=5, decimal_places=0, default=0)
