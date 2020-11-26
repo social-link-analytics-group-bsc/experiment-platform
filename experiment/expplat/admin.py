@@ -42,11 +42,19 @@ class FinishFilter(MultipleChoiceListFilter):
 class UsersAdmin(admin.ModelAdmin):
     list_display = ['experiment_id', 'id']
     list_display += ['date_arrive', 'state', 'date_finish']
-    list_display += ['news_fake_id', 'news_true_id']
+    list_display += ['fake_news', 'true_news']
     list_display += ['employment', 'gender', 'edad', 'prov', 'educ', 'prof', 'empleo', 'relig', 'polit', 'techie']
     list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
     list_filter = (FinishFilter, LangFilter, AgentFilter, "experiment_id")
 
+
+    def fake_news(self, obj):
+        return obj.news_fake_id
+    fake_news.short_description = 'Fake News'
+
+    def true_news(self, obj):
+        return obj.news_true_id
+    true_news.short_description = 'True News'
 
     def state(self, obj):
         ans = len(Answer.objects.filter(user_id=obj.id))
