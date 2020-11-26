@@ -257,7 +257,7 @@ class FinishFilter(SimpleListFilter):
 
 
 class UsersAdmin(admin.ModelAdmin):
-    list_display = ['id', 'date_arrive', 'date_finish', 'state']
+    list_display = ['id', 'date_start', 'date_arrive', 'date_finish', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
@@ -266,6 +266,9 @@ class UsersAdmin(admin.ModelAdmin):
     list_filter = (FinishFilter, LangFilter, GenderFilter, AgeFilter)
     list_filter += (ProvinceFilter, EducationFilter, ProfessionFilter, EmploymentFilter)
     list_filter += (ReligionFilter, PoliticalFilter, TechFilter)
+
+    def date_start(self, obj):
+        return obj.date_arrive
 
     def fake_news(self, obj):
         return obj.news_fake_id
