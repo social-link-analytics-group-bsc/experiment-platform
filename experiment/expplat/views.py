@@ -62,7 +62,6 @@ def index(request):
 
     # if the first article is fake, one from the true news is chosen and othewise if the first article is true
     othernews = News.objects.filter(is_fake=(not first_new.is_fake), error=False)
-    print(othernews)
     second_int = rnd.randint(0, len(othernews)-1)
     second_new = othernews[second_int]
 
@@ -97,6 +96,11 @@ def index(request):
         news_fake_id=fake_new, news_true_id=true_new, first_true=first_true,
         browser_language=lang[:2],
         user_agent=agen,
+        user_agent_mobile=request.user_agent.is_mobile,
+        user_agent_pc=request.user_agent.is_pc,
+        user_agent_browser=request.user_agent.browser.family,
+        user_agent_os=request.user_agent.os.family,
+        user_agent_device=request.user_agent.device.family,
         date_arrive=timezone.now(),
         date_finish=timezone.now(),
         time_index=0,
