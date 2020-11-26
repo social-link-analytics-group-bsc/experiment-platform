@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_admin_multiple_choice_list_filter',
+    'django_user_agents',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
 ROOT_URLCONF = 'experiment.urls'
@@ -169,3 +172,4 @@ LOGGING = {
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
+USER_AGENTS_CACHE = 'default'
