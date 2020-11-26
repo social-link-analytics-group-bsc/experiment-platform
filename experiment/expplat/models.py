@@ -30,6 +30,8 @@ class User(models.Model):
     news_fake_id = models.ForeignKey(News, on_delete=models.CASCADE, related_name='fake_key')
     news_true_id = models.ForeignKey(News, on_delete=models.CASCADE, related_name='true_key')
     first_true = models.BooleanField()
+    reread_fake = models.BooleanField(default=False)
+    reread_true = models.BooleanField(default=False)
     browser_language = models.CharField(max_length=2)
     user_agent = models.CharField(max_length=200)
     date_arrive = models.DateTimeField(default=timezone.now)

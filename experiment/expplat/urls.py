@@ -12,5 +12,6 @@ urlpatterns = [
     path('demo/', views.demo, name='demo'),
     path('rutina/', views.rutina, name='rutina'),
     path('result/', views.result, name='result'),
-    path('notloadnews/', views.notLoadNews, name='notloadnews')
+    path('notloadnews/', views.notLoadNews, name='notloadnews'),
+    path('rereadnews/', views.rereadNews, name='rereadnews')
 ]

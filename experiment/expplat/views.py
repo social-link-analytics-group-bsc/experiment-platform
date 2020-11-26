@@ -261,6 +261,25 @@ def answer(request):
     })
 
 
+def rereadNews(request):
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+
+    if request.session['first_fake']:
+        one = "fake"
+        sec = "true"
+    else:
+        one = "true"
+        sec = "fake"
+
+    if request.GET['new'] == '1':
+        setattr(usr, 'reread_' + one, True)
+    elif request.GET['new'] == '2':
+        setattr(usr, 'reread_' + sec, True)
+
+    usr.save()
+    return resp("reread tracked")
+
+
 def demo(request):
 
     viewState = 'demo'

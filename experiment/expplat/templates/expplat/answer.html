@@ -23,6 +23,10 @@
 	<!-- Core theme CSS (includes Bootstrap)-->
     <link href="{% static "expplat/css/styles.css" %}" rel="stylesheet" />
 
+   	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 	<style>
 
         .bd-placeholder-img {
@@ -95,9 +99,6 @@
 
 <body>
 
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
-
     <div class="progress">
       <div class="progress-bar bg-info" style="width: {{ progress }}%" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
@@ -125,7 +126,7 @@
                             <div class="col-sm-12">
                                 <h4><strong>{{news1.title}}</strong></h4>
                                 <hr>
-                                <p>¿Considera la noticia verdadera?* (<a href="{{ news1.doc }}" target="_blank">volver a leer la noticia</a>)</p>
+                                <p>¿Considera la noticia verdadera?* (<a id="reread1" href="{{ news1.doc }}" target="_blank">volver a leer la noticia</a>)</p>
                                 {% for choice in quest1.choice_set.all %}
 
                                     <div class="form-check form-check-inline">
@@ -191,7 +192,7 @@
 
                                 <h4><strong>{{news2.title}}</strong></h4>
                                 <hr>
-                                <p>¿Considera que la noticia es verdadera?* (<a href="{{ news2.doc }}" target="_blank">volver a leer la noticia</a>)</p>
+                                <p>¿Considera que la noticia es verdadera?* (<a id="reread2" href="{{ news2.doc }}" target="_blank">volver a leer la noticia</a>)</p>
                                 {% for choice in quest2.choice_set.all %}
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" required type="radio" name="{{ quest2.question_code}}" id="quest2_{{ choice.value }}" value="{{ choice.value }}">
@@ -266,6 +267,24 @@
     <script>
 
         $(document).ready(function () {
+
+            $("#reread1").on("click",function(){
+        		$.ajax({
+        			url: "../rereadnews",
+        			data: { new: "1" }
+				}).done(function() {
+				    console.log("reread-tracked!");
+				});
+            });
+
+            $("#reread2").on("click",function(){
+        		$.ajax({
+        			url: "../rereadnews",
+        			data: { new: "2" }
+				}).done(function() {
+				    console.log("reread-tracked!");
+				});
+            });
 
             const form = document.querySelector('#formAnswer');
 
