@@ -36,17 +36,15 @@ class FinishFilter(MultipleChoiceListFilter):
         return tuple([(False, "Finished"), (True, "Not finished")])
 
 
-
-
-
 class UsersAdmin(admin.ModelAdmin):
-    list_display = ['experiment_id', 'id']
-    list_display += ['date_arrive', 'state', 'date_finish']
+    list_display = ['id', 'date_start', 'date_finish', 'state']
     list_display += ['fake_news', 'true_news']
-    list_display += ['employment', 'gender', 'edad', 'prov', 'educ', 'prof', 'empleo', 'relig', 'polit', 'techie']
-    list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
-    list_filter = (FinishFilter, LangFilter, AgentFilter, "experiment_id")
+    list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment', 'religion', 'politics', 'tech']
+    #list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
+    list_filter = (FinishFilter, LangFilter, AgentFilter)
 
+    def date_start(self, obj):
+        return obj.date_arrive
 
     def fake_news(self, obj):
         return obj.news_fake_id
@@ -84,30 +82,27 @@ class UsersAdmin(admin.ModelAdmin):
     def gender(self, obj):
         return self.translateAns('dmgen', obj)
 
-    def edad(self, obj):
+    def age(self, obj):
         return self.translateAns('dmage', obj)
 
-    def prov(self, obj):
+    def location(self, obj):
         return self.translateAns('dmprv', obj)
 
-    def educ(self, obj):
+    def education(self, obj):
         return self.translateAns('dmedu', obj)
 
-    def prof(self, obj):
-        return self.translateAns('dmpro', obj)
+    def profession(self, obj):
+        return self.translateAns('dmpro', obj)    
 
-    def empleo(self, obj):
-        return self.translateAns('dmjob', obj)
-
-    def relig(self, obj):
+    def religion(self, obj):
         return self.translateAns('dmrel', obj)
 
-    def polit(self, obj):
+    def politics(self, obj):
         return self.translateAns('dmpol', obj)
 
-    def techie(self, obj):
+    def tech(self, obj):
         return self.translateAns('dmtec', obj)
-
+    tech.short_description = 'Tech Skills'
 
 class AnsAdmin(admin.ModelAdmin):
     list_display = ['id', 'user_id', 'question_code', 'question_desc', 'value']
