@@ -3,9 +3,10 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 import time
 import random as rnd
-from .models import Experiment, News, User, Question, Answer
+from .models import Experiment, News, User, Question, Answer, ErrorTrack
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.http import HttpResponse as resp
 
 
 def goIndex():
@@ -18,6 +19,7 @@ def saveAnswers(startQue, data, usr):
 
     for que in startQuestions:
         if que.question_code in data.keys():
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
             ans = Answer(user_id=usr, question_id=que, value=data[que.question_code])
             ans.save()
         else:
@@ -26,6 +28,7 @@ def saveAnswers(startQue, data, usr):
                 value = 'unchecked'
             elif que.type == 'input':
                 value = data[que.question_code]
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
             ans = Answer(user_id=usr, question_id=que, value=value)
             ans.save()
 
@@ -53,12 +56,12 @@ def index(request):
     exp = Experiment.objects.all()[0]
 
     # from all news, one article is taken randomly as the first article to be read
-    allnews = News.objects.all()
+    allnews = News.objects.filter(error=False)
     first_int = rnd.randint(0, len(allnews)-1)
     first_new = allnews[first_int]
 
     # if the first article is fake, one from the true news is chosen and othewise if the first article is true
-    othernews = News.objects.filter(is_fake=(not first_new.is_fake))
+    othernews = News.objects.filter(is_fake=(not first_new.is_fake), error=False)
     second_int = rnd.randint(0, len(othernews)-1)
     second_new = othernews[second_int]
 
@@ -84,13 +87,20 @@ def index(request):
     request.session['experiment'] = exp.experiment_code
     request.session['date_index'] = int(time.time())
 
+    lang = request.META.get('HTTP_ACCEPT_LANGUAGE')
+    agen = request.META.get('HTTP_USER_AGENT')
+
     # user instance is initiated and the news and other useful information is saved
     usr = User(
         experiment_id=exp,
         news_fake_id=fake_new, news_true_id=true_new, first_true=first_true,
-        origin='bsc.es', #TODO: get user origin from "request"
-        browser_language='ca', #TODO: get browser_language from "request"
-        user_agent='firefox', #TODO: get user agent from "request"
+        browser_language=lang[:2],
+        user_agent=agen,
+        user_agent_mobile=request.user_agent.is_mobile,
+        user_agent_pc=request.user_agent.is_pc,
+        user_agent_browser=request.user_agent.browser.family,
+        user_agent_os=request.user_agent.os.family,
+        user_agent_device=request.user_agent.device.family,
         date_arrive=timezone.now(),
         time_index=0,
         time_news1=0,
@@ -108,35 +118,89 @@ def index(request):
     return render(request, 'expplat/index.html')
 
 
-def read_news(request):
+def read_news_1(request):
 
     if 'state' not in request.session.keys():
         return goIndex()
 
-    if request.session['state'] in ['index', 'news2']:
-        target = 'expplat:read_news_2'
-        moreread = 'block'
-        moreans = 'none'
-        progress = 25
-        saveTimes(request, 'news1')
-        request.session['state'] = 'news1'
-        new = News.objects.filter(id=request.session['new1'])[0]
-    elif request.session['state'] in ['news1', 'answer']:
-        target = 'expplat:answer'
-        moreread = 'none'
-        moreans = 'block'
-        progress = 50
-        saveTimes(request, 'news2')
-        request.session['state'] = 'news2'
-        new = News.objects.filter(id=request.session['new2'])[0]
-    else:
-        return goIndex()
+    saveTimes(request, 'news1')
+    request.session['state'] = 'news1'
 
+    target = 'expplat:read_news_2'
+    moreread = 'block'
+    moreans = 'none'
+    progress = 25
+    new = News.objects.filter(id=request.session['new1'])[0]
 
     #TODO: prepare other description variables for the template (like title)
     doc = new.doc
     article = "expplat/notis/" + doc
-    return render(request, 'expplat/read_news.html', {'doc': doc, 'target': target, 'moreread': moreread, 'moreans': moreans, 'progress': progress, 'article': article })
+    return render(request, 'expplat/read_news.html', {'doc': doc, 'new_id': new.id, 'target': target, 'moreread': moreread, 'moreans': moreans, 'progress': progress, 'article': article })
+
+
+def read_news_2(request):
+
+    if 'state' not in request.session.keys():
+        return goIndex()
+
+    saveTimes(request, 'news2')
+    request.session['state'] = 'news2'
+
+    target = 'expplat:answer'
+    moreread = 'none'
+    moreans = 'block'
+    progress = 50
+    new = News.objects.filter(id=request.session['new2'])[0]
+
+    #TODO: prepare other description variables for the template (like title)
+    doc = new.doc
+    article = "expplat/notis/" + doc
+    return render(request, 'expplat/read_news.html', {'doc': doc, 'new_id': new.id, 'target': target, 'moreread': moreread, 'moreans': moreans, 'progress': progress, 'article': article })
+
+
+def notLoadNews(request):
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+    errTrack = ErrorTrack(user_id=usr, state=request.session['state'], error_cod=request.GET['error_cod'])
+    errTrack.save()
+    new = News.objects.filter(id=request.GET['new_id'])[0]
+    setattr(new, 'error', True)
+    new.save()
+    num = request.GET['num_new']
+
+    if str(num) == '1':
+        if usr.first_true:
+            allnews = News.objects.filter(is_fake=False, error=False)
+            first_int = rnd.randint(0, len(allnews) - 1)
+            first_new = allnews[first_int]
+            setattr(usr, 'news_true_id', first_new)
+            request.session['new1'] = first_new.id
+            request.session['news_true'] = first_new.id
+        else:
+            allnews = News.objects.filter(is_fake=True, error=False)
+            first_int = rnd.randint(0, len(allnews) - 1)
+            first_new = allnews[first_int]
+            setattr(usr, 'news_false_id', first_new)
+            request.session['new1'] = first_new.id
+            request.session['news_fake'] = first_new.id
+    else:
+        if usr.first_true:
+            allnews = News.objects.filter(is_fake=True, error=False)
+            second_int = rnd.randint(0, len(allnews) - 1)
+            second_new = allnews[second_int]
+            setattr(usr, 'news_false_id', second_new)
+            request.session['new2'] = second_new.id
+            request.session['news_true'] = second_new.id
+        else:
+            allnews = News.objects.filter(is_fake=False, error=False)
+            second_int = rnd.randint(0, len(allnews) - 1)
+            second_new = allnews[second_int]
+            setattr(usr, 'news_true_id', second_new)
+            request.session['new2'] = second_new.id
+            request.session['news_fake'] = second_new.id
+
+    usr.save()
+
+    return resp("error tracked")
 
 
 def answer(request):
@@ -200,6 +264,25 @@ def answer(request):
     })
 
 
+def rereadNews(request):
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+
+    if request.session['first_fake']:
+        one = "fake"
+        sec = "true"
+    else:
+        one = "true"
+        sec = "fake"
+
+    if request.GET['new'] == '1':
+        setattr(usr, 'reread_' + one, True)
+    elif request.GET['new'] == '2':
+        setattr(usr, 'reread_' + sec, True)
+
+    usr.save()
+    return resp("reread tracked")
+
+
 def demo(request):
 
     viewState = 'demo'
@@ -220,72 +303,90 @@ def demo(request):
         usr = User.objects.filter(id=user_id)[0]
 
         fysno = Question.objects.filter(question_code='fysno')[0]
+        Answer.objects.filter(user_id=usr, question_id=fysno).delete()
         ans = Answer(user_id=usr, question_id=fysno, value=data['fysno'])
         ans.save()
 
         fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
         fnox = Question.objects.filter(question_code__startswith="fno")
-        if data['fysno'] == 'si':
+        if data['fysno'] == 'sí':
             for que in fysx:
                 if que.question_code == 'fys10':
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value=data['fys10'])
                     ans.save()
                 elif que.question_code in data.keys():
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='unchecked')
                     ans.save()
             for que in fnox:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
         else:
             for que in fysx:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
             for que in fnox:
-                if que.question_code == 'fno12':
+                if que.question_code == 'fno13':
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value=data['fno12'])
                     ans.save()
                 elif que.question_code in data.keys():
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='unchecked')
                     ans.save()
 
         tysno = Question.objects.filter(question_code='tysno')[0]
+        Answer.objects.filter(user_id=usr, question_id=tysno).delete()
         ans = Answer(user_id=usr, question_id=tysno, value=data['tysno'])
         ans.save()
 
         tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
         tnox = Question.objects.filter(question_code__startswith="tno")
-        if data['tysno'] == 'si':
+        if data['tysno'] == 'sí':
             for que in tysx:
                 if que.question_code == 'tys10':
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value=data['tys10'])
                     ans.save()
                 elif que.question_code in data.keys():
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='unchecked')
                     ans.save()
             for que in tnox:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
         else:
             for que in tysx:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
             for que in tnox:
-                if que.question_code == 'tno12':
+                if que.question_code == 'tno13':
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value=data['tno12'])
                     ans.save()
                 elif que.question_code in data.keys():
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='checked')
                     ans.save()
                 else:
+                    Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='unchecked')
                     ans.save()
 
@@ -333,6 +434,10 @@ def result(request):
 
     saveTimes(request, viewState)
     request.session['state'] = viewState
+
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+    setattr(usr, 'date_finish', timezone.now())
+    usr.save()
 
     if len(request.POST.keys()) == 0:
         print('here without post')

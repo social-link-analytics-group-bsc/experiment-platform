@@ -2,8 +2,16 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZRKXWNPR"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-CZZRKXWNPR');
+	</script>
 	<title>experiment sample platform {% block title %}{% endblock %}</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
 	<script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
@@ -91,7 +99,7 @@ footer p {
 <body>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap.bundle.min.js"></script>
+	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
 
 	<div class="text-center">
 		<div class="row">
@@ -104,17 +112,18 @@ footer p {
 	<hr class="tophr">
 
 	<div class="container center-uri">
-		<div class="text-center">
+		<div class="">
 			<div class="container">
 				<br>
 				<div class="row">
 					<div class="col-sm-12">
 						<h1>Estudio sobre medios de comunicación digital</h1>
-						<p class="lead text-muted">El Barcelona Supercomputing Center junto a la Universidad de Navarra está realizando una investigación sobre medios de comunicación digital. Nos gustaría saber su opinión respecto a los contenidos para mejorar las herramientas actuales. La encuesta sólo le tomará [] minutos y sus respuestas son totalmente anónimas, la información proporcionada será utilizada únicamente para fines de la investigación.</p>
-						<p class="lead text-muted">Si tiene alguna pregunta sobre la encuesta, puede enviarnos un correo electrónico a <strong>algo@algo.com</strong>.</p>
-						<p class="lead text-muted">Su participación es muy valiosa para nosotros. Muchas gracias por su tiempo.</p>
 						<br>
-						<h1><a href="{% url 'expplat:read_news_1' %}" class="btn btn-info btn-lg">Empezar</a></h1>
+						<p class="lead text-muted">El <a href="http://bsc.es" target="_blank">Barcelona Supercomputing Center</a> y la <a href="https://www.unav.edu/web/facultad-de-comunicacion" target="_blank">Facultad de Comunicación de la Universidad de Navarra</a> están realizando una investigación conjunta sobre el consumo de noticias en medios digitales. El estudio consiste en un cuestionario sobre hábitos de consumo informativo en Internet, para el nos gustaría contar con su opinión.</p>
+						<p class="lead text-muted">La encuesta no le tomará más de <u>10 minutos</u>. Sus respuestas son anónimas y la información proporcionada será utilizada únicamente para fines de la investigación. Si tiene alguna pregunta sobre la encuesta, puede enviarnos un correo electrónico a <a href="mailto:mediaexp@bsc.es">mediaexp@bsc.es</a>.</p>
+						<p class="lead text-muted">Su participación es muy valiosa para nosotros. ¡Muchas gracias por su tiempo! Cuando este listo presione sobre el botón Empezar.</p>
+						<br>
+						<h1 align="center"><a href="{% url 'expplat:read_news_1' %}" class="btn btn-info btn-lg">Empezar</a></h1>
 						<br><br>
 					</div>
 				</div>

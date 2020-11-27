@@ -1,5 +1,6 @@
 
 from django.db import models
+from django.utils import timezone
 
 
 class Experiment(models.Model):
@@ -18,20 +19,28 @@ class News(models.Model):
     title = models.CharField(max_length=300)
     ver_doc = models.CharField(max_length=200)
     ver_title = models.CharField(max_length=300)
+    error = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.doc
+        return self.title
 
 
 class User(models.Model):
     experiment_id = models.ForeignKey(Experiment, on_delete=models.CASCADE)
     news_fake_id = models.ForeignKey(News, on_delete=models.CASCADE, related_name='fake_key')
     news_true_id = models.ForeignKey(News, on_delete=models.CASCADE, related_name='true_key')
-    first_true = models.BooleanField()
-    browser_language = models.CharField(max_length=2)
-    user_agent = models.CharField(max_length=20)
-    origin = models.CharField(max_length=50)
-    date_arrive = models.DateTimeField()
+    first_true = models.BooleanField(null=True)
+    reread_fake = models.BooleanField(default=False)
+    reread_true = models.BooleanField(default=False)
+    browser_language = models.CharField(max_length=2, default='')
+    user_agent = models.CharField(max_length=200, default='')
+    user_agent_mobile = models.BooleanField(null=True)
+    user_agent_pc = models.BooleanField(null=True)
+    user_agent_browser = models.CharField(max_length=200, default='')
+    user_agent_os = models.CharField(max_length=200, default='')
+    user_agent_device = models.CharField(max_length=200, default='')
+    date_arrive = models.DateTimeField(default=timezone.now)
+    date_finish = models.DateTimeField(null=True)
     time_index = models.DecimalField(max_digits=5, decimal_places=0, default=0)
     time_news1 = models.DecimalField(max_digits=5, decimal_places=0, default=0)
     time_news2 = models.DecimalField(max_digits=5, decimal_places=0, default=0)
@@ -83,3 +92,9 @@ class Answer(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     value = models.TextField()  #TODO: check whether TextField is the best type!
+
+
+class ErrorTrack(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    state = models.CharField(max_length=200)
+    error_cod = models.CharField(max_length=200)

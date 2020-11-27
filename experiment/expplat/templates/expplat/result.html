@@ -3,7 +3,15 @@
 <html lang="en">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZRKXWNPR"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-CZZRKXWNPR');
+	</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>experiment sample platform {% block title %}{% endblock %}</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
 	<script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
@@ -92,7 +100,7 @@ footer p {
 <body>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap.bundle.min.js"></script>
+	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
 
 
 
@@ -103,37 +111,43 @@ footer p {
 
             <div class="row">
                 <div class="col-sm-12">
-                    <h1>Gracias por su participación!</h1>
+                    <h1>¡Gracias por su participación!</h1>
                     <br>
                     <p>Esta encuesta se realiza en el marco del proyecto RRSSalud, financiado por la fundación BBVA. Durante la encuesta, usted fue invitado a leer dos noticias aleatorias; una de contenido verdadero y la otra de contenido falso. El propósito de la encuesta fue investigar el nivel de vulnerabilidad de las personas a las noticias falsas. Además, evaluar potenciales acciones posteriores a tomar a partir de las noticias leídas.</p>
                     <p>Las noticias visualizadas se encuentran relacionadas con algún aspecto de la pandemia COVID-19 y fueron extraídas de medios digitales de comunicación.</p>
-                    <p>Si desea conocer más información sobre el proyecto de investigación y el experimento favor contactar con <strong>algo@algo.com</strong> o bien puede visitar nuestro perfil de twitter <a href="https://twitter.com/RRSSalud">@RRSSalud</a>.</p>
+                    <p>Si desea conocer más información sobre el proyecto de investigación y el experimento favor contactar con <a href="mailto:mediaexp@bsc.es">mediaexp@bsc.es</a> o bien puede visitar nuestro perfil de twitter <a href="https://twitter.com/RRSSalud" target="_blank">@RRSSalud</a>.</p>
                 </div>
             </div>
             <hr>
             <div class="row">
-                <div class="col-md-4 col-sm-12">
-                    <h3><span class="badge badge-success" style="display: {{news1.display_true}};">VERDADERA</span></h3>
-                    <h3><span class="badge badge-danger" style="display: {{news1.display_fake}};">FALSA</span></h3>
-                </div>
-                <div class="col-md-8 col-sm-12">
+              <div class="col-sm-12">
+                <p>Durante la encuesta usted leyó las siguientes dos noticias. Abajo se expone la veracidad de cada una.</p>
+              </div>
+            </div>
+            <div class="row">                
+                <div class="col-md-10 col-sm-12">
                     <h3><strong>{{news1.title}}</strong></h3>
                 </div>
+                <div class="col-md-2 col-sm-12">                    
+                  <h3><span class="badge badge-success" style="display: {{news1.display_true}};">Verdadera</span></h3>
+                  <h3><span class="badge badge-danger" style="display: {{news1.display_fake}};">Falsa</span></h3>
+                </div>
                 <div class="col-sm-12" style="display: {{news1.display_fake}};">
-                    <h6>Fue desmentida en: <a href="{{ news1.ver_doc }}">{{ news1.ver_title }}</a></h6>
+                    <p>Fue desmentida en: <a href="{{ news1.ver_doc }}" target="_blank">{{ news1.ver_title }}</a></p>
                 </div>
             </div>
-            <hr>
+            <!-- <hr> -->
+            <br>
             <div class="row">
-                <div class="col-md-4 col-sm-12">
-                    <h3><span class="badge badge-success" style="display: {{news2.display_true}};">VERDADERA</span></h3>
-                    <h3><span class="badge badge-danger" style="display: {{news2.display_fake}};">FALSA</span></h3>
+                <div class="col-md-10 col-sm-12">
+                  <h3><strong>{{news2.title}}</strong></h3>
                 </div>
-                <div class="col-md-8 col-sm-12">
-                    <h3><strong>{{news2.title}}</strong></h3>
-                </div>
+                <div class="col-md-2 col-sm-12">
+                    <h3><span class="badge badge-success" style="display: {{news2.display_true}};">Verdadera</span></h3>
+                    <h3><span class="badge badge-danger" style="display: {{news2.display_fake}};">Falsa</span></h3>
+                </div>                
                 <div class="col-sm-12" style="display: {{news2.display_fake}};">
-                    <h6>Fue desmentida en: <a href="{{ news2.ver_doc }}">{{ news2.ver_title }}</a></h6>
+                    <p>Fue desmentida en: <a href="{{ news2.ver_doc }}" target="_blank">{{ news2.ver_title }}</a></p>
                 </div>
             </div>
             <hr>

@@ -3,7 +3,15 @@
 <html lang="en">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-CZZRKXWNPR"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-CZZRKXWNPR');
+	</script>
 	<title>experiment sample platform {% block title %}{% endblock %}</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
 	<script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
@@ -81,6 +89,10 @@
           margin-bottom: 10px !important;
         }
 
+        .table th {
+           text-align: center;
+        }
+
     </style>
 
 </head>
@@ -88,7 +100,7 @@
 <body>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="../bootstrap.bundle.min.js"></script>
+	<script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
 
     <div class="progress">
       <div class="progress-bar bg-info" style="width: {{ progress }}%" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -104,6 +116,7 @@
                     <h2>¿Cuánto tiempo de su rutina dedica a las siguientes actividades?</h2>
                 </div>
             </div>
+            <p>Las preguntas marcadas con asterisco (*) son obligatorias.</p>
 
             <div class="row">
                 <div class="col-sm-12">
@@ -128,7 +141,7 @@
                                   <tbody>
                                     {% for que in questions %}
                                     <tr>
-                                        <th scope="row">{{ que.text }}</th>
+                                        <th scope="row">{{ que.text }}*</th>
                                         {% for choice in que.choice_set.all %}
                                             <td class="text-center"><input class="form-check-input" required type="radio" name="{{ que.question_code}}" id="{{ que.question_code }}_{{ choice.value }}" value="{{ choice.value }}"></td>
                                         {% endfor %}
