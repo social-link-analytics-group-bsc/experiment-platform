@@ -37,14 +37,12 @@ class FinishFilter(MultipleChoiceListFilter):
 
 
 class UsersAdmin(admin.ModelAdmin):
-    list_display = ['id', 'date_start', 'date_finish', 'state']
+    list_display = ['id', 'date_arrive', 'date_finish', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment', 'religion', 'politics', 'tech']
     #list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
+    ordering = ('-date_arrive', )
     list_filter = (FinishFilter, LangFilter, AgentFilter)
-
-    def date_start(self, obj):
-        return obj.date_arrive
 
     def fake_news(self, obj):
         return obj.news_fake_id
