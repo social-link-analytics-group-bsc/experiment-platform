@@ -354,8 +354,8 @@
                 init(no2selected, "no2");
             });
 
-            $("#tys10").on("change",function(){
-                if($("#tys10").is(":checked")){
+            $("#yes{{num_true}}_tys10").on("change",function(){
+                if($("#yes{{num_true}}_tys10").is(":checked")){
                     $("#tys10_div").removeClass("d-none");
                     $("#tys10_div").find("input").attr('required', true);
                 } else {
@@ -363,8 +363,8 @@
                     $("#tys10_div").find("input").attr('required', false);
                 }
             });
-            $("#tno13").on("change",function(){
-                if($("#tno13").is(":checked")){
+            $("#no{{num_true}}_tno13").on("change",function(){
+                if($("#no{{num_true}}_tno13").is(":checked")){
                     $("#tno13_div").removeClass("d-none");
                     $("#tno13_div").find("input").attr('required', true);
                 } else {
@@ -372,8 +372,8 @@
                     $("#tno13_div").find("input").attr('required', false);
                 }
             });
-            $("#fys10").on("change",function(){
-                if($("#fys10").is(":checked")){
+            $("#yes{{num_fake}}_fys10").on("change",function(){
+                if($("#yes{{num_fake}}_fys10").is(":checked")){
                     $("#fys10_div").removeClass("d-none");
                     $("#fys10_div").find("input").attr('required', true);
                 } else {
@@ -381,8 +381,8 @@
                     $("#fys10_div").find("input").attr('required', false);
                 }
             });
-            $("#fno13").on("change",function(){
-                if($("#fno13").is(":checked")){
+            $("#no{{num_fake}}_fno13").on("change",function(){
+                if($("#no{{num_fake}}_fno13").is(":checked")){
                     $("#fno13_div").removeClass("d-none");
                     $("#fno13_div").find("input").attr('required', true);
                 } else {
