@@ -339,7 +339,7 @@ class AnsAdmin(admin.ModelAdmin):
 
 
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'source', 'is_fake', 'appeared', 'appeared2', 'ans_true', 'ans_fake', 'error']
+    list_display = ['id', 'title', 'source', 'is_fake', 'appeared', 'ans_true', 'ans_fake', 'error']
     list_filter = ('is_fake', 'error')
 
     def appeared(self, obj):
@@ -358,7 +358,7 @@ class NewsAdmin(admin.ModelAdmin):
         else:
             usrs = User.objects.filter(news_true_id=obj.id, date_finish__isnull=False)
             return len(usrs)
-    appeared2.short_description = 'Freq Finished'
+    appeared2.short_description = 'Frequency Finished'
 
     def ans_true(self, obj):
         if obj.is_fake:
