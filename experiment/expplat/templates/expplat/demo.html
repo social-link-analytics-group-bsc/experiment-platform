@@ -174,6 +174,15 @@ footer p {
     <script>
 
         $(document).ready(function () {
+            $("#dmprv").on("change",function(){
+                if($("#dmprv").val() == "Fuera de España"){
+                    $("#dmpot_div").removeClass("d-none");
+                    $("#dmpot").attr('required', true);
+                } else {
+                    $("#dmpot_div").addClass("d-none");
+                    $("#dmpot").attr('required', false);
+                }
+            });
             $("#dmedu").on("change",function(){
                 if($("#dmedu").val() == "Otro"){
                     $("#dmedo_div").removeClass("d-none");
