@@ -12,13 +12,13 @@ class Experiment(models.Model):
 
 
 class News(models.Model):
-    is_fake = models.BooleanField()
-    topic = models.CharField(max_length=30)
-    doc = models.CharField(max_length=200)
-    source = models.CharField(max_length=100)
-    title = models.CharField(max_length=300)
-    ver_doc = models.CharField(max_length=200)
-    ver_title = models.CharField(max_length=300)
+    is_fake = models.BooleanField(null=True)
+    topic = models.CharField(max_length=30, default='')
+    doc = models.CharField(max_length=200, default='')
+    source = models.CharField(max_length=100, default='')
+    title = models.CharField(max_length=300, default='')
+    ver_doc = models.CharField(max_length=200, default='')
+    ver_title = models.CharField(max_length=300, default='')
     error = models.BooleanField(default=False)
 
     def __str__(self):
@@ -62,9 +62,9 @@ class QuestionType(models.Model):
 
 
 class Question(models.Model):
-    question_code = models.CharField(max_length=5)
-    text = models.CharField(max_length=200)
-    desc = models.CharField(max_length=100)
+    question_code = models.CharField(max_length=5, default='')
+    text = models.CharField(max_length=200, default='')
+    desc = models.CharField(max_length=100, default='')
     type = models.ForeignKey(QuestionType, on_delete=models.CASCADE)
     required = models.BooleanField(default=False)
 
@@ -74,7 +74,7 @@ class Question(models.Model):
 
 class Choice(models.Model):
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
-    value = models.CharField(max_length=100)
+    value = models.CharField(max_length=100, default='')
 
     def __str__(self):
         return str(self.question_id) + str(self.value)
@@ -91,10 +91,10 @@ class QuestionExperiment(models.Model):
 class Answer(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
-    value = models.TextField()  #TODO: check whether TextField is the best type!
+    value = models.TextField(default='')
 
 
 class ErrorTrack(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    state = models.CharField(max_length=200)
-    error_cod = models.CharField(max_length=200)
+    state = models.CharField(max_length=200, default='')
+    error_cod = models.CharField(max_length=200, default='')

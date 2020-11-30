@@ -1,47 +1,263 @@
 
 from django.contrib import admin
+from django.contrib.admin import SimpleListFilter
 from django_admin_multiple_choice_list_filter.list_filters import MultipleChoiceListFilter
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer, ErrorTrack
 
 
-class LangFilter(MultipleChoiceListFilter):
-    title = 'Lang'
-    parameter_name = 'browser_language__in'
+
+class GenderFilter(MultipleChoiceListFilter):
+    title = 'Gender'
+    parameter_name = 'gender'
 
     def lookups(self, request, model_admin):
-        lang_objs = User.objects.values('browser_language').distinct().order_by('browser_language')
-        langs = []
-        for lang_obj in lang_objs:
-            langs.append((lang_obj['browser_language'], str(lang_obj['browser_language'])))
-        return tuple(langs)
-
-
-class AgentFilter(MultipleChoiceListFilter):
-    title = 'AgentBrow'
-    parameter_name = 'user_agent_browser__in'
-
-    def lookups(self, request, model_admin):
-        agent_objs = User.objects.values('user_agent_browser').distinct().order_by('user_agent_browser')
+        que = Question.objects.filter(question_code='dmgen')[0]
+        agent_objs = que.choice_set.all()
         agents = []
         for agent_obj in agent_objs:
-            agents.append((agent_obj['user_agent_browser'], str(agent_obj['user_agent_browser'])))
+            agents.append((agent_obj.value, str(agent_obj.value)))
         return tuple(agents)
 
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        que = Question.objects.filter(question_code='dmgen')[0]
+        ans = Answer.objects.filter(question_id=que.id, value__in=value)
+        ids = []
+        for an in ans:
+            ids.append(an.user_id.id)
+        return queryset.filter(id__in=ids)
 
-class FinishFilter(MultipleChoiceListFilter):
-    title = 'Finished'
-    parameter_name = 'date_finish__isnull'
+class AgeFilter(MultipleChoiceListFilter):
+    title = 'Age'
+    parameter_name = 'age'
+
+    def lookups(self, request, model_admin):
+        que = Question.objects.filter(question_code='dmage')[0]
+        agent_objs = que.choice_set.all()
+        agents = []
+        for agent_obj in agent_objs:
+            agents.append((agent_obj.value, str(agent_obj.value)))
+        return tuple(agents)
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        que = Question.objects.filter(question_code='dmage')[0]
+        ans = Answer.objects.filter(question_id=que.id, value__in=value)
+        ids = []
+        for an in ans:
+            ids.append(an.user_id.id)
+        return queryset.filter(id__in=ids)
+
+
+class ProvinceFilter(MultipleChoiceListFilter):
+    title = 'Province / location'
+    parameter_name = 'province'
+
+    def lookups(self, request, model_admin):
+        que = Question.objects.filter(question_code='dmprv')[0]
+        agent_objs = que.choice_set.all()
+        agents = []
+        for agent_obj in agent_objs:
+            agents.append((agent_obj.value, str(agent_obj.value)))
+        return tuple(agents)
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        que = Question.objects.filter(question_code='dmprv')[0]
+        ans = Answer.objects.filter(question_id=que.id, value__in=value)
+        ids = []
+        for an in ans:
+            ids.append(an.user_id.id)
+        return queryset.filter(id__in=ids)
+
+
+class EducationFilter(MultipleChoiceListFilter):
+    title = 'Education level'
+    parameter_name = 'education'
+
+    def lookups(self, request, model_admin):
+        que = Question.objects.filter(question_code='dmedu')[0]
+        agent_objs = que.choice_set.all()
+        agents = []
+        for agent_obj in agent_objs:
+            agents.append((agent_obj.value, str(agent_obj.value)))
+        return tuple(agents)
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        que = Question.objects.filter(question_code='dmedu')[0]
+        ans = Answer.objects.filter(question_id=que.id, value__in=value)
+        ids = []
+        for an in ans:
+            ids.append(an.user_id.id)
+        return queryset.filter(id__in=ids)
+
+
+class ProfessionFilter(MultipleChoiceListFilter):
+    title = 'Profession'
+    parameter_name = 'profession'
+
+    def lookups(self, request, model_admin):
+        que = Question.objects.filter(question_code='dmpro')[0]
+        agent_objs = que.choice_set.all()
+        agents = []
+        for agent_obj in agent_objs:
+            agents.append((agent_obj.value, str(agent_obj.value)))
+        return tuple(agents)
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        que = Question.objects.filter(question_code='dmpro')[0]
+        ans = Answer.objects.filter(question_id=que.id, value__in=value)
+        ids = []
+        for an in ans:
+            ids.append(an.user_id.id)
+        return queryset.filter(id__in=ids)
+
+
+class EmploymentFilter(MultipleChoiceListFilter):
+    title = 'Employment status'
+    parameter_name = 'employment'
+
+    def lookups(self, request, model_admin):
+        que = Question.objects.filter(question_code='dmjob')[0]
+        agent_objs = que.choice_set.all()
+        agents = []
+        for agent_obj in agent_objs:
+            agents.append((agent_obj.value, str(agent_obj.value)))
+        return tuple(agents)
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        que = Question.objects.filter(question_code='dmjob')[0]
+        ans = Answer.objects.filter(question_id=que.id, value__in=value)
+        ids = []
+        for an in ans:
+            ids.append(an.user_id.id)
+        return queryset.filter(id__in=ids)
+
+
+class ReligionFilter(MultipleChoiceListFilter):
+    title = 'Religion'
+    parameter_name = 'religion'
+
+    def lookups(self, request, model_admin):
+        que = Question.objects.filter(question_code='dmrel')[0]
+        agent_objs = que.choice_set.all()
+        agents = []
+        for agent_obj in agent_objs:
+            agents.append((agent_obj.value, str(agent_obj.value)))
+        return tuple(agents)
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        que = Question.objects.filter(question_code='dmrel')[0]
+        ans = Answer.objects.filter(question_id=que.id, value__in=value)
+        ids = []
+        for an in ans:
+            ids.append(an.user_id.id)
+        return queryset.filter(id__in=ids)
+
+
+class PoliticalFilter(MultipleChoiceListFilter):
+    title = 'Political orientation'
+    parameter_name = 'politics'
+
+    def lookups(self, request, model_admin):
+        que = Question.objects.filter(question_code='dmpol')[0]
+        agent_objs = que.choice_set.all()
+        agents = []
+        for agent_obj in agent_objs:
+            agents.append((agent_obj.value, str(agent_obj.value)))
+        return tuple(agents)
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        que = Question.objects.filter(question_code='dmpol')[0]
+        ans = Answer.objects.filter(question_id=que.id, value__in=value)
+        ids = []
+        for an in ans:
+            ids.append(an.user_id.id)
+        return queryset.filter(id__in=ids)
+
+
+class TechFilter(MultipleChoiceListFilter):
+    title = 'Technical skills'
+    parameter_name = 'tech'
+
+    def lookups(self, request, model_admin):
+        que = Question.objects.filter(question_code='dmtec')[0]
+        agent_objs = que.choice_set.all()
+        agents = []
+        for agent_obj in agent_objs:
+            agents.append((agent_obj.value, str(agent_obj.value)))
+        return tuple(agents)
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        que = Question.objects.filter(question_code='dmtec')[0]
+        ans = Answer.objects.filter(question_id=que.id, value__in=value)
+        ids = []
+        for an in ans:
+            ids.append(an.user_id.id)
+        return queryset.filter(id__in=ids)
+
+
+class FinishFilter(SimpleListFilter):
+    title = 'Experiment state'
+    parameter_name = 'date_finish'
 
     def lookups(self, request, model_admin):
         return tuple([(False, "Finished"), (True, "Not finished")])
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value == "True"
+        return queryset.filter(date_finish__isnull=value)
 
 
 class UsersAdmin(admin.ModelAdmin):
     list_display = ['id', 'date_start', 'date_finish', 'state']
     list_display += ['fake_news', 'true_news']
-    list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment', 'religion', 'politics', 'tech']
+    list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
+    list_display += ['religion', 'politics', 'tech']
     #list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
-    list_filter = (FinishFilter, LangFilter, AgentFilter)
+    ordering = ('-date_arrive', )
+    list_filter = (FinishFilter, GenderFilter, AgeFilter)
+    list_filter += (ProvinceFilter, EducationFilter, ProfessionFilter, EmploymentFilter)
+    list_filter += (ReligionFilter, PoliticalFilter, TechFilter)
+
+    class Media:
+        js = ['js/jquery.js', 'admin/js/list_filter_collapse.js']
 
     def date_start(self, obj):
         return obj.date_arrive
@@ -55,18 +271,25 @@ class UsersAdmin(admin.ModelAdmin):
     true_news.short_description = 'True News'
 
     def state(self, obj):
-        ans = len(Answer.objects.filter(user_id=obj.id))
-        if ans == 0:
-            return 'read'
-        elif ans < 40:
-            return 'answer'
-        elif ans < 50:
-            return 'demo'
-        elif ans < 60:
-            return 'rutina'
-        elif ans > 70:
-            return 'finish'
+        if obj.date_finish is not None:
+            return 'Finished'
+        else:
+            return 'Not finished'
 
+        # if obj.date_finish is not None:
+        #     return 'result'
+        # elif obj.time_rutina > 0:
+        #     return 'rutina'
+        # elif obj.time_demo > 0:
+        #     return 'demo'
+        # elif obj.time_answer > 0:
+        #     return 'answer'
+        # elif obj.time_news2 > 0:
+        #     return 'news 2'
+        # elif obj.time_news1 > 0:
+        #     return 'news 1'
+        # else:
+        #     return 'index'
 
     def translateAns(self, code, obj):
         que = Question.objects.filter(question_code=code)[0]
@@ -116,8 +339,65 @@ class AnsAdmin(admin.ModelAdmin):
 
 
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'is_fake', 'error', 'topic', 'title']
+    list_display = ['id', 'title', 'source', 'is_fake', 'appeared', 'ans_true', 'ans_fake', 'error']
     list_filter = ('is_fake', 'error')
+
+    def appeared(self, obj):
+        if obj.is_fake:
+            usrs = User.objects.filter(news_fake_id=obj.id)
+            return len(usrs)
+        else:
+            usrs = User.objects.filter(news_true_id=obj.id)
+            return len(usrs)
+    appeared.short_description = 'Freq'
+
+    def appeared2(self, obj):
+        if obj.is_fake:
+            usrs = User.objects.filter(news_fake_id=obj.id, date_finish__isnull=False)
+            return len(usrs)
+        else:
+            usrs = User.objects.filter(news_true_id=obj.id, date_finish__isnull=False)
+            return len(usrs)
+    appeared2.short_description = 'Frequency Finished'
+
+    def ans_true(self, obj):
+        if obj.is_fake:
+            que = Question.objects.filter(question_code='fysno')[0]
+            usrs = User.objects.filter(news_fake_id=obj.id)
+            usrs_id = []
+            for usr in usrs:
+                usrs_id.append(usr.id)
+            ans = Answer.objects.filter(user_id__in=usrs_id, question_id=que.id, value='sí')
+            return len(ans)
+        else:
+            que = Question.objects.filter(question_code='tysno')[0]
+            usrs = User.objects.filter(news_true_id=obj.id)
+            usrs_id = []
+            for usr in usrs:
+                usrs_id.append(usr.id)
+            ans = Answer.objects.filter(user_id__in=usrs_id, question_id=que.id, value='sí')
+            return len(ans)
+    ans_true.short_description = 'True'
+
+    def ans_fake(self, obj):
+        if obj.is_fake:
+            que = Question.objects.filter(question_code='fysno')[0]
+            usrs = User.objects.filter(news_fake_id=obj.id)
+            usrs_id = []
+            for usr in usrs:
+                usrs_id.append(usr.id)
+            ans = Answer.objects.filter(user_id__in=usrs_id, question_id=que.id, value='no')
+            return len(ans)
+        else:
+            que = Question.objects.filter(question_code='tysno')[0]
+            usrs = User.objects.filter(news_true_id=obj.id)
+            usrs_id = []
+            for usr in usrs:
+                usrs_id.append(usr.id)
+            ans = Answer.objects.filter(user_id__in=usrs_id, question_id=que.id, value='no')
+            return len(ans)
+    ans_fake.short_description = 'Fake'
+
 
 admin.site.register(Experiment)
 admin.site.register(News, NewsAdmin)
