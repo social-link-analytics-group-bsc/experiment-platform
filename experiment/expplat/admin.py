@@ -342,8 +342,65 @@ class AnsAdmin(admin.ModelAdmin):
 
 
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'is_fake', 'error', 'topic', 'title']
+    list_display = ['id', 'title', 'source', 'is_fake', 'appeared', 'appeared2', 'ans_true', 'ans_fake', 'error']
     list_filter = ('is_fake', 'error')
+
+    def appeared(self, obj):
+        if obj.is_fake:
+            usrs = User.objects.filter(news_fake_id=obj.id)
+            return len(usrs)
+        else:
+            usrs = User.objects.filter(news_true_id=obj.id)
+            return len(usrs)
+    appeared.short_description = 'Freq'
+
+    def appeared2(self, obj):
+        if obj.is_fake:
+            usrs = User.objects.filter(news_fake_id=obj.id, date_finish__isnull=False)
+            return len(usrs)
+        else:
+            usrs = User.objects.filter(news_true_id=obj.id, date_finish__isnull=False)
+            return len(usrs)
+    appeared2.short_description = 'Freq Finished'
+
+    def ans_true(self, obj):
+        if obj.is_fake:
+            que = Question.objects.filter(question_code='fysno')[0]
+            usrs = User.objects.filter(news_fake_id=obj.id)
+            usrs_id = []
+            for usr in usrs:
+                usrs_id.append(usr.id)
+            ans = Answer.objects.filter(user_id__in=usrs_id, question_id=que.id, value='sí')
+            return len(ans)
+        else:
+            que = Question.objects.filter(question_code='tysno')[0]
+            usrs = User.objects.filter(news_true_id=obj.id)
+            usrs_id = []
+            for usr in usrs:
+                usrs_id.append(usr.id)
+            ans = Answer.objects.filter(user_id__in=usrs_id, question_id=que.id, value='sí')
+            return len(ans)
+    ans_true.short_description = 'True'
+
+    def ans_fake(self, obj):
+        if obj.is_fake:
+            que = Question.objects.filter(question_code='fysno')[0]
+            usrs = User.objects.filter(news_fake_id=obj.id)
+            usrs_id = []
+            for usr in usrs:
+                usrs_id.append(usr.id)
+            ans = Answer.objects.filter(user_id__in=usrs_id, question_id=que.id, value='no')
+            return len(ans)
+        else:
+            que = Question.objects.filter(question_code='tysno')[0]
+            usrs = User.objects.filter(news_true_id=obj.id)
+            usrs_id = []
+            for usr in usrs:
+                usrs_id.append(usr.id)
+            ans = Answer.objects.filter(user_id__in=usrs_id, question_id=que.id, value='no')
+            return len(ans)
+    ans_fake.short_description = 'Fake'
+
 
 admin.site.register(Experiment)
 admin.site.register(News, NewsAdmin)
