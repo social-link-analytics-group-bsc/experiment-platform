@@ -103,6 +103,13 @@ footer p {
   margin-bottom: 10px !important;
 }
 
+.back-img {
+	background-image: url('{% static "expplat/load.gif" %}');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+
 
 
 </style>
@@ -139,7 +146,7 @@ footer p {
 
 	<div class="row">
 		<div class="col-sm-12">
-			<div class="container center-uri">
+			<div id="div_iframe d-none" class="container center-uri back-img">
 				<iframe class="embed-responsive-item" style="width: 100%; height: 100%;" src="{{doc}}"></iframe>
 			</div>
 		</div>
@@ -193,6 +200,7 @@ footer p {
 					});
 				});
             });
+
         });
 
 	</script>
