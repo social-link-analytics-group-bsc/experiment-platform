@@ -217,41 +217,41 @@ def answer(request):
     fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
     fnox = Question.objects.filter(question_code__startswith="fno")
     fafx = Question.objects.filter(question_code__startswith="faf")
-    fys10 = Question.objects.filter(question_code='fys10')[0]
-    fno13 = Question.objects.filter(question_code='fno13')[0]
+    fysot = Question.objects.filter(question_code='fysot')[0]
+    fnoot = Question.objects.filter(question_code='fnoot')[0]
 
     tysno = Question.objects.filter(question_code='tysno')[0]
     tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
     tnox = Question.objects.filter(question_code__startswith="tno")
     tafx = Question.objects.filter(question_code__startswith="taf")
-    tys10 = Question.objects.filter(question_code='tys10')[0]
-    tno13 = Question.objects.filter(question_code='tno13')[0]
+    tysot = Question.objects.filter(question_code='tysot')[0]
+    tnoot = Question.objects.filter(question_code='tnoot')[0]
 
     if request.session['first_fake']:
         quest1 = fysno
         quest1ys = fysx
-        quest1ys_otro = fys10
+        quest1ys_otro = fysot
         quest1no = fnox
-        quest1no_otro = fno13
+        quest1no_otro = fnoot
         quest1af = fafx
         quest2 = tysno
         quest2ys = tysx
-        quest2ys_otro = tys10
+        quest2ys_otro = tysot
         quest2no = tnox
-        quest2no_otro = tno13
+        quest2no_otro = tnoot
         quest2af = tafx
     else:
         quest1 = tysno
         quest1ys = tysx
-        quest1ys_otro = tys10
+        quest1ys_otro = tysot
         quest1no = tnox
-        quest1no_otro = tno13
+        quest1no_otro = tnoot
         quest1af = tafx
         quest2 = fysno
         quest2ys = fysx
-        quest2ys_otro = fys10
+        quest2ys_otro = fysot
         quest2no = fnox
-        quest2no_otro = fno13
+        quest2no_otro = fnoot
         quest2af = fafx
 
     news1 = get_object_or_404(News, pk=request.session['new1'])
@@ -319,9 +319,9 @@ def demo(request):
         fnox = Question.objects.filter(question_code__startswith="fno")
         if data['fysno'] == 'sí':
             for que in fysx:
-                if que.question_code == 'fys10':
+                if que.question_code == 'fysot':
                     Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value=data['fys10'])
+                    ans = Answer(user_id=usr, question_id=que, value=data['fysot'])
                     ans.save()
                 elif que.question_code in data.keys():
                     Answer.objects.filter(user_id=usr, question_id=que).delete()
@@ -341,9 +341,9 @@ def demo(request):
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
             for que in fnox:
-                if que.question_code == 'fno13':
+                if que.question_code == 'fnoot':
                     Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value=data['fno13'])
+                    ans = Answer(user_id=usr, question_id=que, value=data['fnoot'])
                     ans.save()
                 elif que.question_code in data.keys():
                     Answer.objects.filter(user_id=usr, question_id=que).delete()
@@ -363,9 +363,9 @@ def demo(request):
         tnox = Question.objects.filter(question_code__startswith="tno")
         if data['tysno'] == 'sí':
             for que in tysx:
-                if que.question_code == 'tys10':
+                if que.question_code == 'tysot':
                     Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value=data['tys10'])
+                    ans = Answer(user_id=usr, question_id=que, value=data['tysot'])
                     ans.save()
                 elif que.question_code in data.keys():
                     Answer.objects.filter(user_id=usr, question_id=que).delete()
@@ -385,9 +385,9 @@ def demo(request):
                 ans = Answer(user_id=usr, question_id=que, value='undisplayed')
                 ans.save()
             for que in tnox:
-                if que.question_code == 'tno13':
+                if que.question_code == 'tnoot':
                     Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value=data['tno13'])
+                    ans = Answer(user_id=usr, question_id=que, value=data['tnoot'])
                     ans.save()
                 elif que.question_code in data.keys():
                     Answer.objects.filter(user_id=usr, question_id=que).delete()
