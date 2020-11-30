@@ -5,17 +5,6 @@ from django_admin_multiple_choice_list_filter.list_filters import MultipleChoice
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer, ErrorTrack
 
 
-class LangFilter(MultipleChoiceListFilter):
-    title = 'Lang'
-    parameter_name = 'browser_language__in'
-
-    def lookups(self, request, model_admin):
-        lang_objs = User.objects.values('browser_language').distinct().order_by('browser_language')
-        langs = []
-        for lang_obj in lang_objs:
-            langs.append((lang_obj['browser_language'], str(lang_obj['browser_language'])))
-        return tuple(langs)
-
 
 class GenderFilter(MultipleChoiceListFilter):
     title = 'Gender'
@@ -242,7 +231,7 @@ class TechFilter(MultipleChoiceListFilter):
 
 
 class FinishFilter(SimpleListFilter):
-    title = 'Finished'
+    title = 'Experiment state'
     parameter_name = 'date_finish'
 
     def lookups(self, request, model_admin):
@@ -257,15 +246,18 @@ class FinishFilter(SimpleListFilter):
 
 
 class UsersAdmin(admin.ModelAdmin):
-    list_display = ['id', 'date_start', 'date_arrive', 'date_finish', 'state']
+    list_display = ['id', 'date_start', 'date_finish', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
     #list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
     ordering = ('-date_arrive', )
-    list_filter = (FinishFilter, LangFilter, GenderFilter, AgeFilter)
+    list_filter = (FinishFilter, GenderFilter, AgeFilter)
     list_filter += (ProvinceFilter, EducationFilter, ProfessionFilter, EmploymentFilter)
     list_filter += (ReligionFilter, PoliticalFilter, TechFilter)
+
+    class Media:
+        js = ['js/jquery.js', 'admin/js/list_filter_collapse.js']
 
     def date_start(self, obj):
         return obj.date_arrive
@@ -280,19 +272,24 @@ class UsersAdmin(admin.ModelAdmin):
 
     def state(self, obj):
         if obj.date_finish is not None:
-            return 'result'
-        elif obj.time_rutina > 0:
-            return 'rutina'
-        elif obj.time_demo > 0:
-            return 'demo'
-        elif obj.time_answer > 0:
-            return 'answer'
-        elif obj.time_news2 > 0:
-            return 'news 2'
-        elif obj.time_news1 > 0:
-            return 'news 1'
+            return 'Finished'
         else:
-            return 'index'
+            return 'Not finished'
+
+        # if obj.date_finish is not None:
+        #     return 'result'
+        # elif obj.time_rutina > 0:
+        #     return 'rutina'
+        # elif obj.time_demo > 0:
+        #     return 'demo'
+        # elif obj.time_answer > 0:
+        #     return 'answer'
+        # elif obj.time_news2 > 0:
+        #     return 'news 2'
+        # elif obj.time_news1 > 0:
+        #     return 'news 1'
+        # else:
+        #     return 'index'
 
     def translateAns(self, code, obj):
         que = Question.objects.filter(question_code=code)[0]
