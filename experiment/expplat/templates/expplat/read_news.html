@@ -125,20 +125,18 @@ footer p {
 
 	<div class="">
 		<div class="row">
-      <div class="col-sm-3"></div>
+			<div class="col-sm-3"></div>
 			<div class="col-sm-6">
 				<br>
 				<div class="">
-          <p class="lead">En el cuadro de más abajo se desplegará una noticia que fue <u>recientemente publicada en un medio de comunicación digital</u>.
-          El cuadro reproducirá la noticia tal cual se encuentra en el medio que la publicó, incluyendo publicidades, aviso sobre uso de cookies, mensaje sobre subscripciones, etc.<br></p>
-          <p class="lead">La carga de la noticia puede demorar unos segundos, <u>favor espere hasta que se cargue por completo</u>.
-          Si el cuadro aparece en blanco pruebe desplazarse hacia abajo para comenzar a ver la noticia.</p>
-					<p class="lead">Lea completa la noticia antes de avanzar con la encuesta. Al terminar, pulse el botón siguiente.</p>
-					<h3 style="display: {{moreread}};" align="center"><a href="{% url 'expplat:read_news_2' %}"><span class="badge badge-info">Siguiente</span></a></h3>
-					<h3 style="display: {{moreans}};" align="center"><a href="{% url 'expplat:answer' %}"><span class="badge badge-info">Siguiente</span></a></h3>
+					<p class="lead">En el cuadro de más abajo se desplegará una noticia que fue <u>recientemente publicada en un medio de comunicación digital</u>. El cuadro reproducirá la noticia tal cual se encuentra en el medio que la publicó, incluyendo publicidades, aviso sobre uso de cookies, mensaje sobre subscripciones, etc.<br></p>
+					<p class="lead">La carga de la noticia puede demorar unos segundos, <u>favor espere hasta que se cargue por completo</u>. Si el cuadro aparece en blanco pruebe desplazarse hacia abajo para comenzar a ver la noticia.</p>
+					<p id="sig_msg" class="lead d-none">Lea completa la noticia antes de avanzar con la encuesta. Al terminar, pulse el botón siguiente.</p>
+					<h3 id="sig_read" class="d-none" style="display: {{moreread}};" align="center"><a href="{% url 'expplat:read_news_2' %}"><span class="badge badge-info">Siguiente</span></a></h3>
+					<h3 id="sig_ans" class="d-none" style="display: {{moreans}};" align="center"><a href="{% url 'expplat:answer' %}"><span class="badge badge-info">Siguiente</span></a></h3>
 				</div>
-      </div>
-      <div class="col-sm-3"></div>
+      		</div>
+			<div class="col-sm-3"></div>
 		</div>
 	</div>
 
@@ -147,17 +145,17 @@ footer p {
 	<div class="row">
 		<div class="col-sm-12">
 			<div id="div_iframe d-none" class="container center-uri back-img">
-				<iframe class="embed-responsive-item" style="width: 100%; height: 100%;" src="{{doc}}"></iframe>
+				<iframe id="iframe_noti" class="embed-responsive-item" src="{{doc}}" onload="onMyFrameLoad(this)" style="width: 100%; height: 100%;"></iframe>
 			</div>
 		</div>
 	</div>
 	<br>
 	<div class="row">
-    <div class="col-sm-5"></div>
+    	<div class="col-sm-5"></div>
 		<div class="col-sm-3">
 			<button id="noLoadBut" type="button" class="btn btn-danger">Reportar que la noticia no se ha cargado en el cuadro</button>
     	</div>
-    <div class="col-sm-4"></div>
+    	<div class="col-sm-4"></div>
 	</div>
 
 	<div class="footer text-center bottom-uri">
@@ -203,8 +201,16 @@ footer p {
 
         });
 
-	</script>
+		function onMyFrameLoad() {
+			$('#sig_msg').removeClass("d-none");
+			if('{{moreread}}'=='block'){
+				$('#sig_read').removeClass("d-none");
+			} else {
+				$('#sig_ans').removeClass("d-none");
+			}
+		};
 
+	</script>
 
 </body>
 
