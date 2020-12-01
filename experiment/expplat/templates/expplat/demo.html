@@ -146,7 +146,7 @@ footer p {
                                 {% ifequal que.type|stringformat:"s" "input" %}
                                     <div class="form-group d-none" id="{{ que.question_code }}_div">
                                         <label for="{{ que.question_code }}">{{ que.text }}</label>
-                                        <input class="form-control" {% if que.required == True %}required{% endif %} type="text" name="{{ que.question_code}}" id="{{ que.question_code }}">
+                                        <input class="form-control" {% if que.required == True %}required{% endif %} type="text" name="{{ que.question_code}}" id="{{ que.question_code }}" maxlength="50">
                                     </div>
                                 {% endifequal %}
 
