@@ -66,12 +66,12 @@ def index(request):
     exp = Experiment.objects.all()[0]
 
     # from all news, one article is taken randomly as the first article to be read
-    allnews = News.objects.filter(error=False)
+    allnews = News.objects.all()
     first_int = rnd.randint(0, len(allnews)-1)
     first_new = allnews[first_int]
 
     # if the first article is fake, one from the true news is chosen and othewise if the first article is true
-    othernews = News.objects.filter(is_fake=(not first_new.is_fake), error=False)
+    othernews = News.objects.filter(is_fake=(not first_new.is_fake))
     second_int = rnd.randint(0, len(othernews)-1)
     second_new = othernews[second_int]
 
