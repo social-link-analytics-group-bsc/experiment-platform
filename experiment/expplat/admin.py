@@ -573,7 +573,6 @@ class IpadressAdmin(admin.ModelAdmin):
         unique_ipaddress = []
         unique_ids = []
         for ipaddress_obj in qs.all():
-            print(ipaddress_obj.address)
             if ipaddress_obj.address not in unique_ipaddress:
                 unique_ipaddress.append(ipaddress_obj.address)
                 unique_ids.append(ipaddress_obj.id)
