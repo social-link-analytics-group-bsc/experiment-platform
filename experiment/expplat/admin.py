@@ -1,9 +1,29 @@
 
 from django.contrib import admin
+from django.http import HttpResponse
 from django.contrib.admin import SimpleListFilter
 from django_admin_multiple_choice_list_filter.list_filters import MultipleChoiceListFilter
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer, ErrorTrack
+import csv
 
+
+class ExportCsvMixin:
+    def export_as_csv(self, request, queryset):
+
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(field_names)
+        for obj in queryset:
+            row = writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+
+    export_as_csv.short_description = "Export Selected"
 
 
 class GenderFilter(MultipleChoiceListFilter):
@@ -245,7 +265,7 @@ class FinishFilter(SimpleListFilter):
         return queryset.filter(date_finish__isnull=value)
 
 
-class UsersAdmin(admin.ModelAdmin):
+class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = ['id', 'date_start', 'date_finish', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
@@ -255,6 +275,7 @@ class UsersAdmin(admin.ModelAdmin):
     list_filter = (FinishFilter, GenderFilter, AgeFilter)
     list_filter += (ProvinceFilter, EducationFilter, ProfessionFilter, EmploymentFilter)
     list_filter += (ReligionFilter, PoliticalFilter, TechFilter)
+    actions = ["export_as_csv"]
 
     class Media:
         js = ['js/jquery.js', 'admin/js/list_filter_collapse.js']
@@ -338,9 +359,11 @@ class AnsAdmin(admin.ModelAdmin):
         return obj.question_id.text
 
 
-class NewsAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'source', 'is_fake', 'appeared', 'ans_true', 'ans_fake', 'error']
+class NewsAdmin(admin.ModelAdmin, ExportCsvMixin):
+    list_display = ['id', 'title', 'source', 'is_fake']
+    list_display += ['appeared', 'appeared2', 'ans_true', 'ans_fake', 'error']
     list_filter = ('is_fake', 'error')
+    actions = ["export_as_csv"]
 
     def appeared(self, obj):
         if obj.is_fake:
