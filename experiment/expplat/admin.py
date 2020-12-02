@@ -5,6 +5,8 @@ from django.contrib.admin import SimpleListFilter
 from django_admin_multiple_choice_list_filter.list_filters import MultipleChoiceListFilter
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer, ErrorTrack
 import csv
+from datetime import datetime as dt
+from datetime import timedelta
 
 
 class ExportCsvMixin:
@@ -49,6 +51,7 @@ class GenderFilter(MultipleChoiceListFilter):
         for an in ans:
             ids.append(an.user_id.id)
         return queryset.filter(id__in=ids)
+
 
 class AgeFilter(MultipleChoiceListFilter):
     title = 'Age'
@@ -265,15 +268,37 @@ class FinishFilter(SimpleListFilter):
         return queryset.filter(date_finish__isnull=value)
 
 
+class DayFilter(MultipleChoiceListFilter):
+    title = 'Day'
+    parameter_name = 'date_arrive'
+
+    def lookups(self, request, model_admin):
+        sdate = dt.fromisoformat('2020-12-01').date()
+        edate = dt.now().date()
+        delta = edate - sdate  # as timedelta
+        days = []
+        for i in range(delta.days + 1):
+            day = sdate + timedelta(days=i)
+            days.append((day, day))
+        return days
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        return queryset.filter(date_arrive__date__in=value)
+
+
 class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
-    list_display = ['id', 'date_start', 'date_finish', 'state']
+    list_display = ['id', 'start', 'time', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
     list_display += ['province_other']
     #list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
     ordering = ('-date_arrive', )
-    list_filter = (FinishFilter, GenderFilter, AgeFilter)
+    list_filter = (FinishFilter, DayFilter, GenderFilter, AgeFilter)
     list_filter += (ProvinceFilter, EducationFilter, ProfessionFilter, EmploymentFilter)
     list_filter += (ReligionFilter, PoliticalFilter, TechFilter)
     actions = ["export_as_csv"]
@@ -281,8 +306,13 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     class Media:
         js = ['js/jquery.js', 'admin/js/list_filter_collapse.js']
 
-    def date_start(self, obj):
-        return obj.date_arrive
+    def start(self, obj):
+        return obj.date_arrive.date()
+    start.short_description = 'Start'
+
+    def time(self, obj):
+        return obj.time_index + obj.time_news1 + obj.time_news2 + obj.time_answer + obj.time_demo + obj.time_rutina + obj.time_result
+    time.short_description = 'Time'
 
     def fake_news(self, obj):
         return obj.news_fake_id
