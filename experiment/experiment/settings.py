@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_admin_multiple_choice_list_filter',
+    'django_admin_listfilter_dropdown',
     'django_user_agents',
     'jquery',
 ]

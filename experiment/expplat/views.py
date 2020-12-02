@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 import time
 import random as rnd
-from .models import Experiment, News, User, Question, Answer, ErrorTrack
+from .models import Experiment, News, User, Question, Answer, ErrorTrack, Ipadress
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.http import HttpResponse as resp
@@ -47,7 +47,18 @@ def saveTimes(request, current):
     usr.save()
 
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 def index(request):
+
+    ipad = Ipadress(address=get_client_ip(request))
+    ipad.save()
 
     if 'state' in request.session.keys():
         request.session.flush()
@@ -56,12 +67,12 @@ def index(request):
     exp = Experiment.objects.all()[0]
 
     # from all news, one article is taken randomly as the first article to be read
-    allnews = News.objects.filter(error=False)
+    allnews = News.objects.all()
     first_int = rnd.randint(0, len(allnews)-1)
     first_new = allnews[first_int]
 
     # if the first article is fake, one from the true news is chosen and othewise if the first article is true
-    othernews = News.objects.filter(is_fake=(not first_new.is_fake), error=False)
+    othernews = News.objects.filter(is_fake=(not first_new.is_fake))
     second_int = rnd.randint(0, len(othernews)-1)
     second_new = othernews[second_int]
 

@@ -134,3 +134,5 @@ mysql
 .env.dev
 mysql
 .vscode
+
+experiment/expplat/migrations

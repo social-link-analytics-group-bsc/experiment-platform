@@ -144,7 +144,7 @@ footer p {
 
 	<div class="row">
 		<div class="col-sm-12">
-			<div id="div_iframe d-none" class="container center-uri back-img">
+			<div id="div_iframe" class="container center-uri back-img">
 				<iframe id="iframe_noti" class="embed-responsive-item" src="{{doc}}" onload="onMyFrameLoad(this)" style="width: 100%; height: 100%;"></iframe>
 			</div>
 		</div>
@@ -203,6 +203,7 @@ footer p {
 
 		function onMyFrameLoad() {
 			$('#sig_msg').removeClass("d-none");
+			$('#div_iframe').removeClass("back-img");
 			if('{{moreread}}'=='block'){
 				$('#sig_read').removeClass("d-none");
 			} else {
