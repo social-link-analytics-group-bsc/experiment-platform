@@ -377,8 +377,12 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     start.short_description = 'Start'
 
     def time(self, obj):
-        return obj.time_index + obj.time_news1 + obj.time_news2 + obj.time_answer + obj.time_demo + obj.time_rutina + obj.time_result
-    time.short_description = 'Time'
+        time_seg = obj.time_index + obj.time_news1 + obj.time_news2 + \
+                   obj.time_answer + obj.time_demo + obj.time_rutina + \
+                   obj.time_result
+        time_min = round(time_seg/60,2)
+        return time_min
+    time.short_description = 'Time Spent (min)'
 
     def fake_news(self, obj):
         return obj.news_fake_id
