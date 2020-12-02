@@ -565,6 +565,26 @@ class NewsAdmin(admin.ModelAdmin, ExportCsvMixin):
     ans_fake_fin.short_description = 'False Fin'
 
 
+class IpadressAdmin(admin.ModelAdmin):
+    list_display = ['address', 'frequency']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        unique_ipaddress = []
+        unique_ids = []
+        for ipaddress_obj in qs.all():
+            print(ipaddress_obj.address)
+            if ipaddress_obj.address not in unique_ipaddress:
+                unique_ipaddress.append(ipaddress_obj.address)
+                unique_ids.append(ipaddress_obj.id)
+        return qs.filter(id__in=unique_ids)
+
+    def frequency(self, obj):
+        freq = Ipadress.objects.filter(address=obj.address).count()
+        return freq
+    frequency.short_description = 'Frequency'
+
+
 admin.site.register(Experiment)
 admin.site.register(News, NewsAdmin)
 admin.site.register(User, UsersAdmin)
@@ -574,4 +594,4 @@ admin.site.register(Choice)
 admin.site.register(QuestionExperiment)
 admin.site.register(Answer, AnsAdmin)
 admin.site.register(ErrorTrack)
-admin.site.register(Ipadress)
+admin.site.register(Ipadress, IpadressAdmin)
