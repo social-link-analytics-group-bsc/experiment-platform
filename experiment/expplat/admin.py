@@ -270,6 +270,7 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
+    list_display += ['province_other']
     #list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
     ordering = ('-date_arrive', )
     list_filter = (FinishFilter, GenderFilter, AgeFilter)
@@ -347,6 +348,10 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     def tech(self, obj):
         return self.translateAns('dmtec', obj)
     tech.short_description = 'Tech Skills'
+
+    def province_other(self, obj):
+        return self.translateAns('dmpot', obj)
+
 
 class AnsAdmin(admin.ModelAdmin):
     list_display = ['id', 'user_id', 'question_code', 'question_desc', 'value']
