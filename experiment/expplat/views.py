@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 import time
 import random as rnd
-from .models import Experiment, News, User, Question, Answer, ErrorTrack
+from .models import Experiment, News, User, Question, Answer, ErrorTrack, Ipadress
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.http import HttpResponse as resp
@@ -57,7 +57,8 @@ def get_client_ip(request):
 
 def index(request):
 
-    # get_client_ip(request) TODO save it somewhere anonymously
+    ipad = Ipadress(address=get_client_ip(request))
+    ipad.save()
 
     if 'state' in request.session.keys():
         request.session.flush()

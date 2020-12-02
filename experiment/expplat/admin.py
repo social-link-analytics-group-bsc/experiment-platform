@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib.admin import SimpleListFilter
 from django_admin_multiple_choice_list_filter.list_filters import MultipleChoiceListFilter
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
-from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer, ErrorTrack
+from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer, ErrorTrack, Ipadress
 import csv
 from datetime import datetime as dt
 from datetime import timedelta
@@ -570,3 +570,4 @@ admin.site.register(Choice)
 admin.site.register(QuestionExperiment)
 admin.site.register(Answer, AnsAdmin)
 admin.site.register(ErrorTrack)
+admin.site.register(Ipadress)

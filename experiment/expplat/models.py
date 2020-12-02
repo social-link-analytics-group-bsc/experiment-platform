@@ -3,6 +3,12 @@ from django.db import models
 from django.utils import timezone
 
 
+class Ipadress(models.Model):
+    address = models.CharField(max_length=50)
+    def __str__(self):
+        return self.address
+
+
 class Experiment(models.Model):
     experiment_code = models.CharField(max_length=5)
     desc = models.CharField(max_length=200)
