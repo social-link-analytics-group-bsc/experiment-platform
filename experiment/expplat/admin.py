@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.contrib.admin import SimpleListFilter
 from django_admin_multiple_choice_list_filter.list_filters import MultipleChoiceListFilter
+from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer, ErrorTrack
 import csv
 from datetime import datetime as dt
@@ -270,7 +271,7 @@ class FinishFilter(SimpleListFilter):
 
 class DayFilter(MultipleChoiceListFilter):
     title = 'Day'
-    parameter_name = 'date_arrive'
+    parameter_name = 'date_arrive__date'
 
     def lookups(self, request, model_admin):
         sdate = dt.fromisoformat('2020-12-01').date()
@@ -290,15 +291,80 @@ class DayFilter(MultipleChoiceListFilter):
         return queryset.filter(date_arrive__date__in=value)
 
 
+class WeekFilter(MultipleChoiceListFilter):
+    title = 'Week'
+    parameter_name = 'date_arrive__week'
+
+    def lookups(self, request, model_admin):
+        sdate = dt.fromisoformat('2020-11-30').date()
+        edate = dt.now().date()
+        weeks = [(sdate.isocalendar()[1], sdate)]
+        while weeks[-1][1] <= edate:
+            newday = weeks[-1][1] + timedelta(days=7)
+            weeks.append((newday.isocalendar()[1], newday))
+        return weeks
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value.split(",")
+        return queryset.filter(date_arrive__week__in=value)
+
+
+class DayMinFilter(SimpleListFilter):
+    title = 'Day-min'
+    parameter_name = 'date_arrive__date__gte'
+    template = 'django_admin_listfilter_dropdown/dropdown_filter.html'
+
+    def lookups(self, request, model_admin):
+        sdate = dt.fromisoformat('2020-12-01').date()
+        edate = dt.now().date()
+        delta = edate - sdate  # as timedelta
+        days = []
+        for i in range(delta.days + 1):
+            day = sdate + timedelta(days=i)
+            days.append((day, day))
+        return days
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        return queryset.filter(date_arrive__date__gte=value)
+
+
+class DayMaxFilter(SimpleListFilter):
+    title = 'Day-max'
+    parameter_name = 'date_arrive__date__lte'
+    template = 'django_admin_listfilter_dropdown/dropdown_filter.html'
+
+    def lookups(self, request, model_admin):
+        sdate = dt.fromisoformat('2020-12-01').date()
+        edate = dt.now().date()
+        delta = edate - sdate  # as timedelta
+        days = []
+        for i in range(delta.days + 1):
+            day = sdate + timedelta(days=i)
+            days.append((day, day))
+        return days
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        return queryset.filter(date_arrive__date__lte=value)
+
+
 class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = ['id', 'start', 'time', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
     list_display += ['province_other']
-    #list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
+    # list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
     ordering = ('-date_arrive', )
-    list_filter = (FinishFilter, DayFilter, GenderFilter, AgeFilter)
+    list_filter = (FinishFilter, DayFilter, WeekFilter, DayMinFilter, DayMaxFilter, GenderFilter, AgeFilter)
     list_filter += (ProvinceFilter, EducationFilter, ProfessionFilter, EmploymentFilter)
     list_filter += (ReligionFilter, PoliticalFilter, TechFilter)
     actions = ["export_as_csv"]
