@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.contrib.admin import SimpleListFilter
 from django_admin_multiple_choice_list_filter.list_filters import MultipleChoiceListFilter
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
+from django.db.models import Count
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer, ErrorTrack, Ipadress
 import csv
 from datetime import datetime as dt
@@ -356,12 +357,26 @@ class DayMaxFilter(SimpleListFilter):
         return queryset.filter(date_arrive__date__lte=value)
 
 
+class ErrorFilter(SimpleListFilter):
+    title = 'Reported error'
+    parameter_name = 'error'
+
+    def lookups(self, request, model_admin):
+        return tuple([(True, "Reported"), (False, "Not reported")])
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value == "True"
+        return queryset.filter(error=value)
+
+
 class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
-    list_display = ['id', 'start', 'time', 'state']
+    list_display = ['id', 'start', 'hour', 'time', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
-    list_display += ['province_other']
     # list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
     ordering = ('-date_arrive', )
     list_filter = (FinishFilter, DayFilter, WeekFilter, DayMinFilter, DayMaxFilter, GenderFilter, AgeFilter)
@@ -374,7 +389,11 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
 
     def start(self, obj):
         return obj.date_arrive.date()
-    start.short_description = 'Start'
+    start.short_description = 'Start Date'
+
+    def hour(self, obj):
+        return obj.date_arrive.time()
+    hour.short_description = 'Start Hour'
 
     def time(self, obj):
         time_seg = obj.time_index + obj.time_news1 + obj.time_news2 + \
@@ -422,7 +441,11 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
             return ans[0].value
 
     def employment(self, obj):
-        return self.translateAns('dmjob', obj)
+        res = self.translateAns('dmjob', obj)
+        if res == "Otro":
+            return self.translateAns('dmjoo', obj)
+        else:
+            return res
 
     def gender(self, obj):
         return self.translateAns('dmgen', obj)
@@ -431,16 +454,32 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
         return self.translateAns('dmage', obj)
 
     def location(self, obj):
-        return self.translateAns('dmprv', obj)
+        res = self.translateAns('dmprv', obj)
+        if res == "Fuera de España":
+            return self.translateAns('dmpot', obj)
+        else:
+            return res
 
     def education(self, obj):
-        return self.translateAns('dmedu', obj)
+        res = self.translateAns('dmedu', obj)
+        if res == "Otro":
+            return self.translateAns('dmedo', obj)
+        else:
+            return res
 
     def profession(self, obj):
-        return self.translateAns('dmpro', obj)    
+        res = self.translateAns('dmpro', obj)
+        if res == "Otro":
+            return self.translateAns('dmpoo', obj)
+        else:
+            return res
 
     def religion(self, obj):
-        return self.translateAns('dmrel', obj)
+        res = self.translateAns('dmrel', obj)
+        if res == "Otro":
+            return self.translateAns('dmreo', obj)
+        else:
+            return res
 
     def politics(self, obj):
         return self.translateAns('dmpol', obj)
@@ -448,9 +487,6 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     def tech(self, obj):
         return self.translateAns('dmtec', obj)
     tech.short_description = 'Tech Skills'
-
-    def province_other(self, obj):
-        return self.translateAns('dmpot', obj)
 
 
 class AnsAdmin(admin.ModelAdmin):
@@ -467,7 +503,7 @@ class AnsAdmin(admin.ModelAdmin):
 class NewsAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = ['id', 'title', 'source', 'is_fake']
     list_display += ['appeared', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error']
-    list_filter = ('is_fake', 'error')
+    list_filter = ('is_fake', ErrorFilter)
     actions = ["export_as_csv"]
 
     def appeared(self, obj):
@@ -576,12 +612,12 @@ class IpadressAdmin(admin.ModelAdmin):
             if ipaddress_obj.address not in unique_ipaddress:
                 unique_ipaddress.append(ipaddress_obj.address)
                 unique_ids.append(ipaddress_obj.id)
+        qs = qs.annotate(_frequency=Count("address", distinct=True))
         return qs.filter(id__in=unique_ids)
 
     def frequency(self, obj):
-        freq = Ipadress.objects.filter(address=obj.address).count()
-        return freq
-    frequency.short_description = 'Frequency'
+        return Ipadress.objects.filter(address=obj.address).count()
+    frequency.admin_order_field = '_frequency'
 
 
 admin.site.register(Experiment)
