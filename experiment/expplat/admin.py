@@ -388,11 +388,11 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
 
     def start(self, obj):
         return obj.date_arrive.date()
-    start.short_description = 'Start'
+    start.short_description = 'Start Date'
 
     def hour(self, obj):
         return obj.date_arrive.time()
-    hour.short_description = 'Hour'
+    hour.short_description = 'Start Hour'
 
     def time(self, obj):
         time_seg = obj.time_index + obj.time_news1 + obj.time_news2 + \
