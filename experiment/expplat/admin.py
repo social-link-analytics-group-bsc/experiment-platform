@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.contrib.admin import SimpleListFilter
 from django_admin_multiple_choice_list_filter.list_filters import MultipleChoiceListFilter
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
+from django.db.models import Count
 from .models import Experiment, News, User, QuestionType, Question, Choice, QuestionExperiment, Answer, ErrorTrack, Ipadress
 import csv
 from datetime import datetime as dt
@@ -611,12 +612,12 @@ class IpadressAdmin(admin.ModelAdmin):
             if ipaddress_obj.address not in unique_ipaddress:
                 unique_ipaddress.append(ipaddress_obj.address)
                 unique_ids.append(ipaddress_obj.id)
+        qs = qs.annotate(_frequency=Count("address", distinct=True))
         return qs.filter(id__in=unique_ids)
 
     def frequency(self, obj):
-        freq = Ipadress.objects.filter(address=obj.address).count()
-        return freq
-    frequency.short_description = 'Frequency'
+        return Ipadress.objects.filter(address=obj.address).count()
+    frequency.admin_order_field = '_frequency'
 
 
 admin.site.register(Experiment)
