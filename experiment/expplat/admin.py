@@ -356,6 +356,21 @@ class DayMaxFilter(SimpleListFilter):
         return queryset.filter(date_arrive__date__lte=value)
 
 
+class ErrorFilter(SimpleListFilter):
+    title = 'Reported error'
+    parameter_name = 'error'
+
+    def lookups(self, request, model_admin):
+        return tuple([(True, "Reported"), (False, "Not reported")])
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        value = value == "True"
+        return queryset.filter(error=value)
+
+
 class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = ['id', 'start', 'hour', 'time', 'state']
     list_display += ['fake_news', 'true_news']
@@ -487,7 +502,7 @@ class AnsAdmin(admin.ModelAdmin):
 class NewsAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = ['id', 'title', 'source', 'is_fake']
     list_display += ['appeared', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error']
-    list_filter = ('is_fake', 'error')
+    list_filter = ('is_fake', ErrorFilter)
     actions = ["export_as_csv"]
 
     def appeared(self, obj):
