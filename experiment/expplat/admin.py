@@ -357,7 +357,7 @@ class DayMaxFilter(SimpleListFilter):
 
 
 class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
-    list_display = ['id', 'start', 'time', 'state']
+    list_display = ['id', 'start', 'hour', 'time', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
@@ -374,6 +374,10 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     def start(self, obj):
         return obj.date_arrive.date()
     start.short_description = 'Start'
+
+    def hour(self, obj):
+        return obj.date_arrive.time()
+    hour.short_description = 'Hour'
 
     def time(self, obj):
         time_seg = obj.time_index + obj.time_news1 + obj.time_news2 + \
