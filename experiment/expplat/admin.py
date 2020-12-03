@@ -361,7 +361,6 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
-    list_display += ['province_other']
     # list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
     ordering = ('-date_arrive', )
     list_filter = (FinishFilter, DayFilter, WeekFilter, DayMinFilter, DayMaxFilter, GenderFilter, AgeFilter)
@@ -422,7 +421,11 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
             return ans[0].value
 
     def employment(self, obj):
-        return self.translateAns('dmjob', obj)
+        res = self.translateAns('dmjob', obj)
+        if res == "Otro":
+            return self.translateAns('dmjoo', obj)
+        else:
+            return res
 
     def gender(self, obj):
         return self.translateAns('dmgen', obj)
@@ -431,16 +434,32 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
         return self.translateAns('dmage', obj)
 
     def location(self, obj):
-        return self.translateAns('dmprv', obj)
+        res = self.translateAns('dmprv', obj)
+        if res == "Fuera de España":
+            return self.translateAns('dmpot', obj)
+        else:
+            return res
 
     def education(self, obj):
-        return self.translateAns('dmedu', obj)
+        res = self.translateAns('dmedu', obj)
+        if res == "Otro":
+            return self.translateAns('dmedo', obj)
+        else:
+            return res
 
     def profession(self, obj):
-        return self.translateAns('dmpro', obj)    
+        res = self.translateAns('dmpro', obj)
+        if res == "Otro":
+            return self.translateAns('dmpoo', obj)
+        else:
+            return res
 
     def religion(self, obj):
-        return self.translateAns('dmrel', obj)
+        res = self.translateAns('dmrel', obj)
+        if res == "Otro":
+            return self.translateAns('dmreo', obj)
+        else:
+            return res
 
     def politics(self, obj):
         return self.translateAns('dmpol', obj)
@@ -448,9 +467,6 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     def tech(self, obj):
         return self.translateAns('dmtec', obj)
     tech.short_description = 'Tech Skills'
-
-    def province_other(self, obj):
-        return self.translateAns('dmpot', obj)
 
 
 class AnsAdmin(admin.ModelAdmin):
