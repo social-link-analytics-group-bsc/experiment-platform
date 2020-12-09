@@ -508,7 +508,7 @@ class AnsAdmin(admin.ModelAdmin):
         return obj.question_id.text
 
 
-class NewsAdmin(admin.ModelAdmin, ExportCsvMixin):
+class NewsAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'source', 'is_fake']
     list_display += ['appeared', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error']
     list_filter = ('is_fake', ErrorFilter)
@@ -611,21 +611,6 @@ class NewsAdmin(admin.ModelAdmin, ExportCsvMixin):
 
 class IpadressAdmin(admin.ModelAdmin):
     list_display = ['address', 'frequency']
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        unique_ipaddress = []
-        unique_ids = []
-        for ipaddress_obj in qs.all():
-            if ipaddress_obj.address not in unique_ipaddress:
-                unique_ipaddress.append(ipaddress_obj.address)
-                unique_ids.append(ipaddress_obj.id)
-        qs = qs.annotate(_frequency=Count("address", distinct=True))
-        return qs.filter(id__in=unique_ids)
-
-    def frequency(self, obj):
-        return Ipadress.objects.filter(address=obj.address).count()
-    frequency.admin_order_field = '_frequency'
 
 
 admin.site.register(Experiment)
