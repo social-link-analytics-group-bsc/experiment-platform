@@ -494,7 +494,7 @@ class UsersAdmin(admin.ModelAdmin):
             info_to_write += [self.religion(obj), self.politics(obj), self.tech(obj)]
             writer.writerow(info_to_write)
         return response
-    export_as_csv.short_description = "Export Selected as CSV"
+    export_as_csv.short_description = "Export selected users as CSV"
 
 
 class AnsAdmin(admin.ModelAdmin):
@@ -611,6 +611,7 @@ class NewsAdmin(admin.ModelAdmin):
 
 class IpadressAdmin(admin.ModelAdmin):
     list_display = ['address', 'frequency']
+    ordering = ('-frequency', )
 
 
 admin.site.register(Experiment)
