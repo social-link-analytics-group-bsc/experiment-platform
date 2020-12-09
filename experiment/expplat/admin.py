@@ -11,25 +11,6 @@ from datetime import datetime as dt
 from datetime import timedelta
 
 
-class ExportCsvMixin:
-    def export_as_csv(self, request, queryset):
-
-        meta = self.model._meta
-        field_names = [field.name for field in meta.fields]
-
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
-        writer = csv.writer(response)
-
-        writer.writerow(field_names)
-        for obj in queryset:
-            row = writer.writerow([getattr(obj, field) for field in field_names])
-
-        return response
-
-    export_as_csv.short_description = "Export selected item"
-
-
 class GenderFilter(MultipleChoiceListFilter):
     title = 'Gender'
     parameter_name = 'gender'
@@ -372,8 +353,8 @@ class ErrorFilter(SimpleListFilter):
         return queryset.filter(error=value)
 
 
-class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
-    list_display = ['id', 'start', 'hour', 'time', 'state']
+class UsersAdmin(admin.ModelAdmin):
+    list_display = ['id', 'start', 'hour', 'time', 'finish', 'initiated', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
@@ -411,26 +392,33 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
         return obj.news_true_id
     true_news.short_description = 'True News'
 
-    def state(self, obj):
+    def finish(self, obj):
         if obj.date_finish is not None:
             return 'Finished'
         else:
             return 'Not finished'
 
-        # if obj.date_finish is not None:
-        #     return 'result'
-        # elif obj.time_rutina > 0:
-        #     return 'rutina'
-        # elif obj.time_demo > 0:
-        #     return 'demo'
-        # elif obj.time_answer > 0:
-        #     return 'answer'
-        # elif obj.time_news2 > 0:
-        #     return 'news 2'
-        # elif obj.time_news1 > 0:
-        #     return 'news 1'
-        # else:
-        #     return 'index'
+    def initiated(self, obj):
+        if obj.time_index > 0:
+            return 'initiated'
+        else:
+            return 'not init'
+
+    def state(self, obj):
+        if obj.date_finish is not None:
+            return 'result'
+        elif obj.time_demo > 0:
+            return 'rutina'
+        elif obj.time_answer > 0:
+            return 'demo'
+        elif obj.time_news2 > 0:
+            return 'answer'
+        elif obj.time_news1 > 0:
+            return 'news 2'
+        elif obj.time_index > 0:
+            return 'news 1'
+        else:
+            return 'index'
 
     def translateAns(self, code, obj):
         que = Question.objects.filter(question_code=code)[0]
@@ -489,6 +477,26 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     tech.short_description = 'Tech Skills'
 
 
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = ['id', 'start', 'hour', 'time', 'finish', 'initiated', 'state']
+        field_names += ['fake_news', 'true_news']
+        field_names += ['gender', 'age', 'location', 'education', 'profession', 'employment']
+        field_names += ['religion', 'politics', 'tech']
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response, delimiter=';')
+        writer.writerow(field_names)
+        for obj in queryset:
+            info_to_write = [obj.id, obj.date_arrive.date(), obj.date_arrive.time(), self.time(obj), self.finish(obj), self.initiated(obj), self.state(obj)]
+            info_to_write += [self.fake_news(obj), self.true_news(obj)]
+            info_to_write += [self.gender(obj), self.age(obj), self.location(obj), self.education(obj), self.profession(obj), self.employment(obj)]
+            info_to_write += [self.religion(obj), self.politics(obj), self.tech(obj)]
+            writer.writerow(info_to_write)
+        return response
+    export_as_csv.short_description = "Export selected users as CSV"
+
+
 class AnsAdmin(admin.ModelAdmin):
     list_display = ['id', 'user_id', 'question_code', 'question_desc', 'value']
     # list_filter = ("user_id", "value")
@@ -500,7 +508,7 @@ class AnsAdmin(admin.ModelAdmin):
         return obj.question_id.text
 
 
-class NewsAdmin(admin.ModelAdmin, ExportCsvMixin):
+class NewsAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'source', 'is_fake']
     list_display += ['appeared', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error']
     list_filter = ('is_fake', ErrorFilter)
@@ -603,21 +611,7 @@ class NewsAdmin(admin.ModelAdmin, ExportCsvMixin):
 
 class IpadressAdmin(admin.ModelAdmin):
     list_display = ['address', 'frequency']
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        unique_ipaddress = []
-        unique_ids = []
-        for ipaddress_obj in qs.all():
-            if ipaddress_obj.address not in unique_ipaddress:
-                unique_ipaddress.append(ipaddress_obj.address)
-                unique_ids.append(ipaddress_obj.id)
-        qs = qs.annotate(_frequency=Count("address", distinct=True))
-        return qs.filter(id__in=unique_ids)
-
-    def frequency(self, obj):
-        return Ipadress.objects.filter(address=obj.address).count()
-    frequency.admin_order_field = '_frequency'
+    ordering = ('-frequency', )
 
 
 admin.site.register(Experiment)

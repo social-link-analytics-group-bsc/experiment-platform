@@ -55,10 +55,25 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+
+def saveIpadress(num_ip):
+    ipads = Ipadress.objects.filter(address=num_ip)
+
+    if len(ipads) == 0:
+        ipad = Ipadress(address=num_ip, frequency=1)
+    elif len(ipads) == 1:
+        ipad = ipads[0]
+        setattr(ipad, 'frequency', getattr(ipad, 'frequency') + 1)
+    else:
+        print('error at saveIpadress')
+        return 'error'
+
+    ipad.save()
+
+
 def index(request):
 
-    ipad = Ipadress(address=get_client_ip(request))
-    ipad.save()
+    saveIpadress((get_client_ip(request)))
 
     if 'state' in request.session.keys():
         request.session.flush()
