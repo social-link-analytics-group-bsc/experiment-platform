@@ -52,7 +52,7 @@ COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
-RUN apt-get update & apt-get install -y netcat-openbsd libmariadb-dev
+RUN apt-get update --fix-missing & apt-get install -y netcat-openbsd libmariadb-dev
 
 # copy entrypoint.sh
 COPY ./entrypoint.sh $APP_HOME
