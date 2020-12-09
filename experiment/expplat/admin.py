@@ -11,25 +11,6 @@ from datetime import datetime as dt
 from datetime import timedelta
 
 
-class ExportCsvMixin:
-    def export_as_csv(self, request, queryset):
-
-        meta = self.model._meta
-        field_names = [field.name for field in meta.fields]
-
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
-        writer = csv.writer(response)
-
-        writer.writerow(field_names)
-        for obj in queryset:
-            row = writer.writerow([getattr(obj, field) for field in field_names])
-
-        return response
-
-    export_as_csv.short_description = "Export selected item"
-
-
 class GenderFilter(MultipleChoiceListFilter):
     title = 'Gender'
     parameter_name = 'gender'
@@ -372,7 +353,7 @@ class ErrorFilter(SimpleListFilter):
         return queryset.filter(error=value)
 
 
-class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
+class UsersAdmin(admin.ModelAdmin):
     list_display = ['id', 'start', 'hour', 'time', 'finish', 'initiated', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
@@ -494,6 +475,26 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
     def tech(self, obj):
         return self.translateAns('dmtec', obj)
     tech.short_description = 'Tech Skills'
+
+
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = ['id', 'start', 'hour', 'time', 'finish', 'initiated', 'state']
+        field_names += ['fake_news', 'true_news']
+        field_names += ['gender', 'age', 'location', 'education', 'profession', 'employment']
+        field_names += ['religion', 'politics', 'tech']
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response, delimiter=';')
+        writer.writerow(field_names)
+        for obj in queryset:
+            info_to_write = [obj.id, obj.date_arrive.date(), obj.date_arrive.time(), self.time(obj), self.finish(obj), self.initiated(obj), self.state(obj)]
+            info_to_write += [self.fake_news(obj), self.true_news(obj)]
+            info_to_write += [self.gender(obj), self.age(obj), self.location(obj), self.education(obj), self.profession(obj), self.employment(obj)]
+            info_to_write += [self.religion(obj), self.politics(obj), self.tech(obj)]
+            writer.writerow(info_to_write)
+        return response
+    export_as_csv.short_description = "Export Selected as CSV"
 
 
 class AnsAdmin(admin.ModelAdmin):
