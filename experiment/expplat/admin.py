@@ -373,7 +373,7 @@ class ErrorFilter(SimpleListFilter):
 
 
 class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
-    list_display = ['id', 'start', 'hour', 'time', 'state']
+    list_display = ['id', 'start', 'hour', 'time', 'finish', 'initiated', 'state']
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
@@ -411,26 +411,33 @@ class UsersAdmin(admin.ModelAdmin, ExportCsvMixin):
         return obj.news_true_id
     true_news.short_description = 'True News'
 
-    def state(self, obj):
+    def finish(self, obj):
         if obj.date_finish is not None:
             return 'Finished'
         else:
             return 'Not finished'
 
-        # if obj.date_finish is not None:
-        #     return 'result'
-        # elif obj.time_rutina > 0:
-        #     return 'rutina'
-        # elif obj.time_demo > 0:
-        #     return 'demo'
-        # elif obj.time_answer > 0:
-        #     return 'answer'
-        # elif obj.time_news2 > 0:
-        #     return 'news 2'
-        # elif obj.time_news1 > 0:
-        #     return 'news 1'
-        # else:
-        #     return 'index'
+    def initiated(self, obj):
+        if obj.time_index > 0:
+            return 'initiated'
+        else:
+            return 'not init'
+
+    def state(self, obj):
+        if obj.date_finish is not None:
+            return 'result'
+        elif obj.time_demo > 0:
+            return 'rutina'
+        elif obj.time_answer > 0:
+            return 'demo'
+        elif obj.time_news2 > 0:
+            return 'answer'
+        elif obj.time_news1 > 0:
+            return 'news 2'
+        elif obj.time_index > 0:
+            return 'news 1'
+        else:
+            return 'index'
 
     def translateAns(self, code, obj):
         que = Question.objects.filter(question_code=code)[0]
