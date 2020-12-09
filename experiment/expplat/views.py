@@ -73,7 +73,7 @@ def saveIpadress(num_ip):
 
 def index(request):
 
-    saveIpadress((get_client_ip(request)))
+    #saveIpadress((get_client_ip(request)))
 
     if 'state' in request.session.keys():
         request.session.flush()
