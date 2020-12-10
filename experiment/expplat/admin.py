@@ -435,6 +435,12 @@ class UsersAdmin(admin.ModelAdmin):
         else:
             return res
 
+    def employmentOt(self, obj):
+        return self.translateAns('dmjob', obj)
+
+    def employmentOtVal(self, obj):
+        return self.translateAns('dmjoo', obj)
+
     def gender(self, obj):
         return self.translateAns('dmgen', obj)
 
@@ -448,12 +454,31 @@ class UsersAdmin(admin.ModelAdmin):
         else:
             return res
 
+    def locationOt(self, obj):
+        return self.translateAns('dmprv', obj)
+
+    def locationOtVal(self, obj):
+        return self.translateAns('dmpot', obj)
+
+    def locationCountry(self, obj):
+        res = self.translateAns('dmprv', obj)
+        if res == "Fuera de España":
+            return res
+        else:
+            return "España"
+
     def education(self, obj):
         res = self.translateAns('dmedu', obj)
         if res == "Otro":
             return self.translateAns('dmedo', obj)
         else:
             return res
+
+    def educationOt(self, obj):
+        return self.translateAns('dmedu', obj)
+
+    def educationOtVal(self, obj):
+        return self.translateAns('dmedo', obj)
 
     def profession(self, obj):
         res = self.translateAns('dmpro', obj)
@@ -462,12 +487,24 @@ class UsersAdmin(admin.ModelAdmin):
         else:
             return res
 
+    def professionOt(self, obj):
+        return self.translateAns('dmpro', obj)
+
+    def professionOtVal(self, obj):
+        return self.translateAns('dmpoo', obj)
+
     def religion(self, obj):
         res = self.translateAns('dmrel', obj)
         if res == "Otro":
             return self.translateAns('dmreo', obj)
         else:
             return res
+
+    def religionOt(self, obj):
+        return self.translateAns('dmrel', obj)
+
+    def religionOtVal(self, obj):
+        return self.translateAns('dmreo', obj)
 
     def politics(self, obj):
         return self.translateAns('dmpol', obj)
@@ -481,8 +518,8 @@ class UsersAdmin(admin.ModelAdmin):
         meta = self.model._meta
         field_names = ['id', 'start', 'hour', 'time', 'finish', 'initiated', 'state']
         field_names += ['fake_news', 'true_news']
-        field_names += ['gender', 'age', 'location', 'education', 'profession', 'employment']
-        field_names += ['religion', 'politics', 'tech']
+        field_names += ['gender', 'age', 'location', 'loc-other', 'country', 'education', 'edu-other', 'profession', 'prof-other', 'employment', 'emp-other']
+        field_names += ['religion', 'rel-other', 'politics', 'tech']
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
         writer = csv.writer(response, delimiter=';')
@@ -490,8 +527,9 @@ class UsersAdmin(admin.ModelAdmin):
         for obj in queryset:
             info_to_write = [obj.id, obj.date_arrive.date(), obj.date_arrive.time(), self.time(obj), self.finish(obj), self.initiated(obj), self.state(obj)]
             info_to_write += [self.fake_news(obj), self.true_news(obj)]
-            info_to_write += [self.gender(obj), self.age(obj), self.location(obj), self.education(obj), self.profession(obj), self.employment(obj)]
-            info_to_write += [self.religion(obj), self.politics(obj), self.tech(obj)]
+            info_to_write += [self.gender(obj), self.age(obj), self.locationOt(obj), self.locationOtVal(obj), self.locationCountry(obj)]
+            info_to_write += [self.educationOt(obj), self.educationOtVal(obj), self.professionOt(obj), self.professionOtVal(obj), self.employmentOt(obj), self.employmentOtVal(obj)]
+            info_to_write += [self.religionOt(obj), self.religionOtVal(obj), self.politics(obj), self.tech(obj)]
             writer.writerow(info_to_write)
         return response
     export_as_csv.short_description = "Export selected users as CSV"
