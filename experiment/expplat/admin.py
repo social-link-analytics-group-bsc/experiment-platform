@@ -646,6 +646,23 @@ class NewsAdmin(admin.ModelAdmin):
             return len(ans)
     ans_fake_fin.short_description = 'False Fin'
 
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = ['id', 'title', 'source', 'is_fake']
+        field_names += ['appeared', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error']
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response, delimiter=';')
+        writer.writerow(field_names)
+        for obj in queryset:
+            info_to_write = [obj.id, obj.title, obj.source, obj.is_fake]
+            info_to_write += [self.appeared(obj), self.appeared2(obj)]
+            info_to_write += [self.ans_true(obj), self.ans_fake(obj), self.ans_true_fin(obj), self.ans_fake_fin(obj), obj.error]
+            writer.writerow(info_to_write)
+        return response
+
+    export_as_csv.short_description = "Export selected news as CSV"
+
 
 class IpadressAdmin(admin.ModelAdmin):
     list_display = ['address']
