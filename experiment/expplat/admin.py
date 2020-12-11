@@ -518,7 +518,7 @@ class UsersAdmin(admin.ModelAdmin):
         meta = self.model._meta
         field_names = ['id', 'start', 'hour', 'time', 'finish', 'initiated', 'state']
         field_names += ['fake_news', 'true_news']
-        field_names += ['gender', 'age', 'location', 'loc-other', 'country', 'education', 'edu-other', 'profession', 'prof-other', 'employment', 'emp-other']
+        field_names += ['gender', 'age', 'location', 'loc-other', 'education', 'edu-other', 'profession', 'prof-other', 'employment', 'emp-other']
         field_names += ['religion', 'rel-other', 'politics', 'tech']
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
@@ -527,7 +527,7 @@ class UsersAdmin(admin.ModelAdmin):
         for obj in queryset:
             info_to_write = [obj.id, obj.date_arrive.date(), obj.date_arrive.time(), self.time(obj), self.finish(obj), self.initiated(obj), self.state(obj)]
             info_to_write += [self.fake_news(obj), self.true_news(obj)]
-            info_to_write += [self.gender(obj), self.age(obj), self.locationOt(obj), self.locationOtVal(obj), self.locationCountry(obj)]
+            info_to_write += [self.gender(obj), self.age(obj), self.locationOt(obj), self.locationOtVal(obj)]
             info_to_write += [self.educationOt(obj), self.educationOtVal(obj), self.professionOt(obj), self.professionOtVal(obj), self.employmentOt(obj), self.employmentOtVal(obj)]
             info_to_write += [self.religionOt(obj), self.religionOtVal(obj), self.politics(obj), self.tech(obj)]
             writer.writerow(info_to_write)
