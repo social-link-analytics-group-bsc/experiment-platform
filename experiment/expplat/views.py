@@ -343,6 +343,7 @@ def demo(request):
 
         fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
         fnox = Question.objects.filter(question_code__startswith="fno")
+        fafx = Question.objects.filter(question_code__startswith="faf")
         if data['fysno'] == 'sí':
             for que in fysx:
                 if que.question_code == 'fysot':
@@ -379,6 +380,15 @@ def demo(request):
                     Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='unchecked')
                     ans.save()
+        for que in fafx:
+            if que.question_code in data.keys():
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='checked')
+                ans.save()
+            else:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                ans.save()
 
         tysno = Question.objects.filter(question_code='tysno')[0]
         Answer.objects.filter(user_id=usr, question_id=tysno).delete()
@@ -387,6 +397,7 @@ def demo(request):
 
         tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
         tnox = Question.objects.filter(question_code__startswith="tno")
+        tafx = Question.objects.filter(question_code__startswith="taf")
         if data['tysno'] == 'sí':
             for que in tysx:
                 if que.question_code == 'tysot':
@@ -423,6 +434,15 @@ def demo(request):
                     Answer.objects.filter(user_id=usr, question_id=que).delete()
                     ans = Answer(user_id=usr, question_id=que, value='unchecked')
                     ans.save()
+        for que in tafx:
+            if que.question_code in data.keys():
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='checked')
+                ans.save()
+            else:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                ans.save()
 
     dem = Question.objects.filter(question_code__startswith="dm")
 

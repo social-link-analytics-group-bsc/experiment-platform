@@ -363,7 +363,7 @@ class UsersAdmin(admin.ModelAdmin):
     list_filter = (FinishFilter, DayFilter, WeekFilter, DayMinFilter, DayMaxFilter, GenderFilter, AgeFilter)
     list_filter += (ProvinceFilter, EducationFilter, ProfessionFilter, EmploymentFilter)
     list_filter += (ReligionFilter, PoliticalFilter, TechFilter)
-    actions = ["export_as_csv"]
+    actions = ["export_as_csv", "export_all_csv"]
 
     class Media:
         js = ['js/jquery.js', 'admin/js/list_filter_collapse.js']
@@ -513,7 +513,6 @@ class UsersAdmin(admin.ModelAdmin):
         return self.translateAns('dmtec', obj)
     tech.short_description = 'Tech Skills'
 
-
     def export_as_csv(self, request, queryset):
         meta = self.model._meta
         field_names = ['id', 'start', 'hour', 'time', 'finish', 'initiated', 'state']
@@ -533,6 +532,40 @@ class UsersAdmin(admin.ModelAdmin):
             writer.writerow(info_to_write)
         return response
     export_as_csv.short_description = "Export selected users as CSV"
+
+    def export_all_csv(self, request, queryset):
+        meta = self.model._meta
+
+        field_names = ['id', 'start', 'hour', 'time', 'finish', 'initiated', 'state']
+        field_names += ['fake_news', 'true_news']
+        field_names += ['gender', 'age', 'location', 'loc-other', 'education', 'edu-other', 'profession', 'prof-other', 'employment', 'emp-other']
+        field_names += ['religion', 'rel-other', 'politics', 'tech']
+        field_names += ['time_index', 'time_news1', 'time_news2', 'time_answer', 'time_demo', 'time_rutina', 'time_result']
+        field_names += ['first_true', 'reread_fake', 'reread_true', 'browser_language', 'user_agent', 'user_agent_mobile', 'user_agent_pc', 'user_agent_browser', 'user_agent_os', 'user_agent_device']
+        field_names += ['date_arrive', 'date_finish']
+
+        quests = Question.objects.all()
+        for que in quests:
+            field_names += [que.question_code]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response, delimiter=';')
+        writer.writerow(field_names)
+        for obj in queryset:
+            info_to_write = [obj.id, obj.date_arrive.date(), obj.date_arrive.time(), self.time(obj), self.finish(obj), self.initiated(obj), self.state(obj)]
+            info_to_write += [self.fake_news(obj), self.true_news(obj)]
+            info_to_write += [self.gender(obj), self.age(obj), self.locationOt(obj), self.locationOtVal(obj)]
+            info_to_write += [self.educationOt(obj), self.educationOtVal(obj), self.professionOt(obj), self.professionOtVal(obj), self.employmentOt(obj), self.employmentOtVal(obj)]
+            info_to_write += [self.religionOt(obj), self.religionOtVal(obj), self.politics(obj), self.tech(obj)]
+            info_to_write += [obj.time_index, obj.time_news1, obj.time_news2, obj.time_answer, obj.time_demo, obj.time_rutina, obj.time_result]
+            info_to_write += [obj.first_true, obj.reread_fake, obj.reread_true, obj.browser_language, obj.user_agent, obj.user_agent_mobile, obj.user_agent_pc, obj.user_agent_browser, obj.user_agent_os, obj.user_agent_device]
+            info_to_write += [obj.date_arrive, obj.date_finish]
+            for que in quests:
+                info_to_write += [self.translateAns(que.question_code,obj)]
+            writer.writerow(info_to_write)
+        return response
+    export_all_csv.short_description = "Export users and answers as CSV"
 
 
 class AnsAdmin(admin.ModelAdmin):
