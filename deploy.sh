@@ -24,21 +24,66 @@ do
     esac
 done
 
+LOG_DIR="${PROJECT_DIR}/log"
+
+if [[ ! -d $LOG_DIR ]]
+then
+    `mkdir $LOG_DIR`
+fi
+
+LOGFILE=${LOG_DIR}/deploy_expplat.log
+ERRORFILE=${LOG_DIR}/deploy_expplat.err
+error=0
+
 #0. get into the app directory
-echo "Getting into the directory ${PROJECT_DIR}..."
+echo "[1/5] Getting into the directory ${PROJECT_DIR}..."
 cd $PROJECT_DIR
 
 #1. create backup
-echo "Creating a backup in ${BACKUP_DIR}..."
-backup_dt=`date '+%Y-%m-%dT%H%M'`
-backup_fn="data${backup_dt}.json"
-docker-compose -f docker-compose.yml exec app python manage.py dumpdata --exclude auth.permission --exclude contenttypes > ${BACKUP_DIR}/${backup_fn}
+if [ $? -eq 0 ]
+then
+    echo "[2/5] Creating a backup in ${BACKUP_DIR}..."
+    backup_dt=`date '+%Y-%m-%dT%H%M'`
+    backup_fn="data${backup_dt}.json"
+    docker-compose -f docker-compose.yml exec app python manage.py dumpdata --exclude auth.permission --exclude contenttypes > ${BACKUP_DIR}/${backup_fn} >> $LOGFILE 2>> $ERRORFILE
+else
+    error=0
+fi
 
 #2. pull changes from master
-git pull origin master
+if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
+then
+    echo "[3/5] Pulling changes from master..."
+    git pull origin master
+else
+    error=0
+fi
 
 #3. down containers
-docker-compose -f docker-compose.yml down
+if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
+then
+    echo "[4/5] Downing containers..."
+    docker-compose -f docker-compose.yml down
+else
+    error=0
+fi
 
 #4. up containers
-docker-compose -f docker-compose.yml up --build -d
+if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
+then
+    echo "[4/5] Building and running containers..."
+    docker-compose -f docker-compose.yml up --build -d
+else
+    error=0
+fi
+
+if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
+then
+    echo "Process has finished successfully"
+    echo "For more information, check $LOGFILE"
+else
+    echo "There was an error running the process"
+    echo "For more information, check $ERRORFILE"
+fi
+
+exit $error
