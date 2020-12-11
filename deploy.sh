@@ -72,7 +72,7 @@ fi
 if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
 then
     echo "[5/6] Change permission of mysql directory"
-    sudo chmod 777 -R mysql
+    sudo chmod 777 -R ${PROJECT_DIR}/mysql
 else
     error=0
 fi
