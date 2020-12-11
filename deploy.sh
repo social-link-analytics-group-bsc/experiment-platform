@@ -36,13 +36,13 @@ ERRORFILE=${LOG_DIR}/deploy_expplat.err
 error=0
 
 #0. get into the app directory
-echo "[1/5] Getting into the directory ${PROJECT_DIR}..."
+echo "[1/6] Getting into the directory ${PROJECT_DIR}"
 cd $PROJECT_DIR
 
 #1. create backup
 if [ $? -eq 0 ]
 then
-    echo "[2/5] Creating a backup in ${BACKUP_DIR}..."
+    echo "[2/6] Creating a backup in ${BACKUP_DIR}..."
     backup_dt=`date '+%Y-%m-%dT%H%M'`
     backup_fn="data${backup_dt}.json"
     docker-compose -f docker-compose.yml exec app python manage.py dumpdata --exclude auth.permission --exclude contenttypes > ${BACKUP_DIR}/${backup_fn} >> $LOGFILE 2>> $ERRORFILE
@@ -53,7 +53,7 @@ fi
 #2. pull changes from master
 if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
 then
-    echo "[3/5] Pulling changes from master..."
+    echo "[3/6] Pulling changes from master..."
     git pull origin master
 else
     error=0
@@ -62,16 +62,25 @@ fi
 #3. down containers
 if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
 then
-    echo "[4/5] Downing containers..."
+    echo "[4/6] Downing containers..."
     docker-compose -f docker-compose.yml down
 else
     error=0
 fi
 
-#4. up containers
+#4. change permission of mysql directory
 if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
 then
-    echo "[4/5] Building and running containers..."
+    echo "[5/6] Change permission of mysql directory"
+    sudo chmod 777 -R mysql
+else
+    error=0
+fi
+
+#5. up containers
+if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
+then
+    echo "[6/6] Building and running containers..."
     docker-compose -f docker-compose.yml up --build -d
 else
     error=0
