@@ -5,7 +5,7 @@ from django.utils import timezone
 
 class Ipadress(models.Model):
     address = models.CharField(max_length=50)
-    # frequency = models.DecimalField(max_digits=5, decimal_places=0, default=0)
+    frequency = models.DecimalField(max_digits=5, decimal_places=0, default=0)
 
     def __str__(self):
         return self.address
