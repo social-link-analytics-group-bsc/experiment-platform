@@ -47,7 +47,7 @@ then
     backup_fn="data${backup_dt}.json"
     docker-compose -f docker-compose.yml exec app python manage.py dumpdata --exclude auth.permission --exclude contenttypes > ${BACKUP_DIR}/${backup_fn} >> $LOGFILE 2>> $ERRORFILE
 else
-    error=0
+    error=1
 fi
 
 #2. down containers
@@ -56,7 +56,7 @@ then
     echo "[3/5] Downing containers..."
     docker-compose -f docker-compose.yml down
 else
-    error=0
+    error=1
 fi
 
 #3. change permission of mysql directory
@@ -65,7 +65,7 @@ then
     echo "[4/5] Change permission of mysql directory"
     sudo chmod 777 -R ${PROJECT_DIR}/mysql
 else
-    error=0
+    error=1
 fi
 
 #4. up containers
@@ -74,7 +74,7 @@ then
     echo "[5/5] Building and running containers..."
     docker-compose -f docker-compose.yml up --build -d
 else
-    error=0
+    error=1
 fi
 
 if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
