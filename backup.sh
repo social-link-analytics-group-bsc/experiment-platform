@@ -24,8 +24,8 @@ then
     `mkdir $LOG_DIR`
 fi
 
-LOGFILE=${LOG_DIR}/deploy_expplat.log
-ERRORFILE=${LOG_DIR}/deploy_expplat.err
+LOGFILE=${LOG_DIR}/backup_expplat.log
+ERRORFILE=${LOG_DIR}/backup_expplat.err
 error=0
 
 #0. get into the app directory
