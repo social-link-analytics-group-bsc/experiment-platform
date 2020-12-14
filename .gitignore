@@ -132,4 +132,6 @@ dmypy.json
 mysql
 .vscode
 
-experiment/expplat/migrations
+#experiment/expplat/migrations
+
+.env.db
