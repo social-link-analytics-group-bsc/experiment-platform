@@ -698,8 +698,8 @@ class NewsAdmin(admin.ModelAdmin):
 
 
 class IpadressAdmin(admin.ModelAdmin):
-    list_display = ['address']
-    #ordering = ('-frequency', )
+    list_display = ['address', 'frequency']
+    ordering = ('-frequency', )
 
 
 admin.site.register(Experiment)
