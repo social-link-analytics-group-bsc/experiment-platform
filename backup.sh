@@ -24,7 +24,6 @@ then
     `mkdir $LOG_DIR`
 fi
 
-LOGFILE=${LOG_DIR}/backup_expplat.log
 ERRORFILE=${LOG_DIR}/backup_expplat.err
 error=0
 
@@ -38,7 +37,7 @@ then
     echo "[2/2] Creating a backup in ${BACKUP_DIR}..."
     backup_dt=`date '+%Y-%m-%dT%H%M'`
     backup_fn="data${backup_dt}.json"
-    docker-compose -f docker-compose.yml exec app python manage.py dumpdata --exclude auth.permission --exclude contenttypes > ${BACKUP_DIR}/${backup_fn} >> $LOGFILE 2>> $ERRORFILE
+    docker-compose -f docker-compose.yml exec app python manage.py dumpdata --exclude auth.permission --exclude contenttypes > ${BACKUP_DIR}/${backup_fn} 2>> $ERRORFILE
 else
     error=1
 fi
@@ -46,7 +45,6 @@ fi
 if [[ $? -eq 0 ]] && [[ $error -eq 0 ]]
 then
     echo "Process has finished successfully"
-    echo "For more information, check $LOGFILE"
 else
     echo "There was an error running the process"
     echo "For more information, check $ERRORFILE"
