@@ -11,7 +11,7 @@ then
     echo "MySQL started"
 fi
 
-python manage.py makemigrations expplat
+#python manage.py makemigrations expplat
 python manage.py migrate
 python manage.py collectstatic --no-input --clear
 
