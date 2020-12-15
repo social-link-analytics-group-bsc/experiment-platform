@@ -168,7 +168,16 @@ LOGGING = {
             'handlers': ['file', 'console'],
             'level': 'DEBUG',
             'propagate': True,
-        }
+        },
+        # TO SEE ALL QUERIES TO DB
+        # 'django.db.backends': {
+        #     'level': 'DEBUG',
+        #     'handlers': ['console'],
+        # },
+        # 'django.db.template': {
+        #     'level': 'DEBUG',
+        #     'handlers': ['console'],
+        # }
     }
 }
 
