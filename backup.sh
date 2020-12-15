@@ -37,7 +37,7 @@ then
     echo "[2/2] Creating a backup in ${BACKUP_DIR}..."
     backup_dt=`date '+%Y-%m-%dT%H%M'`
     backup_fn="data${backup_dt}.json"
-    docker-compose -f docker-compose.yml exec app python manage.py dumpdata --exclude auth.permission --exclude contenttypes > ${BACKUP_DIR}/${backup_fn} 2>> $ERRORFILE
+    docker-compose -f docker-compose.yml exec -T app python manage.py dumpdata --exclude auth.permission --exclude contenttypes > ${BACKUP_DIR}/${backup_fn} 2>> $ERRORFILE
 else
     error=1
 fi
