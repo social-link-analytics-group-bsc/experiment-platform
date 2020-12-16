@@ -548,8 +548,8 @@ class UsersAdmin(admin.ModelAdmin):
         quests = list(Question.objects.values('id', 'question_code'))
         quest = {}
         for que in quests:
-            quest[que['id']] = que['question_code']
-            field_names += [que['question_code']]
+            quest[que['id']] = que['desc']
+            field_names += [que['desc']]
 
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
@@ -558,6 +558,7 @@ class UsersAdmin(admin.ModelAdmin):
 
         for obj in queryset:
             # https://docs.python.org/3/library/collections.html#collections.defaultdict
+            # TODO: a query to answers is performed at each user, could be overcome querying all answers at once
             ans = list(Answer.objects.filter(user_id=obj.id).values('id', 'user_id', 'question_id', 'value'))
             answers = {}
             for an in ans:
