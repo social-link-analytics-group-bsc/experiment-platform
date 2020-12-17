@@ -599,19 +599,36 @@ class AnsAdmin(admin.ModelAdmin):
 
 
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'source', 'is_fake']
-    list_display += ['appeared', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error']
+    list_display = ['id', 'title', 'source', 'trueFalse']
+    list_display += ['given', 'seen', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error', 'err_freq']
     list_filter = ('is_fake', ErrorFilter)
     actions = ["export_as_csv"]
 
-    def appeared(self, obj):
+    def trueFalse(self, obj):
+        return not obj.is_fake
+    trueFalse.short_description = 'True/False'
+
+    def given(self, obj):
         if obj.is_fake:
             usrs = User.objects.filter(news_fake_id=obj.id)
             return len(usrs)
         else:
             usrs = User.objects.filter(news_true_id=obj.id)
             return len(usrs)
-    appeared.short_description = 'Freq'
+    given.short_description = 'Given'
+
+    def seen(self, obj):
+        num = 0
+        if obj.is_fake:
+            usrs1 = User.objects.filter(news_fake_id=obj.id, time_news1__gt=0, first_true=True)
+            usrs2 = User.objects.filter(news_fake_id=obj.id, time_index__gt=0, first_true=False)
+            num += len(usrs1) + len(usrs2)
+        else:
+            usrs1 = User.objects.filter(news_true_id=obj.id, time_index__gt=0, first_true=True)
+            usrs2 = User.objects.filter(news_true_id=obj.id, time_news1__gt=0, first_true=False)
+            num += len(usrs1) + len(usrs2)
+        return num
+    seen.short_description = 'Seen'
 
     def appeared2(self, obj):
         if obj.is_fake:
@@ -620,7 +637,7 @@ class NewsAdmin(admin.ModelAdmin):
         else:
             usrs = User.objects.filter(news_true_id=obj.id, date_finish__isnull=False)
             return len(usrs)
-    appeared2.short_description = 'Frequency Finished'
+    appeared2.short_description = 'Finished'
 
     def ans_true(self, obj):
         if obj.is_fake:
@@ -700,16 +717,16 @@ class NewsAdmin(admin.ModelAdmin):
 
     def export_as_csv(self, request, queryset):
         meta = self.model._meta
-        field_names = ['id', 'title', 'source', 'is_fake']
-        field_names += ['appeared', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error']
+        field_names = ['id', 'title', 'source', 'trueFalse']
+        field_names += ['given', 'seen', 'finished', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'err_freq']
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
         writer = csv.writer(response, delimiter=';')
         writer.writerow(field_names)
         for obj in queryset:
-            info_to_write = [obj.id, obj.title, obj.source, obj.is_fake]
-            info_to_write += [self.appeared(obj), self.appeared2(obj)]
-            info_to_write += [self.ans_true(obj), self.ans_fake(obj), self.ans_true_fin(obj), self.ans_fake_fin(obj), obj.error]
+            info_to_write = [obj.id, obj.title, obj.source, self.trueFalse(obj)]
+            info_to_write += [self.given(obj), self.seen(obj), self.appeared2(obj)]
+            info_to_write += [self.ans_true(obj), self.ans_fake(obj), self.ans_true_fin(obj), self.ans_fake_fin(obj), obj.err_freq]
             writer.writerow(info_to_write)
         return response
 
