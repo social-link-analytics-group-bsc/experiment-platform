@@ -545,7 +545,7 @@ class UsersAdmin(admin.ModelAdmin):
         #field_names += ['first_true', 'reread_fake', 'reread_true', 'browser_language', 'user_agent', 'user_agent_mobile', 'user_agent_pc', 'user_agent_browser', 'user_agent_os', 'user_agent_device']
         field_names += ['date_arrive', 'date_finish']
 
-        quests = list(Question.objects.values('id', 'question_code'))
+        quests = list(Question.objects.values('id', 'question_code', 'desc'))
         quest = {}
         for que in quests:
             quest[que['id']] = que['desc']
