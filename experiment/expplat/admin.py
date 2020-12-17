@@ -562,7 +562,10 @@ class UsersAdmin(admin.ModelAdmin):
             ans = list(Answer.objects.filter(user_id=obj.id).values('id', 'user_id', 'question_id', 'value'))
             answers = {}
             for an in ans:
-                answers[quest[an['question_id']]] = an['value']
+                if quest[an['question_id']] == '':
+                    answers[an['question_id']] = an['value']
+                else:
+                    answers[quest[an['question_id']]] = an['value']
 
             info_to_write = []
             #info_to_write = [obj.id, obj.date_arrive.date(), obj.date_arrive.time(), self.time(obj), self.finish(obj), self.initiated(obj), self.state(obj)]
