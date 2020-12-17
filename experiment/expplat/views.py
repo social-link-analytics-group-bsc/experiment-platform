@@ -190,6 +190,7 @@ def notLoadNews(request):
     errTrack.save()
     new = News.objects.filter(id=request.GET['new_id'])[0]
     setattr(new, 'error', True)
+    setattr(new, 'err_freq', getattr(new, 'err_freq')+1)
     new.save()
     num = request.GET['num_new']
 
