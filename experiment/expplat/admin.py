@@ -11,6 +11,26 @@ from datetime import datetime as dt
 from datetime import timedelta
 
 
+class ExportCsvMixin:
+    def export_as_csv(self, request, queryset):
+
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(field_names)
+        for obj in queryset:
+            row = writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+
+    export_as_csv.short_description = "Export Selected"
+
+
+
 class GenderFilter(MultipleChoiceListFilter):
     title = 'Gender'
     parameter_name = 'gender'
@@ -545,7 +565,7 @@ class UsersAdmin(admin.ModelAdmin):
         #field_names += ['first_true', 'reread_fake', 'reread_true', 'browser_language', 'user_agent', 'user_agent_mobile', 'user_agent_pc', 'user_agent_browser', 'user_agent_os', 'user_agent_device']
         field_names += ['date_arrive', 'date_finish']
 
-        quests = list(Question.objects.values('id', 'question_code'))
+        quests = list(Question.objects.values('id', 'question_code', 'desc'))
         quest = {}
         for que in quests:
             quest[que['id']] = que['desc']
@@ -562,7 +582,10 @@ class UsersAdmin(admin.ModelAdmin):
             ans = list(Answer.objects.filter(user_id=obj.id).values('id', 'user_id', 'question_id', 'value'))
             answers = {}
             for an in ans:
-                answers[quest[an['question_id']]] = an['value']
+                if quest[an['question_id']] == '':
+                    answers[an['question_id']] = an['value']
+                else:
+                    answers[quest[an['question_id']]] = an['value']
 
             info_to_write = []
             #info_to_write = [obj.id, obj.date_arrive.date(), obj.date_arrive.time(), self.time(obj), self.finish(obj), self.initiated(obj), self.state(obj)]
@@ -596,19 +619,36 @@ class AnsAdmin(admin.ModelAdmin):
 
 
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'source', 'is_fake']
-    list_display += ['appeared', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error']
+    list_display = ['id', 'title', 'source', 'trueFalse']
+    list_display += ['given', 'seen', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error', 'err_freq']
     list_filter = ('is_fake', ErrorFilter)
     actions = ["export_as_csv"]
 
-    def appeared(self, obj):
+    def trueFalse(self, obj):
+        return not obj.is_fake
+    trueFalse.short_description = 'True/False'
+
+    def given(self, obj):
         if obj.is_fake:
             usrs = User.objects.filter(news_fake_id=obj.id)
-            return len(usrs)
+            return len(usrs)+obj.err_freq
         else:
             usrs = User.objects.filter(news_true_id=obj.id)
-            return len(usrs)
-    appeared.short_description = 'Freq'
+            return len(usrs)+obj.err_freq
+    given.short_description = 'Given'
+
+    def seen(self, obj):
+        num = 0
+        if obj.is_fake:
+            usrs1 = User.objects.filter(news_fake_id=obj.id, time_news1__gt=0, first_true=True)
+            usrs2 = User.objects.filter(news_fake_id=obj.id, time_index__gt=0, first_true=False)
+            num += len(usrs1) + len(usrs2)
+        else:
+            usrs1 = User.objects.filter(news_true_id=obj.id, time_index__gt=0, first_true=True)
+            usrs2 = User.objects.filter(news_true_id=obj.id, time_news1__gt=0, first_true=False)
+            num += len(usrs1) + len(usrs2)
+        return num+obj.err_freq
+    seen.short_description = 'Seen'
 
     def appeared2(self, obj):
         if obj.is_fake:
@@ -617,7 +657,7 @@ class NewsAdmin(admin.ModelAdmin):
         else:
             usrs = User.objects.filter(news_true_id=obj.id, date_finish__isnull=False)
             return len(usrs)
-    appeared2.short_description = 'Frequency Finished'
+    appeared2.short_description = 'Finished'
 
     def ans_true(self, obj):
         if obj.is_fake:
@@ -697,34 +737,45 @@ class NewsAdmin(admin.ModelAdmin):
 
     def export_as_csv(self, request, queryset):
         meta = self.model._meta
-        field_names = ['id', 'title', 'source', 'is_fake']
-        field_names += ['appeared', 'appeared2', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'error']
+        field_names = ['id', 'title', 'source', 'trueFalse']
+        field_names += ['given', 'seen', 'finished', 'ans_true', 'ans_fake', 'ans_true_fin', 'ans_fake_fin', 'err_freq']
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
         writer = csv.writer(response, delimiter=';')
         writer.writerow(field_names)
         for obj in queryset:
-            info_to_write = [obj.id, obj.title, obj.source, obj.is_fake]
-            info_to_write += [self.appeared(obj), self.appeared2(obj)]
-            info_to_write += [self.ans_true(obj), self.ans_fake(obj), self.ans_true_fin(obj), self.ans_fake_fin(obj), obj.error]
+            info_to_write = [obj.id, obj.title, obj.source, self.trueFalse(obj)]
+            info_to_write += [self.given(obj), self.seen(obj), self.appeared2(obj)]
+            info_to_write += [self.ans_true(obj), self.ans_fake(obj), self.ans_true_fin(obj), self.ans_fake_fin(obj), obj.err_freq]
             writer.writerow(info_to_write)
         return response
 
     export_as_csv.short_description = "Export selected news as CSV"
 
 
-class IpadressAdmin(admin.ModelAdmin):
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ['question_code', 'desc', 'type', 'required', 'text']
+    ordering = ('id', )
+
+
+class IpadressAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = ['address', 'frequency']
     ordering = ('-frequency', )
+    actions = ["export_as_csv"]
+
+
+class ErrorTrackAdmin(admin.ModelAdmin, ExportCsvMixin):
+    list_display = ['user_id', 'state', 'error_cod']
+    actions = ["export_as_csv"]
 
 
 admin.site.register(Experiment)
 admin.site.register(News, NewsAdmin)
 admin.site.register(User, UsersAdmin)
 admin.site.register(QuestionType)
-admin.site.register(Question)
+admin.site.register(Question, QuestionAdmin)
 admin.site.register(Choice)
 admin.site.register(QuestionExperiment)
 admin.site.register(Answer, AnsAdmin)
-admin.site.register(ErrorTrack)
+admin.site.register(ErrorTrack, ErrorTrackAdmin)
 admin.site.register(Ipadress, IpadressAdmin)
