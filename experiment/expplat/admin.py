@@ -11,6 +11,26 @@ from datetime import datetime as dt
 from datetime import timedelta
 
 
+class ExportCsvMixin:
+    def export_as_csv(self, request, queryset):
+
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(field_names)
+        for obj in queryset:
+            row = writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+
+    export_as_csv.short_description = "Export Selected"
+
+
+
 class GenderFilter(MultipleChoiceListFilter):
     title = 'Gender'
     parameter_name = 'gender'
@@ -733,18 +753,29 @@ class NewsAdmin(admin.ModelAdmin):
     export_as_csv.short_description = "Export selected news as CSV"
 
 
-class IpadressAdmin(admin.ModelAdmin):
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ['question_code', 'desc', 'type', 'required', 'text']
+    ordering = ('id', )
+
+
+class IpadressAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = ['address', 'frequency']
     ordering = ('-frequency', )
+    actions = ["export_as_csv"]
+
+
+class ErrorTrackAdmin(admin.ModelAdmin, ExportCsvMixin):
+    list_display = ['user_id', 'state', 'error_cod']
+    actions = ["export_as_csv"]
 
 
 admin.site.register(Experiment)
 admin.site.register(News, NewsAdmin)
 admin.site.register(User, UsersAdmin)
 admin.site.register(QuestionType)
-admin.site.register(Question)
+admin.site.register(Question, QuestionAdmin)
 admin.site.register(Choice)
 admin.site.register(QuestionExperiment)
 admin.site.register(Answer, AnsAdmin)
-admin.site.register(ErrorTrack)
+admin.site.register(ErrorTrack, ErrorTrackAdmin)
 admin.site.register(Ipadress, IpadressAdmin)
