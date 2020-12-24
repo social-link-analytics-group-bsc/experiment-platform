@@ -196,14 +196,14 @@ def notLoadNews(request):
 
     if str(num) == '1':
         if usr.first_true:
-            allnews = News.objects.filter(is_fake=False, error=False)
+            allnews = News.objects.filter(is_fake=False).exclude(id=request.GET['new_id'])
             first_int = rnd.randint(0, len(allnews) - 1)
             first_new = allnews[first_int]
             setattr(usr, 'news_true_id', first_new)
             request.session['new1'] = first_new.id
             request.session['news_true'] = first_new.id
         else:
-            allnews = News.objects.filter(is_fake=True, error=False)
+            allnews = News.objects.filter(is_fake=True).exclude(id=request.GET['new_id'])
             first_int = rnd.randint(0, len(allnews) - 1)
             first_new = allnews[first_int]
             setattr(usr, 'news_fake_id', first_new)
@@ -211,14 +211,14 @@ def notLoadNews(request):
             request.session['news_fake'] = first_new.id
     else:
         if usr.first_true:
-            allnews = News.objects.filter(is_fake=True, error=False)
+            allnews = News.objects.filter(is_fake=True).exclude(id=request.GET['new_id'])
             second_int = rnd.randint(0, len(allnews) - 1)
             second_new = allnews[second_int]
             setattr(usr, 'news_fake_id', second_new)
             request.session['new2'] = second_new.id
             request.session['news_true'] = second_new.id
         else:
-            allnews = News.objects.filter(is_fake=False, error=False)
+            allnews = News.objects.filter(is_fake=False).exclude(id=request.GET['new_id'])
             second_int = rnd.randint(0, len(allnews) - 1)
             second_new = allnews[second_int]
             setattr(usr, 'news_true_id', second_new)
