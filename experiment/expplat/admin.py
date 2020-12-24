@@ -631,10 +631,10 @@ class NewsAdmin(admin.ModelAdmin):
     def given(self, obj):
         if obj.is_fake:
             usrs = User.objects.filter(news_fake_id=obj.id)
-            return len(usrs)
+            return len(usrs)+obj.err_freq
         else:
             usrs = User.objects.filter(news_true_id=obj.id)
-            return len(usrs)
+            return len(usrs)+obj.err_freq
     given.short_description = 'Given'
 
     def seen(self, obj):
@@ -647,7 +647,7 @@ class NewsAdmin(admin.ModelAdmin):
             usrs1 = User.objects.filter(news_true_id=obj.id, time_index__gt=0, first_true=True)
             usrs2 = User.objects.filter(news_true_id=obj.id, time_news1__gt=0, first_true=False)
             num += len(usrs1) + len(usrs2)
-        return num
+        return num+obj.err_freq
     seen.short_description = 'Seen'
 
     def appeared2(self, obj):
