@@ -558,18 +558,20 @@ class UsersAdmin(admin.ModelAdmin):
 
         field_names = []
         #field_names = ['id', 'start', 'hour', 'time', 'finish', 'initiated', 'state']
-        field_names += ['fake_news', 'true_news']
+        field_names += ['fake_news', 'true_news', 'first_true', 'reread_fake', 'reread_true']
         # field_names += ['gender', 'age', 'location', 'loc-other', 'education', 'edu-other', 'profession', 'prof-other', 'employment', 'emp-other']
         # field_names += ['religion', 'rel-other', 'politics', 'tech']
-        #field_names += ['time_index', 'time_news1', 'time_news2', 'time_answer', 'time_demo', 'time_rutina', 'time_result']
-        #field_names += ['first_true', 'reread_fake', 'reread_true', 'browser_language', 'user_agent', 'user_agent_mobile', 'user_agent_pc', 'user_agent_browser', 'user_agent_os', 'user_agent_device']
         field_names += ['date_arrive', 'date_finish']
+        field_names += ['state', 'time']
 
         quests = list(Question.objects.values('id', 'question_code', 'desc'))
         quest = {}
         for que in quests:
             quest[que['id']] = que['desc']
             field_names += [que['desc']]
+
+        field_names += ['time_index', 'time_news1', 'time_news2', 'time_answer', 'time_demo', 'time_rutina', 'time_result']
+        field_names += ['browser_language', 'user_agent', 'user_agent_mobile', 'user_agent_pc', 'user_agent_browser', 'user_agent_os', 'user_agent_device']
 
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
@@ -589,19 +591,21 @@ class UsersAdmin(admin.ModelAdmin):
 
             info_to_write = []
             #info_to_write = [obj.id, obj.date_arrive.date(), obj.date_arrive.time(), self.time(obj), self.finish(obj), self.initiated(obj), self.state(obj)]
-            info_to_write += [self.fake_news(obj), self.true_news(obj)]
+            info_to_write += [self.fake_news(obj), self.true_news(obj), obj.first_true, obj.reread_fake, obj.reread_true]
             # info_to_write += [self.gender(obj), self.age(obj), self.locationOt(obj), self.locationOtVal(obj)]
             # info_to_write += [self.educationOt(obj), self.educationOtVal(obj), self.professionOt(obj), self.professionOtVal(obj), self.employmentOt(obj), self.employmentOtVal(obj)]
             # info_to_write += [self.religionOt(obj), self.religionOtVal(obj), self.politics(obj), self.tech(obj)]
-            #info_to_write += [obj.time_index, obj.time_news1, obj.time_news2, obj.time_answer, obj.time_demo, obj.time_rutina, obj.time_result]
-            #info_to_write += [obj.first_true, obj.reread_fake, obj.reread_true, obj.browser_language, obj.user_agent, obj.user_agent_mobile, obj.user_agent_pc, obj.user_agent_browser, obj.user_agent_os, obj.user_agent_device]
+
             info_to_write += [obj.date_arrive, obj.date_finish]
+            info_to_write += [self.state(obj), self.time(obj)]
             for que_id in quest:
                 if quest[que_id] in answers.keys():
                     info_to_write += [answers[quest[que_id]]]
                 else:
                     info_to_write += ['-']
                 # info_to_write += [self.translateAns(que.question_code,obj)]
+            info_to_write += [obj.time_index, obj.time_news1, obj.time_news2, obj.time_answer, obj.time_demo, obj.time_rutina, obj.time_result]
+            info_to_write += [obj.browser_language, obj.user_agent, obj.user_agent_mobile, obj.user_agent_pc, obj.user_agent_browser, obj.user_agent_os, obj.user_agent_device]
             writer.writerow(info_to_write)
         return response
     export_all_csv.short_description = "Export users and answers as CSV"

@@ -522,4 +522,6 @@ def result(request):
         news2.display_fake = 'none'
         news2.display_true = 'block'
 
+    request.session.flush()
+
     return render(request, 'expplat/result.html', { 'news1': news1, 'news2': news2 })
