@@ -149,58 +149,8 @@ footer p {
 			</div>
 		</div>
 	</div>
-	<br>
-	<div class="row">
-    	<div class="col-sm-5"></div>
-		<div class="col-sm-3">
-			<button id="noLoadBut" type="button" class="btn btn-danger">Reportar que la noticia no se ha cargado en el cuadro</button>
-    	</div>
-    	<div class="col-sm-4"></div>
-	</div>
-
-	<div class="footer text-center bottom-uri">
-		<hr>
-	</div>
-
-	<div class="modal bd-example-modal-sm" tabindex="-1" role="dialog" id="myModal">
-		<div class="modal-dialog modal-sm" role="document">
-			<div class="modal-content">
-				<div class="modal-body">
-					<h5 class="modal-title">Oh!, lamentamos lo sucedido.</h5>
-					<br>
-					<p>Para continuar con el experimento le mostraremos otra noticia.</p>
-					<br>
-					<div class="text-center">
-						<button id="newNews" class="btn btn-info btn-lg">Entendido</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
    <script>
-
-        $(document).ready(function () {
-
-        	$('#myModal').modal({ show: false})
-
-        	$("#noLoadBut").on("click",function(){
-
-				num_new = window.location.href.substr(-2,1)
-
-        		$.ajax({
-        			url: "../notloadnews",
-        			data: { error_cod: "rn_noload", new_id: "{{ new_id }}", num_new: num_new }
-				}).done(function() {
-					$('#myModal').modal('show');
-					$("#newNews").on("click",function(){
-						window.location.reload(true)
-					});
-					setTimeout(function () { window.location.reload(true) }, 4000);
-				});
-            });
-
-        });
 
 		function onMyFrameLoad() {
 			$('#sig_msg').removeClass("d-none");
