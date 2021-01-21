@@ -33,6 +33,117 @@ def saveAnswers(startQue, data, usr):
             ans.save()
 
 
+def saveAnstfysno(data, usr):
+
+    fysno = Question.objects.filter(question_code='fysno')[0]
+    Answer.objects.filter(user_id=usr, question_id=fysno).delete()
+    ans = Answer(user_id=usr, question_id=fysno, value=data['fysno'])
+    ans.save()
+
+    fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
+    fnox = Question.objects.filter(question_code__startswith="fno")
+    fafx = Question.objects.filter(question_code__startswith="faf")
+    if data['fysno'] == 'sí':
+        for que in fysx:
+            if que.question_code == 'fysot':
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value=data['fysot'])
+                ans.save()
+            elif que.question_code in data.keys():
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='checked')
+                ans.save()
+            else:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                ans.save()
+        for que in fnox:
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
+            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
+            ans.save()
+    else:
+        for que in fysx:
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
+            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
+            ans.save()
+        for que in fnox:
+            if que.question_code == 'fnoot':
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value=data['fnoot'])
+                ans.save()
+            elif que.question_code in data.keys():
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='checked')
+                ans.save()
+            else:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                ans.save()
+    for que in fafx:
+        if que.question_code in data.keys():
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
+            ans = Answer(user_id=usr, question_id=que, value='checked')
+            ans.save()
+        else:
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
+            ans = Answer(user_id=usr, question_id=que, value='unchecked')
+            ans.save()
+
+    tysno = Question.objects.filter(question_code='tysno')[0]
+    Answer.objects.filter(user_id=usr, question_id=tysno).delete()
+    ans = Answer(user_id=usr, question_id=tysno, value=data['tysno'])
+    ans.save()
+
+    tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
+    tnox = Question.objects.filter(question_code__startswith="tno")
+    tafx = Question.objects.filter(question_code__startswith="taf")
+    if data['tysno'] == 'sí':
+        for que in tysx:
+            if que.question_code == 'tysot':
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value=data['tysot'])
+                ans.save()
+            elif que.question_code in data.keys():
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='checked')
+                ans.save()
+            else:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                ans.save()
+        for que in tnox:
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
+            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
+            ans.save()
+    else:
+        for que in tysx:
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
+            ans = Answer(user_id=usr, question_id=que, value='undisplayed')
+            ans.save()
+        for que in tnox:
+            if que.question_code == 'tnoot':
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value=data['tnoot'])
+                ans.save()
+            elif que.question_code in data.keys():
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='checked')
+                ans.save()
+            else:
+                Answer.objects.filter(user_id=usr, question_id=que).delete()
+                ans = Answer(user_id=usr, question_id=que, value='unchecked')
+                ans.save()
+    for que in tafx:
+        if que.question_code in data.keys():
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
+            ans = Answer(user_id=usr, question_id=que, value='checked')
+            ans.save()
+        else:
+            Answer.objects.filter(user_id=usr, question_id=que).delete()
+            ans = Answer(user_id=usr, question_id=que, value='unchecked')
+            ans.save()
+
+
 def saveTimes(request, current):
     usr = User.objects.filter(id=request.session['user_id'])[0]
     last_state = request.session['state']
@@ -69,6 +180,11 @@ def saveIpadress(num_ip):
         return 'error'
 
     ipad.save()
+
+
+def read_all_news_at_once(request):
+    news = News.objects.all()
+    return render(request, 'expplat/read_all_news_at_once.html', {'doc': news})
 
 
 def index(request):
@@ -230,6 +346,25 @@ def notLoadNews(request):
     return resp("error tracked")
 
 
+def rereadNews(request):
+    usr = User.objects.filter(id=request.session['user_id'])[0]
+
+    if request.session['first_fake']:
+        one = "fake"
+        sec = "true"
+    else:
+        one = "true"
+        sec = "fake"
+
+    if request.GET['new'] == '1':
+        setattr(usr, 'reread_' + one, True)
+    elif request.GET['new'] == '2':
+        setattr(usr, 'reread_' + sec, True)
+
+    usr.save()
+    return resp("reread tracked")
+
+
 def answer(request):
 
     viewState = 'answer'
@@ -239,6 +374,7 @@ def answer(request):
 
     saveTimes(request, viewState)
     request.session['state'] = viewState
+
 
     fysno = Question.objects.filter(question_code='fysno')[0]
     fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
@@ -292,191 +428,14 @@ def answer(request):
         num_fake = 2
         num_true = 1
 
-    return render(request, 'expplat/answer.html', {
-        'quest1': quest1, 'quest1ys': quest1ys, 'quest1ys_otro': quest1ys_otro, 'quest1no': quest1no, 'quest1no_otro': quest1no_otro, 'quest1af': quest1af,
-        'quest2': quest2, 'quest2ys': quest2ys, 'quest2ys_otro': quest2ys_otro, 'quest2no': quest2no, 'quest2no_otro': quest2no_otro, 'quest2af': quest2af,
-        'news1': news1, 'news2': news2, 'num_fake': num_fake, 'num_true': num_true, 'progress': 75
-    })
-
-
-def rereadNews(request):
-    usr = User.objects.filter(id=request.session['user_id'])[0]
-
-    if request.session['first_fake']:
-        one = "fake"
-        sec = "true"
-    else:
-        one = "true"
-        sec = "fake"
-
-    if request.GET['new'] == '1':
-        setattr(usr, 'reread_' + one, True)
-    elif request.GET['new'] == '2':
-        setattr(usr, 'reread_' + sec, True)
-
-    usr.save()
-    return resp("reread tracked")
-
-
-def demo(request):
-
-    viewState = 'demo'
-
-    if 'state' not in request.session.keys():
-        return goIndex()
-
-    saveTimes(request, viewState)
-    request.session['state'] = viewState
-
-    if len(request.POST.keys()) == 0:
-        print('here without post')
-    else:
-        data = request.POST
-
-        exp = request.session['experiment']
-        user_id = request.session['user_id']
-        usr = User.objects.filter(id=user_id)[0]
-
-        fysno = Question.objects.filter(question_code='fysno')[0]
-        Answer.objects.filter(user_id=usr, question_id=fysno).delete()
-        ans = Answer(user_id=usr, question_id=fysno, value=data['fysno'])
-        ans.save()
-
-        fysx = Question.objects.filter(question_code__startswith="fys").exclude(question_code='fysno')
-        fnox = Question.objects.filter(question_code__startswith="fno")
-        fafx = Question.objects.filter(question_code__startswith="faf")
-        if data['fysno'] == 'sí':
-            for que in fysx:
-                if que.question_code == 'fysot':
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value=data['fysot'])
-                    ans.save()
-                elif que.question_code in data.keys():
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value='checked')
-                    ans.save()
-                else:
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value='unchecked')
-                    ans.save()
-            for que in fnox:
-                Answer.objects.filter(user_id=usr, question_id=que).delete()
-                ans = Answer(user_id=usr, question_id=que, value='undisplayed')
-                ans.save()
-        else:
-            for que in fysx:
-                Answer.objects.filter(user_id=usr, question_id=que).delete()
-                ans = Answer(user_id=usr, question_id=que, value='undisplayed')
-                ans.save()
-            for que in fnox:
-                if que.question_code == 'fnoot':
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value=data['fnoot'])
-                    ans.save()
-                elif que.question_code in data.keys():
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value='checked')
-                    ans.save()
-                else:
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value='unchecked')
-                    ans.save()
-        for que in fafx:
-            if que.question_code in data.keys():
-                Answer.objects.filter(user_id=usr, question_id=que).delete()
-                ans = Answer(user_id=usr, question_id=que, value='checked')
-                ans.save()
-            else:
-                Answer.objects.filter(user_id=usr, question_id=que).delete()
-                ans = Answer(user_id=usr, question_id=que, value='unchecked')
-                ans.save()
-
-        tysno = Question.objects.filter(question_code='tysno')[0]
-        Answer.objects.filter(user_id=usr, question_id=tysno).delete()
-        ans = Answer(user_id=usr, question_id=tysno, value=data['tysno'])
-        ans.save()
-
-        tysx = Question.objects.filter(question_code__startswith="tys").exclude(question_code='tysno')
-        tnox = Question.objects.filter(question_code__startswith="tno")
-        tafx = Question.objects.filter(question_code__startswith="taf")
-        if data['tysno'] == 'sí':
-            for que in tysx:
-                if que.question_code == 'tysot':
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value=data['tysot'])
-                    ans.save()
-                elif que.question_code in data.keys():
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value='checked')
-                    ans.save()
-                else:
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value='unchecked')
-                    ans.save()
-            for que in tnox:
-                Answer.objects.filter(user_id=usr, question_id=que).delete()
-                ans = Answer(user_id=usr, question_id=que, value='undisplayed')
-                ans.save()
-        else:
-            for que in tysx:
-                Answer.objects.filter(user_id=usr, question_id=que).delete()
-                ans = Answer(user_id=usr, question_id=que, value='undisplayed')
-                ans.save()
-            for que in tnox:
-                if que.question_code == 'tnoot':
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value=data['tnoot'])
-                    ans.save()
-                elif que.question_code in data.keys():
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value='checked')
-                    ans.save()
-                else:
-                    Answer.objects.filter(user_id=usr, question_id=que).delete()
-                    ans = Answer(user_id=usr, question_id=que, value='unchecked')
-                    ans.save()
-        for que in tafx:
-            if que.question_code in data.keys():
-                Answer.objects.filter(user_id=usr, question_id=que).delete()
-                ans = Answer(user_id=usr, question_id=que, value='checked')
-                ans.save()
-            else:
-                Answer.objects.filter(user_id=usr, question_id=que).delete()
-                ans = Answer(user_id=usr, question_id=que, value='unchecked')
-                ans.save()
-
     dem = Question.objects.filter(question_code__startswith="dm")
-
-    return render(request, 'expplat/demo.html', {
-        'questions': dem, 'progress': 85
-    })
-
-
-def rutina(request):
-
-    viewState = 'rutina'
-
-    if 'state' not in request.session.keys():
-        return goIndex()
-
-    saveTimes(request, viewState)
-    request.session['state'] = viewState
-
-    if len(request.POST.keys()) == 0:
-        print('here without post')
-    else:
-        data = request.POST
-
-        exp = request.session['experiment']
-        user_id = request.session['user_id']
-        usr = User.objects.filter(id=user_id)[0]
-
-        saveAnswers("dm", data, usr)
-
     rut = Question.objects.filter(question_code__startswith="rut")
 
-    return render(request, 'expplat/rutina.html', {
-        'questions': rut, 'first': rut[0], 'progress': 95
+    return render(request, 'expplat/answer_all.html', {
+        'quest1': quest1, 'quest1ys': quest1ys, 'quest1ys_otro': quest1ys_otro, 'quest1no': quest1no, 'quest1no_otro': quest1no_otro, 'quest1af': quest1af,
+        'quest2': quest2, 'quest2ys': quest2ys, 'quest2ys_otro': quest2ys_otro, 'quest2no': quest2no, 'quest2no_otro': quest2no_otro, 'quest2af': quest2af,
+        'questions_dm': dem, 'questions_rut': rut, 'first': rut[0],
+        'news1': news1, 'news2': news2, 'num_fake': num_fake, 'num_true': num_true, 'progress': 75
     })
 
 
@@ -502,10 +461,11 @@ def result(request):
         user_id = request.session['user_id']
         usr = User.objects.filter(id=user_id)[0]
 
+        saveAnstfysno(data, usr)
+        saveAnswers("dm", data, usr)
         saveAnswers("rut", data, usr)
 
 
-    #TODO: get the correct news from session keys or user instance
     news1 = get_object_or_404(News, pk=request.session['new1'])
     if news1.is_fake:
         news1.display_fake = 'block'

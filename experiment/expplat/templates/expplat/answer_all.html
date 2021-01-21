@@ -108,19 +108,21 @@
 	<div class="container center-uri">
         <div class="container">
 
-            <div class="row">
-                <div class="col-sm-12">
-                    <p>Responda las siguientes preguntas según las noticias que leyó anteriormente. Las preguntas marcadas con asterisco (*) son obligatorias.</p>
+            <form id="formAnswer" action="{% url 'expplat:result' %}" method="post">
+            {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2>Responda las siguientes preguntas según las noticias que leyó anteriormente.</h2>
+                    </div>
                 </div>
-            </div>
+                <p>Las preguntas marcadas con asterisco (*) son obligatorias.</p>
+                <br>
 
-            <div class="row">
-                <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
 
-                    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
-                    <form id="formAnswer" action="{% url 'expplat:demo' %}" method="post">
-                    {% csrf_token %}
+                        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
                         <div class="row">
                             <div class="col-sm-12">
@@ -248,14 +250,101 @@
                             </div>
                         </div>
 
-                        <hr>
 
-
-                    <input class="btn btn-info" type="submit" value="SIGUIENTE">
-                    </form>
-
+                    </div>
                 </div>
-            </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2>Por favor, responda a las siguientes preguntas sobre Vd.</h2>
+                    </div>
+                </div>
+                <hr>
+
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+                        {% for que in questions_dm %}
+                        <div class="row">
+                            <div class="col-sm-12">
+
+                                {% ifequal que.type|stringformat:"s" "radio" %}
+                                    <div class="form-group">
+                                        <label for="{{ que.question_code }}">{{ que.text }}{% if que.required == True %}*{% endif %}</label>
+                                        <select {% if que.required == True %}required{% endif %} class="form-control" name="{{ que.question_code}}" id="{{ que.question_code }}">
+                                            <option value="" disabled selected>-- SELECCIONE UNA OPCIÓN --</option>
+                                        {% for choice in que.choice_set.all %}
+                                            <option value="{{ choice.value }}">{{ choice.value }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endifequal %}
+
+                                {% ifequal que.type|stringformat:"s" "input" %}
+                                    <div class="form-group d-none" id="{{ que.question_code }}_div">
+                                        <label for="{{ que.question_code }}">{{ que.text }}</label>
+                                        <input class="form-control" {% if que.required == True %}required{% endif %} type="text" name="{{ que.question_code}}" id="{{ que.question_code }}" maxlength="50">
+                                    </div>
+                                {% endifequal %}
+
+                                <br>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2>¿Cuánto tiempo de su rutina dedica a las siguientes actividades?</h2>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+                        <div class="row">
+                            <div class="col-sm-12">
+
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        {% for choice in first.choice_set.all %}
+                                            <th scope="col">{{ choice.value }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {% for que in questions_rut %}
+                                    <tr>
+                                        <th scope="row">{{ que.text }}*</th>
+                                        {% for choice in que.choice_set.all %}
+                                            <td class="text-center"><input class="form-check-input" required type="radio" name="{{ que.question_code}}" id="{{ que.question_code }}_{{ choice.value }}" value="{{ choice.value }}"></td>
+                                        {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <input class="btn btn-info" type="submit" value="FINALIZAR">
+
+                    </div>
+                </div>
+
+            </form>
 
         </div>
 	</div>
@@ -388,6 +477,52 @@
                 } else {
                     $("#fnoot_div").addClass("d-none");
                     $("#fnoot_div").find("input").attr('required', false);
+                }
+            });
+
+            $("#dmprv").on("change",function(){
+                if($("#dmprv").val() == "Fuera de España"){
+                    $("#dmpot_div").removeClass("d-none");
+                    $("#dmpot").attr('required', true);
+                } else {
+                    $("#dmpot_div").addClass("d-none");
+                    $("#dmpot").attr('required', false);
+                }
+            });
+            $("#dmedu").on("change",function(){
+                if($("#dmedu").val() == "Otro"){
+                    $("#dmedo_div").removeClass("d-none");
+                    $("#dmedo").attr('required', true);
+                } else {
+                    $("#dmedo_div").addClass("d-none");
+                    $("#dmedo").attr('required', false);
+                }
+            });
+            $("#dmpro").on("change",function(){
+                if($("#dmpro").val() == "Otro"){
+                    $("#dmpoo_div").removeClass("d-none");
+                    $("#dmpoo").attr('required', true);
+                } else {
+                    $("#dmpoo_div").addClass("d-none");
+                    $("#dmpoo").attr('required', false);
+                }
+            });
+            $("#dmjob").on("change",function(){
+                if($("#dmjob").val() == "Otro"){
+                    $("#dmjoo_div").removeClass("d-none");
+                    $("#dmjoo").attr('required', true);
+                } else {
+                    $("#dmjoo_div").addClass("d-none");
+                    $("#dmjoo").attr('required', false);
+                }
+            });
+            $("#dmrel").on("change",function(){
+                if($("#dmrel").val() == "Otro"){
+                    $("#dmreo_div").removeClass("d-none");
+                    $("#dmreo").attr('required', true);
+                } else {
+                    $("#dmreo_div").addClass("d-none");
+                    $("#dmreo").attr('required', false);
                 }
             });
 
