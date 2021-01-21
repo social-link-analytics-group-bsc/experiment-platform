@@ -71,6 +71,11 @@ def saveIpadress(num_ip):
     ipad.save()
 
 
+def read_all_news_at_once(request):
+    news = News.objects.all()
+    return render(request, 'expplat/read_all_news_at_once.html', {'doc': news})
+
+
 def index(request):
 
     saveIpadress((get_client_ip(request)))
