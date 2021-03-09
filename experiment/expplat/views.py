@@ -193,6 +193,10 @@ def demuestran_5g_covid(request):
 
 def index(request):
 
+    path = request.get_full_path()
+    id_sondea = 0
+    if 'id' in path:
+        id_sondea = path[path.find('id')+3:]
     saveIpadress((get_client_ip(request)))
 
     if 'state' in request.session.keys():
@@ -254,7 +258,8 @@ def index(request):
         time_answer=0,
         time_demo=0,
         time_rutina=0,
-        time_result=0
+        time_result=0,
+        id_sondea=id_sondea
     )
 
     # save in session the user_id to identify it in following steps

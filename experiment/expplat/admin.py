@@ -378,6 +378,7 @@ class UsersAdmin(admin.ModelAdmin):
     list_display += ['fake_news', 'true_news']
     list_display += ['gender', 'age', 'location', 'education', 'profession', 'employment']
     list_display += ['religion', 'politics', 'tech']
+    list_display += ['id_sondea']
     # list_display += ['browser_language', 'user_agent_mobile', 'user_agent_pc', 'user_agent_os', 'user_agent_browser']
     ordering = ('-date_arrive', )
     list_filter = (FinishFilter, DayFilter, WeekFilter, DayMinFilter, DayMaxFilter, GenderFilter, AgeFilter)
@@ -563,6 +564,7 @@ class UsersAdmin(admin.ModelAdmin):
         # field_names += ['religion', 'rel-other', 'politics', 'tech']
         field_names += ['date_arrive', 'date_finish']
         field_names += ['state', 'time']
+        field_names += ['id_sondea']
 
         quests = list(Question.objects.values('id', 'question_code', 'desc'))
         quest = {}
@@ -598,6 +600,7 @@ class UsersAdmin(admin.ModelAdmin):
 
             info_to_write += [obj.date_arrive, obj.date_finish]
             info_to_write += [self.state(obj), self.time(obj)]
+            info_to_write += [obj.id_sondea]
             for que_id in quest:
                 if quest[que_id] in answers.keys():
                     info_to_write += [answers[quest[que_id]]]
