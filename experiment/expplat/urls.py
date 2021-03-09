@@ -12,5 +12,6 @@ urlpatterns = [
     path('result/', views.result, name='result'),
     path('notloadnews/', views.notLoadNews, name='notloadnews'),
     path('rereadnews/', views.rereadNews, name='rereadnews'),
-    path('read_all_news_at_once_2020/', views.read_all_news_at_once, name='read_all_news_at_once')
+    path('read_all_news_at_once_2020/', views.read_all_news_at_once, name='read_all_news_at_once'),
+    path('demuestran_5g_covid', views.demuestran_5g_covid, name='demuestran_5g_covid')
 ]

@@ -187,6 +187,10 @@ def read_all_news_at_once(request):
     return render(request, 'expplat/read_all_news_at_once.html', {'doc': news})
 
 
+def demuestran_5g_covid(request):
+    return render(request, 'expplat/demuestran_5g_covid.html')
+
+
 def index(request):
 
     saveIpadress((get_client_ip(request)))
