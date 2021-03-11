@@ -57,7 +57,7 @@ class User(models.Model):
     time_demo = models.DecimalField(max_digits=5, decimal_places=0, default=0)
     time_rutina = models.DecimalField(max_digits=5, decimal_places=0, default=0)
     time_result = models.DecimalField(max_digits=5, decimal_places=0, default=0)
-    id_sondea = models.DecimalField(max_digits=5, decimal_places=0, default=0)
+    id_sondea = models.DecimalField(max_digits=10, decimal_places=0, default=0)
 
     def __str__(self):
         return str(self.id)
