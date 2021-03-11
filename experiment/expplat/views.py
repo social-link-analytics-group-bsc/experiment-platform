@@ -193,7 +193,7 @@ def demuestran_5g_covid(request):
 
 def index(request):
 
-    path = request.get_full_path()
+    path = request.get_full_path().lower()
     id_sondea = 0
     if 'id' in path:
         id_sondea = path[path.find('id')+3:]
