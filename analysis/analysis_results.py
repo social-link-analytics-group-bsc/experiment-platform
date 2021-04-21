@@ -1,31 +1,33 @@
 
-from matplotlib.backends.backend_agg import RendererAgg
+# from matplotlib.backends.backend_agg import RendererAgg
 import streamlit as st
-import numpy as np
-import pandas as pd
-import xmltodict
-from pandas import json_normalize
-import urllib.request
-import seaborn as sns
-import matplotlib
-from matplotlib.figure import Figure
-from PIL import Image
-import gender_guesser.detector as gender
-from streamlit_lottie import st_lottie
-import requests
+# import numpy as np
+# import pandas as pd
+# import xmltodict
+# from pandas import json_normalize
+# import urllib.request
+# import seaborn as sns
+# import matplotlib
+# from matplotlib.figure import Figure
+# from PIL import Image
+# import gender_guesser.detector as gender
+# from streamlit_lottie import st_lottie
+# import requests
 
-import io
+
+
+# import io
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import plotly.express as px
-import seaborn as sns
+# import matplotlib.dates as mdates
+# import plotly.express as px
+# import seaborn as sns
 import numpy as np
-import unicodedata
+# import unicodedata
 import json
 
-from collections import defaultdict
-from datetime import timedelta
+# from collections import defaultdict
+# from datetime import timedelta
 
 from prepare_dataset import prep
 
