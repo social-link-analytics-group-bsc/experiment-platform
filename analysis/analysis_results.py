@@ -78,16 +78,16 @@ def set_filters(dfall, news):
     if len(grupos_percep_filt_crit) > 0:
         if 'Acierto en la verdadera' in grupos_percep_filt_crit:
             perce_true_correct_filt = dfall['tysno_verdadera'] == 'sí'
-        filt &= perce_true_correct_filt
+            filt &= perce_true_correct_filt
         if 'Acierto en la falsa' in grupos_percep_filt_crit:
             perce_fake_correct_filt = dfall['fysno_verdadera'] == 'no'
-        filt &= perce_fake_correct_filt
+            filt &= perce_fake_correct_filt
         if 'Error en la verdadera' in grupos_percep_filt_crit:
             perce_true_error_filt = dfall['tysno_verdadera'] == 'no'
-        filt &= perce_true_error_filt
+            filt &= perce_true_error_filt
         if 'Error en la falsa' in grupos_percep_filt_crit:
             perce_fake_error_filt = dfall['fysno_verdadera'] == 'sí'
-        filt &= perce_fake_error_filt
+            filt &= perce_fake_error_filt
 
 
     #news_topic_filt
@@ -96,20 +96,42 @@ def set_filters(dfall, news):
     st.sidebar.title('Filtro demografia')
 
     st.sidebar.header('Edad')
-    edades = []
-    demo_age_filt = st.sidebar.multiselect('Escoge las edades por las que quieras filtrar', edades, [],
-                                           help='Para omitir el filtro no seleccionar ninguna opción')
+    edades = ['< 18 años', '18-24 años', '15-34 años', '15-44 años', '15-54 años', '15-65 años', '> 65 años']
+    demo_age_filt_crit = st.sidebar.multiselect('Escoge las edades por las que quieras filtrar', edades, [], help='Para omitir el filtro no seleccionar ninguna opción')
+    if len(demo_age_filt_crit) > 0:
+        demo_age_filt = dfall['dm_edad'].isin(demo_age_filt_crit)
+        filt &= demo_age_filt
 
     st.sidebar.header('Género')
-    genero = []
-    demo_gen_filt = st.sidebar.multiselect('Escoge el género por el que quieras filtrar', genero, [],
-                                           help='Para omitir el filtro no seleccionar ninguna opción')
+    genero = ['Femenino', 'Masculino', 'No binario', 'NS/NC']
+    demo_gen_filt_crit = st.sidebar.multiselect('Escoge el género por el que quieras filtrar', genero, [], help='Para omitir el filtro no seleccionar ninguna opción')
+    if len(demo_gen_filt_crit) > 0:
+        demo_gen_filt = dfall['dm_genero'].isin(demo_gen_filt_crit)
+        filt &= demo_gen_filt
 
     st.sidebar.header('Estudios')
     st.sidebar.header('Profesional')
     st.sidebar.header('Política')
     st.sidebar.header('Religión')
     st.sidebar.header('Geografia')
+
+    # dm_provincia
+    # dm_prov_otro
+    #
+    # dm_educacion
+    # dm_edu_otro
+    #
+    # dm_professional
+    # dm_prof_otro
+    #
+    # dm_empleo
+    # dm_empleo_otro
+    #
+    # dm_religion
+    # dm_rel_otro
+    #
+    # dm_politica
+
 
     return filt
 
@@ -124,8 +146,12 @@ section = st.selectbox('Qué sección quiere ver?', sections)
 
 if section == 'Explorar dataset':
     st.header(section)
-    print(filt)
     st.dataframe(df_all)
+
+    st.text('Numero de registros: ' + str(df_all.shape[0]))
+
+    st.text('Description categorical variables')
+    st.dataframe(df_all.describe(exclude=[np.number], datetime_is_numeric=True))
 
     if st.button('Mostrar variables'):
         vars = list(df_all.columns)
@@ -150,28 +176,28 @@ elif section == 'Comportamiento en plataforma':
     st.header('Tiempo del experimento')
     # df[df['time_completion_min']<=20]['time_completion_min'].plot.hist()
     fig_time_exp, ax = plt.subplots()
-    ax.hist(df[df['time_completion_min'] <= 20]['time_completion_min'])
-    plt.figtext(0.65, 0.6, df[df['time_completion_min'] <= 20]['time_completion_min'].describe().to_string())
+    ax.hist(df_all[df_all['time_completion_min'] <= 20]['time_completion_min'])
+    plt.figtext(0.65, 0.6, df_all[df_all['time_completion_min'] <= 20]['time_completion_min'].describe().to_string())
     st.text("Estadisticas descriptivas de tiempo de completitud del experimento (minutos)\n")
     st.pyplot(fig_time_exp)
 
     st.text("Estadisticas descriptivas de tiempo de lectura de las noticias (segundos)\n")
     fig_time_news, axs = plt.subplots(1, 2, figsize=(15, 5))
-    axs[0].hist(df[df['time_news1'] <= 700]['time_news1'])
+    axs[0].hist(df_all[df_all['time_news1'] <= 700]['time_news1'])
     axs[0].title.set_text('News 1')
-    plt.figtext(0.35, 0.55, df[df['time_news1'] <= 700]['time_news1'].describe().to_string())
-    axs[1].hist(df[df['time_news2'] <= 700]['time_news2'])
+    plt.figtext(0.35, 0.55, df_all[df_all['time_news1'] <= 700]['time_news1'].describe().to_string())
+    axs[1].hist(df_all[df_all['time_news2'] <= 700]['time_news2'])
     axs[1].title.set_text('News 2')
-    plt.figtext(0.77, 0.55, df[df['time_news2'] <= 700]['time_news2'].describe().to_string())
+    plt.figtext(0.77, 0.55, df_all[df_all['time_news2'] <= 700]['time_news2'].describe().to_string())
     st.pyplot(fig_time_news)
 
 
     st.text("Estadisticas descriptivas de tiempo de lectura de las noticias (segundos)\n")
     fig_time_news_veracity, axs = plt.subplots(1, 2, figsize=(15, 5))
 
-    ft = df[df['first_true']][['time_news1', 'time_news2']]
+    ft = df_all[df_all['first_true']][['time_news1', 'time_news2']]
     ft.columns = ['true', 'fake']
-    ff = df[~df['first_true']][['time_news1', 'time_news2']]
+    ff = df_all[~df_all['first_true']][['time_news1', 'time_news2']]
     ff.columns = ['fake', 'true']
     time_true = pd.concat([ft[['true']], ff[['true']]])
     time_fake = pd.concat([ft[['fake']], ff[['fake']]])
@@ -189,9 +215,9 @@ elif section == 'Comportamiento en plataforma':
     st.text("Estadisticas descriptivas de tiempo de lectura de las noticias (segundos)\n")
     fig_time_news_4, axs = plt.subplots(2, 2, figsize=(15, 10))
 
-    ft = df[df['first_true']][['time_news1', 'time_news2']]
+    ft = df_all[df_all['first_true']][['time_news1', 'time_news2']]
     ft.columns = ['true', 'fake']
-    ff = df[~df['first_true']][['time_news1', 'time_news2']]
+    ff = df_all[~df_all['first_true']][['time_news1', 'time_news2']]
     ff.columns = ['fake', 'true']
     time_true = pd.concat([ft[['true']], ff[['true']]])
     time_fake = pd.concat([ft[['fake']], ff[['fake']]])
@@ -261,7 +287,7 @@ elif section == 'Análisis descriptivo':
         if var in ['dm_genero', 'dm_edad_a', 'dm_politica_a', 'dm_tecnologia']:
             plot_counter += 1
             plt.subplot(2, 2, plot_counter)
-            ax = df[var].value_counts().plot.bar()
+            ax = df_all[var].value_counts().plot.bar()
             ax.set_xlabel(var, fontsize=13)
             ax.set_ylabel('Frecuencia', fontsize=13)
             plt.xticks(size=12)
@@ -269,7 +295,7 @@ elif section == 'Análisis descriptivo':
             plt.grid(False, which='major', axis='x')
             for p in ax.patches:
                 h_col = int(p.get_height())
-                ax.annotate(f"{h_col} ({round(100 * (h_col / n), 1)}%)",
+                ax.annotate(f"{h_col} ({round(100 * (h_col / df_all.shape[0]), 1)}%)",
                             (p.get_x() + p.get_width() / 2., p.get_height()),
                             ha='center', va='center', fontsize=12, color='black', xytext=(0, 10),
                             textcoords='offset points')
@@ -280,7 +306,7 @@ elif section == 'Análisis descriptivo':
     var = 'dm_lugar'
     x_label = 'Lugar'
     y_label = 'Frecuencia'
-    ax = df[var].value_counts().sort_values(ascending=True).plot.barh(figsize=(16, 12))
+    ax = df_all[var].value_counts().sort_values(ascending=True).plot.barh(figsize=(16, 12))
     ax.set_xlabel(x_label, fontsize=13)
     ax.set_ylabel(y_label, fontsize=13)
     plt.xticks(size=12)
@@ -288,7 +314,7 @@ elif section == 'Análisis descriptivo':
     plt.grid(False, which='major', axis='x')
     for p in ax.patches:
         w_col = int(p.get_width())
-        ax.annotate(f"{w_col} ({round(100 * (w_col / n), 1)}%)", (p.get_x() + p.get_width() + 2.8, p.get_y() - 0.5),
+        ax.annotate(f"{w_col} ({round(100 * (w_col / df_all.shape[0]), 1)}%)", (p.get_x() + p.get_width() + 2.8, p.get_y() - 0.5),
                     ha='center', va='center', fontsize=12, color='black', xytext=(0, 10),
                     textcoords='offset points')
     st.pyplot(fig)
@@ -298,7 +324,7 @@ elif section == 'Análisis descriptivo':
     var = 'dm_education'
     x_label = 'Educación'
     y_label = 'Frecuencia'
-    ax = df[var].value_counts().sort_values(ascending=True).plot.barh()
+    ax = df_all[var].value_counts().sort_values(ascending=True).plot.barh()
     ax.set_xlabel(x_label, fontsize=13)
     ax.set_ylabel(y_label, fontsize=13)
     plt.xticks(size=12)
@@ -306,7 +332,7 @@ elif section == 'Análisis descriptivo':
     plt.grid(False, which='major', axis='x')
     for p in ax.patches:
         w_col = int(p.get_width())
-        ax.annotate(f"{w_col} ({round(100 * (w_col / n), 1)}%)", (p.get_x() + p.get_width(), p.get_y()),
+        ax.annotate(f"{w_col} ({round(100 * (w_col / df_all.shape[0]), 1)}%)", (p.get_x() + p.get_width(), p.get_y()),
                     ha='center', va='center', fontsize=12, color='black', xytext=(40, 10),
                     textcoords='offset points')
     st.pyplot(fig)
@@ -316,7 +342,7 @@ elif section == 'Análisis descriptivo':
     var = 'dm_empleo'
     x_label = 'Empleo'
     y_label = 'Frecuencia'
-    ax = df[var].value_counts().sort_values(ascending=True).plot.barh()
+    ax = df_all[var].value_counts().sort_values(ascending=True).plot.barh()
     ax.set_xlabel(x_label, fontsize=13)
     ax.set_ylabel(y_label, fontsize=13)
     plt.xticks(size=12)
@@ -324,7 +350,7 @@ elif section == 'Análisis descriptivo':
     plt.grid(False, which='major', axis='x')
     for p in ax.patches:
         w_col = int(p.get_width())
-        ax.annotate(f"{w_col} ({round(100 * (w_col / n), 1)}%)", (p.get_x() + p.get_width(), p.get_y()),
+        ax.annotate(f"{w_col} ({round(100 * (w_col / df_all.shape[0]), 1)}%)", (p.get_x() + p.get_width(), p.get_y()),
                     ha='center', va='center', fontsize=12, color='black', xytext=(40, 10),
                     textcoords='offset points')
     st.pyplot(fig)
@@ -334,7 +360,7 @@ elif section == 'Análisis descriptivo':
     var = 'dm_religion'
     x_label = 'Preferencia religiosa'
     y_label = 'Frecuencia'
-    ax = df[var].value_counts().sort_values(ascending=True).plot.barh()
+    ax = df_all[var].value_counts().sort_values(ascending=True).plot.barh()
     ax.set_xlabel(x_label, fontsize=13)
     ax.set_ylabel(y_label, fontsize=13)
     plt.xticks(size=12)
@@ -342,7 +368,7 @@ elif section == 'Análisis descriptivo':
     plt.grid(False, which='major', axis='x')
     for p in ax.patches:
         w_col = int(p.get_width())
-        ax.annotate(f"{w_col} ({round(100 * (w_col / n), 1)}%)", (p.get_x() + p.get_width(), p.get_y()),
+        ax.annotate(f"{w_col} ({round(100 * (w_col / df_all.shape[0]), 1)}%)", (p.get_x() + p.get_width(), p.get_y()),
                     ha='center', va='center', fontsize=12, color='black', xytext=(40, 10),
                     textcoords='offset points')
     st.pyplot(fig)
@@ -354,7 +380,7 @@ elif section == 'Análisis descriptivo':
     for var in vars_routine:
         key = var.split('_')[1].title()
         results[key] = list()
-        routine = dict(df[var].value_counts())
+        routine = dict(df_all[var].value_counts())
         for category_name in category_names:
             if category_name in routine:
                 results[key].append(routine[category_name])
@@ -415,7 +441,7 @@ elif section == 'Análisis de percepción':
 
     st.markdown('Respuesta sobre noticia **`falsa`** adjudicada')
     fig, ax = plt.subplots()
-    ax = df['fysno_verdadera'].value_counts().plot.bar()
+    ax = df_all['fysno_verdadera'].value_counts().plot.bar()
     ax.set_xlabel('¿Cree que es verdadera la noticia [falsa]?', fontsize=13)
     ax.set_ylabel('Frecuencia', fontsize=13)
     plt.xticks(size=12, rotation=0)
@@ -423,20 +449,20 @@ elif section == 'Análisis de percepción':
     plt.grid(False, which='major', axis='x')
     for p in ax.patches:
         h_col = int(p.get_height())
-        ax.annotate(f"{h_col} ({round(100 * (h_col / n), 1)}%)", (p.get_x() + p.get_width() / 2., p.get_height()),
+        ax.annotate(f"{h_col} ({round(100 * (h_col / df_all.shape[0]), 1)}%)", (p.get_x() + p.get_width() / 2., p.get_height()),
                     ha='center', va='center', fontsize=12, color='black', xytext=(0, 10),
                     textcoords='offset points')
     st.pyplot(fig)
 
 
     st.markdown('Noticias **`falsas`** ordenadas por errores en detección ')
-    fake_news_names = list(df['fake_news'].unique())
+    fake_news_names = list(df_all['fake_news'].unique())
     rights, rights_str, wrongs, wrongs_str = [], [], [], []
     for name in fake_news_names:
-        errors = df.loc[(df['fake_news'] == name) & (df['fysno_verdadera'] == 'sí'), :].shape[0] / \
-                 df.loc[df['fake_news'] == name, :].shape[0]
-        no_errors = df.loc[(df['fake_news'] == name) & (df['fysno_verdadera'] == 'no'), :].shape[0] / \
-                    df.loc[df['fake_news'] == name, :].shape[0]
+        errors = df_all.loc[(df_all['fake_news'] == name) & (df_all['fysno_verdadera'] == 'sí'), :].shape[0] / \
+                 df_all.loc[df_all['fake_news'] == name, :].shape[0]
+        no_errors = df_all.loc[(df_all['fake_news'] == name) & (df_all['fysno_verdadera'] == 'no'), :].shape[0] / \
+                    df_all.loc[df_all['fake_news'] == name, :].shape[0]
         wrongs.append(round(errors * 100, 1))
         wrongs_str.append(str(round(errors * 100, 1)) + '%')
         rights.append(round(no_errors * 100, 1))
@@ -449,7 +475,7 @@ elif section == 'Análisis de percepción':
 
     st.markdown('Respuesta sobre noticia **`verdadera`** adjudicada')
     fig, ax = plt.subplots()
-    ax = df['tysno_verdadera'].value_counts().plot.bar()
+    ax = df_all['tysno_verdadera'].value_counts().plot.bar()
     ax.set_xlabel('¿Cree que es verdadera la noticia [verdadera]?', fontsize=13)
     ax.set_ylabel('Frecuencia', fontsize=13)
     plt.xticks(size=12, rotation=0)
@@ -457,19 +483,19 @@ elif section == 'Análisis de percepción':
     plt.grid(False, which='major', axis='x')
     for p in ax.patches:
         h_col = int(p.get_height())
-        ax.annotate(f"{h_col} ({round(100 * (h_col / n), 1)}%)", (p.get_x() + p.get_width() / 2., p.get_height()),
+        ax.annotate(f"{h_col} ({round(100 * (h_col / df_all.shape[0]), 1)}%)", (p.get_x() + p.get_width() / 2., p.get_height()),
                     ha='center', va='center', fontsize=12, color='black', xytext=(0, 10),
                     textcoords='offset points')
     st.pyplot(fig)
 
     st.markdown('Noticias **`verdaderas`** ordenadas por errores en detección ')
-    news_names = list(df['true_news'].unique())
+    news_names = list(df_all['true_news'].unique())
     rights, rights_str, wrongs, wrongs_str = [], [], [], []
     for name in news_names:
-        errors = df.loc[(df['true_news'] == name) & (df['tysno_verdadera'] == 'no'), :].shape[0] / \
-                 df.loc[df['true_news'] == name, :].shape[0]
-        no_errors = df.loc[(df['true_news'] == name) & (df['tysno_verdadera'] == 'sí'), :].shape[0] / \
-                    df.loc[df['true_news'] == name, :].shape[0]
+        errors = df_all.loc[(df_all['true_news'] == name) & (df_all['tysno_verdadera'] == 'no'), :].shape[0] / \
+                 df_all.loc[df_all['true_news'] == name, :].shape[0]
+        no_errors = df_all.loc[(df_all['true_news'] == name) & (df_all['tysno_verdadera'] == 'sí'), :].shape[0] / \
+                    df_all.loc[df_all['true_news'] == name, :].shape[0]
         wrongs.append(round(errors * 100, 1))
         wrongs_str.append(str(round(errors * 100, 1)) + '%')
         rights.append(round(no_errors * 100, 1))
@@ -500,8 +526,8 @@ elif section == 'Análisis de percepción':
     num_justifications_str = []
     for var in vars_justifications_fake_checked_true:
         justifications.append(' '.join(var.split('_')[1:]))
-        num_just = round(df.loc[(df['fysno_verdadera'] == 'sí') & (df[var] == 'checked'), :].shape[0] /
-                         df.loc[df['fysno_verdadera'] == 'sí', :].shape[0] * 100, 1)
+        num_just = round(df_all.loc[(df_all['fysno_verdadera'] == 'sí') & (df_all[var] == 'checked'), :].shape[0] /
+                         df_all.loc[df_all['fysno_verdadera'] == 'sí', :].shape[0] * 100, 1)
         num_justifications.append(num_just)
         num_justifications_str.append(str(num_just) + '%')
     justifications_df = pd.DataFrame.from_dict(
@@ -530,8 +556,8 @@ elif section == 'Análisis de percepción':
     num_justifications_str = []
     for var in vars_justifications_fake_checked_false:
         justifications.append(' '.join(var.split('_')[1:]))
-        num_just = round(df.loc[(df['fysno_verdadera'] == 'no') & (df[var] == 'checked'), :].shape[0] /
-                         df.loc[df['fysno_verdadera'] == 'no', :].shape[0] * 100, 1)
+        num_just = round(df_all.loc[(df_all['fysno_verdadera'] == 'no') & (df_all[var] == 'checked'), :].shape[0] /
+                         df_all.loc[df_all['fysno_verdadera'] == 'no', :].shape[0] * 100, 1)
         num_justifications.append(num_just)
         num_justifications_str.append(str(num_just) + '%')
     justifications_df = pd.DataFrame.from_dict(
@@ -560,8 +586,8 @@ elif section == 'Análisis de percepción':
     num_justifications_str = []
     for var in vars_justifications_true_checked_false:
         justifications.append(' '.join(var.split('_')[1:]))
-        num_just = round(df.loc[(df['tysno_verdadera'] == 'no') & (df[var] == 'checked'), :].shape[0] /
-                         df.loc[df['tysno_verdadera'] == 'no', :].shape[0] * 100, 1)
+        num_just = round(df_all.loc[(df_all['tysno_verdadera'] == 'no') & (df_all[var] == 'checked'), :].shape[0] /
+                         df_all.loc[df_all['tysno_verdadera'] == 'no', :].shape[0] * 100, 1)
         num_justifications.append(num_just)
         num_justifications_str.append(str(num_just) + '%')
     justifications_df = pd.DataFrame.from_dict(
@@ -587,8 +613,8 @@ elif section == 'Análisis de percepción':
     num_justifications_str = []
     for var in vars_justifications_true_checked_true:
         justifications.append(' '.join(var.split('_')[1:]))
-        num_just = round(df.loc[(df['tysno_verdadera'] == 'sí') & (df[var] == 'checked'), :].shape[0] /
-                         df.loc[df['tysno_verdadera'] == 'sí', :].shape[0] * 100, 1)
+        num_just = round(df_all.loc[(df_all['tysno_verdadera'] == 'sí') & (df_all[var] == 'checked'), :].shape[0] /
+                         df_all.loc[df_all['tysno_verdadera'] == 'sí', :].shape[0] * 100, 1)
         num_justifications.append(num_just)
         num_justifications_str.append(str(num_just) + '%')
     justifications_df = pd.DataFrame.from_dict(
@@ -611,7 +637,7 @@ elif section == 'Análisis de percepción':
     num_actions_str = []
     for var in vars_actions_checked_false:
         actions.append(' '.join(var.split('_')[1:]))
-        num_act = round(df.loc[df[var] == 'checked', :].shape[0] / df.loc[df[var] != '-', :].shape[0] * 100, 1)
+        num_act = round(df_all.loc[df_all[var] == 'checked', :].shape[0] / df_all.loc[df_all[var] != '-', :].shape[0] * 100, 1)
         num_actions.append(num_act)
         num_actions_str.append(str(num_act) + '%')
     actions_df = pd.DataFrame.from_dict({'Actions': actions, 'Num. Seleccion': num_actions_str, 'num_act': num_actions})
@@ -631,7 +657,7 @@ elif section == 'Análisis de percepción':
     num_actions_str = []
     for var in vars_actions_checked_true:
         actions.append(' '.join(var.split('_')[1:]))
-        num_act = round(df.loc[df[var] == 'checked', :].shape[0] / df.loc[df[var] != '-', :].shape[0] * 100, 1)
+        num_act = round(df_all.loc[df_all[var] == 'checked', :].shape[0] / df_all.loc[df_all[var] != '-', :].shape[0] * 100, 1)
         num_actions.append(num_act)
         num_actions_str.append(str(num_act) + '%')
     actions_df = pd.DataFrame.from_dict({'Actions': actions, 'Num. Seleccion': num_actions_str, 'num_act': num_actions})
