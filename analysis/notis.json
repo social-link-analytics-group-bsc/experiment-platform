@@ -1,5 +1,5 @@
 [
-  { "news_id": 1, "is_fake": false, "topic_1":  "tecnologia", "topic_2": "mascarilla", "data_title": "La Junta iniciar el lunes el reparto de mens para menores en riesgo de exclusión en Córdoba", "min_title": "Junta reparto menús menores" },
+  { "news_id": 1, "is_fake": false, "topic_1":  "política", "topic_2": "mascarilla", "data_title": "La Junta iniciar el lunes el reparto de mens para menores en riesgo de exclusión en Córdoba", "min_title": "Junta reparto menús menores" },
   { "news_id": 2, "is_fake": false, "topic_1":  "tecnologia", "topic_2": "mascarilla", "data_title": "El CSIC busca una vacuna para el Covid-19 a partir del virus que erradicó la viruela", "min_title": "CSIC vacuna viruela" },
   { "news_id": 3, "is_fake": false, "topic_1":  "tecnologia", "topic_2": "mascarilla", "data_title": "Coronavirus: llega a Madrid el material sanitario al que Huawei se comprometió con el rey Felipe VI", "min_title": "Madrid material sanitario Huawei rey" },
   { "news_id": 4, "is_fake": false, "topic_1":  "tecnologia", "topic_2": "mascarilla", "data_title": "Coronavirus | No hay evidencia de que los perros transmitan el virus", "min_title": "Perros transmitan virus" },
@@ -17,6 +17,7 @@
   { "news_id": 16, "is_fake": true, "topic_1":  "tecnologia", "topic_2": "mascarilla", "data_title": "Todo apunta a que el COVID-19 \"se escapó\" del Instituto de Virología de Wuhan", "min_title": "COVID-19 escapó Instituto Virología Wuhan" },
   { "news_id": 17, "is_fake": true, "topic_1":  "tecnologia", "topic_2": "mascarilla", "data_title": "El uso prolongado del tapaboca produce hipoxia", "min_title": "Tapaboca produce hipoxia" },
   { "news_id": 18, "is_fake": true, "topic_1":  "tecnologia", "topic_2": "mascarilla", "data_title": "Stefano Montario: las mascarillas incuban el cáncer", "min_title": "Stefano Montario mascarillas incuban cáncer" },
-  { "news_id": 19, "is_fake": true, "topic_1":  "tecnologia", "topic_2": "mascarilla", "data_title": "El Ministerio del Interior alemán define al coronavirus como \"falsa alarma global\" en un informe filtrado a la prensa", "min_title": "Ministerio Interior alemán falsa alarma" },
-  { "news_id": 20, "is_fake": true, "topic_1":  "tecnologia", "topic_2": "mascarilla", "data_title": "La OMS alerta sobre el Virus Nipah, que puede ser peor que el Covid-19", "min_title": "OMS Virus Nipah" }
+  { "news_id": 19, "is_fake": true, "topic_1":  "política", "topic_2": "mascarilla", "data_title": "El Ministerio del Interior alemán define al coronavirus como \"falsa alarma global\" en un informe filtrado a la prensa", "min_title": "Ministerio Interior alemán falsa alarma" },
+  { "news_id": 20, "is_fake": true, "topic_1":  "salud", "topic_2": "mascarilla", "data_title": "La OMS alerta sobre el Virus Nipah, que puede ser peor que el Covid-19", "min_title": "OMS Virus Nipah" }
 ]
+
