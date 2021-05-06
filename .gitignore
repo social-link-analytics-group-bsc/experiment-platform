@@ -138,3 +138,8 @@ mysql
 #experiment/expplat/migrations
 
 .env.db
+
+
+# Exclude all datasets 
+
+*.csv
