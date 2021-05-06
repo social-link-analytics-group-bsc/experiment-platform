@@ -371,7 +371,6 @@ df_filt = df_all[filt].copy()
 st.title("RRSSalud / Resultados experimento")
 
 sections = [
-    "Ninguna",
     "Explorar dataset",
     "Comportamiento en plataforma",
     "Análisis descriptivo",
