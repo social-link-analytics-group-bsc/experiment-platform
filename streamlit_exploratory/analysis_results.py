@@ -11,14 +11,14 @@ from prepare_dataset import prep
 
 st.set_page_config(layout="wide")
 
-with open("notis.json") as f:
+with open("../data/notis.json") as f:
     notis = json.load(f)
 notis_df = pd.DataFrame(notis)
 
 topics = ["salud", "política", "mascarillas", "virus"]
 
 
-df_raw = pd.read_csv("./data/sondea_analisis_20210323_SONDEA.csv", sep=";")
+df_raw = pd.read_csv("../data/sondea_analisis_20210323_SONDEA.csv", sep=";")
 (
     df,
     df_init,
@@ -564,9 +564,13 @@ elif section == "Comportamiento en plataforma":
     )
     true_freq_abs.columns = ["init", "fin"]
     true_freq_abs["prob_fin"] = true_freq_abs["fin"] / true_freq_abs["init"]
-    true_freq_abs.sort_values("prob_fin", ascending=False)["prob_fin"].mul(100).round(
-        1
-    ).astype(str) + "%"
+    (
+        true_freq_abs.sort_values("prob_fin", ascending=False)["prob_fin"]
+        .mul(100)
+        .round(1)
+        .astype(str)
+        + "%"
+    )
 
     st.text("Probabilidad de finalización del experimento dada una noticia falsa")
     fake_freq_abs = pd.concat(
@@ -574,9 +578,13 @@ elif section == "Comportamiento en plataforma":
     )
     fake_freq_abs.columns = ["init", "fin"]
     fake_freq_abs["prob_fin"] = fake_freq_abs["fin"] / fake_freq_abs["init"]
-    fake_freq_abs.sort_values("prob_fin", ascending=False)["prob_fin"].mul(100).round(
-        1
-    ).astype(str) + "%"
+    (
+        fake_freq_abs.sort_values("prob_fin", ascending=False)["prob_fin"]
+        .mul(100)
+        .round(1)
+        .astype(str)
+        + "%"
+    )
 
 
 elif section == "Análisis descriptivo":
