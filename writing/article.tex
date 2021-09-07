@@ -1,0 +1,258 @@
+\documentclass{article}
+
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}		% Can be removed after putting your text content
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{doi}
+\usepackage{csvsimple}
+\usepackage{lscape}
+\usepackage{mathtools}
+\usepackage{csvsimple}
+\usepackage{tabularx}
+
+\usepackage{color, soul}
+\newcommand{\TODO}{\hl}
+
+\title{Results from experiments}
+
+%\date{September 9, 1985}	% Here you can change the date presented in the paper title
+%\date{} 					% Or removing it
+
+\author{\hspace{1mm}
+	\href{https://orcid.org/0000-0000-0000-0000}{\hspace{1mm}Olivier R.~Philippe} \\
+	Department of Life Sciences\\
+	Barcelona Supercomputing Center\\
+	Barcelona, ES 08034 \\
+	\texttt{olivier.philippe@bsc.es} \\
+	%% examples of more authors
+	\And
+	\href{https://orcid.org/0000-0000-0000-0000}{\hspace{1mm}Nataly ~Buslón} \\
+	Department of Life Sciences\\
+	Barcelona Supercomputing Center\\
+	Barcelona, ES 08034 \\
+	\texttt{nataly.buslon@bsc.es} \\
+	\And
+	Diego ~Saby \\
+    Department of Life Sciences\\
+	Barcelona Supercomputing Center\\
+	Barcelona, ES 08034 \\
+	\texttt{diego.saby@bsc.es} \\
+	\And
+	\hspace{1mm}Javier ~del Valle \\
+	Department of Life Sciences\\
+	Barcelona Supercomputing Center\\
+	Barcelona, ES 08034 \\
+	\texttt{javier.delvalle@bsc.es} \\
+	\And
+	\hspace{1mm}Oriol ~Puig \\
+	Department of Life Sciences\\
+	Barcelona Supercomputing Center\\
+	Barcelona, ES 08034 \\
+	\texttt{oriol.puigrodriguez@bsc.es} \\
+	\And
+	\hspace{1mm}Ram\'on Salaverr\'ia  \\
+	Departamento de Proyectos Period\'isticos\\
+	Universidad de Navarra\\
+	Pamplona, ES 31009 \\
+	\texttt{rsalaver@unav.es} \\
+	\And
+	\hspace{1mm}Mar\'ia Jos\'e ~Rementeria \\
+	Department of Life Sciences\\
+	Barcelona Supercomputing Center\\
+	Barcelona, ES 08034 \\
+	\texttt{maria.rementeria@bsc.es} \\
+}
+% Uncomment to remove the date
+%\date{}
+
+% Uncomment to override  the `A preprint' in the header
+%\renewcommand{\headeright}{Technical Report}
+%\renewcommand{\undertitle}{Technical Report}
+\renewcommand{\shorttitle}{\textit{arXiv} Template}
+
+%%% Add PDF metadata to help others organize their library
+%%% Once the PDF is generated, you can check the metadata with
+%%% $ pdfinfo template.pdf
+\hypersetup{
+pdftitle={Results from experiment},
+pdfsubject={q-bio.NC, q-bio.QM},
+%pdfauthor={Olivier R.~Philippe, Elias D.~Striatum},
+pdfkeywords={First keyword, Second keyword, More},
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+	\lipsum[1]
+\end{abstract}
+
+
+% keywords can be removed
+\keywords{\TODO{First} keyword \and \TODO{Second keyword} \and \TODO{More}}
+
+
+\section{Introduction}
+
+
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Design}
+20 News talking about the COVID were selected and separated in 10 False News and 10 True News. To judge which news was considered as disinformation \TODO{Add the proper methodology here}
+The list of the news can be found in \ref{tab:list_news}
+
+
+\subsection{Procedure}
+\label{ssec:procedure}
+
+During an online experiment, hosted on Google form, participants were asked to judge if a news was legitmate or a misinformation. 
+
+After they answered, a list of multiple choice questions asked them what were the reasons that led to the decision. The questions were different in case of the subject answered True \ref{table:q_after_true} or False \ref{table:q_after_false}.
+In the case they considered the news as True, another serie of multiple choices questions asked them about their intentions of actions \ref{table:q_actions}. 
+
+
+% \begin{table}[htb!]
+%     \centering
+%     \csvautobooktabular{./tables/justification_fake_right.csv}
+%     \caption{Justifications for recognising news as False}
+%     \label{tab:q_after_false}
+% \end{table}
+
+% \begin{table}[htb!]
+%     \centering
+%     \csvautobooktabular{./tables/q_true.csv}
+%     \caption{Justifications for recognising news as True}
+%     \label{tab:q_after_true}
+% \end{table}
+
+% \begin{table}[htb!]
+%     \centering
+%     \csvautobooktabular{./tables/q_actions.csv}
+%     \caption{Intentions of action after considering a news True}
+%     \label{tab:q_actions}
+
+% \end{table}
+
+Each participants read a legitimate news and a misinformation news presented in random order. After that questions were asked about their age, gender, political affiliation, education, religion and technological level.
+
+
+\subsection{Subjects}
+\label{ssec:subjects}
+
+From the total of subjects (N=1063), subjects that completed the survey under 2 minutes (N=51) and the ones that required more than 25 minutes (N=9) were considered as outliers and removed, leaving the final dataset of 840 subjects. See figure \ref{fig:participants_time_completion}.
+
+\begin{figure}[hbt]
+    \centering
+    \includegraphics[width=8cm]{plots/time_completion.png}
+    \caption{Descriptive statistics on time completion from participants}
+    \label{fig:participants_time_completion}
+\end{figure}
+
+
+\subsection{Recoding the answers}
+
+
+
+\appendix
+
+\section{List of News}
+\label{sec:list_news}
+
+
+\csvreader[
+  tabular=| p{10cm} | p{2.5cm} |p{4cm}|,
+  table head= \hline News Title & Type of news & Medio digital de publicación\\ \hline,
+  late after last line=\\\hline,
+]{./tables/news_titles.csv}{}%
+{\csvcoli & \csvcolii & \csvcoliii}
+
+\bigskip
+
+
+% \begin{aligned}
+%     \begin{split}
+%   \operatorname{answer}_{i}  &\sim \operatorname{Binomial}(n = 1, \operatorname{prob}_{\operatorname{answer} = \operatorname{Right}} = \widehat{P}) \\
+%     \log\left[\frac{\hat{P}}{1 - \hat{P}} \right] &=\alpha_{j[i],k[i]} \\
+%     \alpha_{j}  &\sim N \left(\gamma_{0}^{\alpha} + \gamma_{1}^{\alpha}(\operatorname{recode\_politics}_{\operatorname{Centro}}) + \\ \gamma_{2}^{\alpha}(\operatorname{recode\_politics}_{\operatorname{Derecha}})\ + \\ \gamma_{3}^{\alpha}(\operatorname{recode\_education}_{\operatorname{No\_university\_studies}})\ + \\ \gamma_{4}^{\alpha}(\operatorname{dm\_genero}_{\operatorname{Masculino}})\ + \\ \gamma_{5}^{\alpha}(\operatorname{recode\_age}_{\operatorname{35-54}}) + \gamma_{6}^{\alpha}(\operatorname{recode\_age}_{\operatorname{>55}}) + \gamma_{7}^{\alpha}(\operatorname{recode\_religion}_{\operatorname{Religious}})\ + \\ \gamma_{8}^{\alpha}(\operatorname{dm\_tecnologia}_{\operatorname{Media}})\ + \\ \gamma_{9}^{\alpha}(\operatorname{dm\_tecnologia}_{\operatorname{Avanzada}}) + \\ \gamma_{100}^{\alpha}(\operatorname{dm\_genero}_{\operatorname{Masculino}} \times \operatorname{dm\_tecnologia}_{\operatorname{Media}}) + \gamma_{111}^{\alpha}(\operatorname{dm\_genero}_{\operatorname{Masculino}} \times \operatorname{dm\_tecnologia}_{\operatorname{Avanzada}}), \sigma^2_{\alpha_{j}} \right)
+%     \text{, for id_sondea j = 1,} \dots \text{,J} \\
+%     \alpha_{k}  &\sim N \left(\gamma_{0}^{\alpha} + \gamma_{1}^{\alpha}(\operatorname{type\_news}_{\operatorname{fake\_news}}) + \gamma_{2}^{\alpha}(\operatorname{topic}_{\operatorname{Science}}) + \gamma_{3}^{\alpha}(\operatorname{topic}_{\operatorname{Technology}}) + \gamma_{4}^{\alpha}(\operatorname{recode\_religion}_{\operatorname{Religious}} \times \operatorname{topic}_{\operatorname{Science}}) + \gamma_{5}^{\alpha}(\operatorname{recode\_religion}_{\operatorname{Religious}} \times \operatorname{topic}_{\operatorname{Technology}}) + \gamma_{6}^{\alpha}(\operatorname{recode\_education}_{\operatorname{No\_university\_studies}} \times \operatorname{topic}_{\operatorname{Science}}) + \gamma_{7}^{\alpha}(\operatorname{recode\_education}_{\operatorname{No\_university\_studies}} \times \operatorname{topic}_{\operatorname{Technology}}) + \gamma_{8}^{\alpha}(\operatorname{recode\_education}_{\operatorname{No\_university\_studies}} \times \operatorname{type\_news}_{\operatorname{fake\_news}}) + \gamma_{9}^{\alpha}(\operatorname{recode\_politics}_{\operatorname{Centro}} \times \operatorname{type\_news}_{\operatorname{fake\_news}}) + \gamma_{10}^{\alpha}(\operatorname{recode\_politics}_{\operatorname{Derecha}} \times \operatorname{type\_news}_{\operatorname{fake\_news}}) + \gamma_{11}^{\alpha}(\operatorname{dm\_genero}_{\operatorname{Masculino}} \times \operatorname{type\_news}_{\operatorname{fake\_news}}), \sigma^2_{\alpha_{k}} \right)
+%     \text{, for news_title k = 1,} \dots \text{,K}
+%     \end{split}
+% \end{aligned}
+
+\begin{equation}
+  \operatorname{answer}_{i}  \sim \operatorname{Binomial}(n = 1, \operatorname{prob}_{\operatorname{answer} = \operatorname{Right}} = \widehat{P})
+\end{equation}
+
+\begin{equation}
+    \log\left[\frac{\hat{P}}{1 - \hat{P}} \right] =\alpha_{j[i],k[i]}
+\end{equation}
+
+\begin{equation}
+    \begin{split}
+    \MoveEqLeft
+    \alpha_{j}  \sim N (\beta_{0}^{\alpha}\ + \\
+    & \beta_{1}^{\alpha}(\operatorname{politics}\ + \\
+    & \beta_{3}^{\alpha}(\operatorname{education}\ + \\
+    & \beta{4}^{\alpha}(\operatorname{gender}\ + \\
+    & \gamma_{5}^{\alpha}(\operatorname{recode\_age}_{\operatorname{35-54}}) + \gamma_{6}^{\alpha}(\operatorname{recode\_age}_{\operatorname{>55}}) + \gamma_{7}^{\alpha}(\operatorname{recode\_religion}_{\operatorname{Religious}})\ + \\
+    & \gamma_{8}^{\alpha}(\operatorname{dm\_tecnologia}_{\operatorname{Media}})\ + \\
+    & \gamma_{9}^{\alpha}(\operatorname{dm\_tecnologia}_{\operatorname{Avanzada}}) + \\
+    & \gamma_{100}^{\alpha}(\operatorname{dm\_genero}_{\operatorname{Masculino}} \times \operatorname{dm\_tecnologia}_{\operatorname{Media}}) + \gamma_{111}^{\alpha}(\operatorname{dm\_genero}_{\operatorname{Masculino}} \times \operatorname{dm\_tecnologia}_{\operatorname{Avanzada}}), \sigma^2_{\alpha_{j}})
+    % \text{, for id_sondea j = 1,} \dots \text{,J} \\
+    \end{split}
+\end{equation}
+
+\begin{equation}
+    \begin{split}
+    \MoveEqLeft
+    \alpha_{k}  \sim N (\gamma_{0}^{\alpha} + \gamma_{1}^{\alpha}(\operatorname{type\_news}_{\operatorname{fake\_news}}) + \gamma_{2}^{\alpha}(\operatorname{topic}_{\operatorname{Science}}) + \gamma_{3}^{\alpha}(\operatorname{topic}_{\operatorname{Technology}}) + \\
+    & \gamma_{4}^{\alpha}(\operatorname{recode\_religion}_{\operatorname{Religious}} \times \operatorname{topic}_{\operatorname{Science}}) + \gamma_{5}^{\alpha}(\operatorname{recode\_religion}_{\operatorname{Religious}} \times \operatorname{topic}_{\operatorname{Technology}}) +\\
+    & \gamma_{6}^{\alpha}(\operatorname{recode\_education}_{\operatorname{No\_university\_studies}} \times \operatorname{topic}_{\operatorname{Science}}) + \gamma_{7}^{\alpha}(\operatorname{recode\_education}_{\operatorname{No\_university\_studies}} \times \operatorname{topic}_{\operatorname{Technology}}) +\\
+    & \gamma_{8}^{\alpha}(\operatorname{recode\_education}_{\operatorname{No\_university\_studies}} \times \operatorname{type\_news}_{\operatorname{fake\_news}}) + \gamma_{9}^{\alpha}(\operatorname{recode\_politics}_{\operatorname{Centro}} \times \operatorname{type\_news}_{\operatorname{fake\_news}}) + \\
+    & \gamma_{10}^{\alpha}(\operatorname{recode\_politics}_{\operatorname{Derecha}} \times \operatorname{type\_news}_{\operatorname{fake\_news}}) + \gamma_{11}^{\alpha}(\operatorname{dm\_genero}_{\operatorname{Masculino}} \times \operatorname{type\_news}_{\operatorname{fake\_news}}), \sigma^2_{\alpha_{k}} )
+    % \text{, for news_title k = 1,} \dots \text{,K}
+\end{split}
+\end{equation}
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}  %%% Uncomment this line and comment out the ``thebibliography'' section below to use the external .bib file (using bibtex) .
+
+
+%%% Uncomment this section and comment out the \bibliography{references} line above to use inline references.
+% \begin{thebibliography}{1}
+
+% 	\bibitem{kour2014real}
+% 	George Kour and Raid Saabne.
+% 	\newblock Real-time segmentation of on-line handwritten arabic script.
+% 	\newblock In {\em Frontiers in Handwriting Recognition (ICFHR), 2014 14th
+% 			International Conference on}, pages 417--422. IEEE, 2014.
+
+% 	\bibitem{kour2014fast}
+% 	George Kour and Raid Saabne.
+% 	\newblock Fast classification of handwritten on-line arabic characters.
+% 	\newblock In {\em Soft Computing and Pattern Recognition (SoCPaR), 2014 6th
+% 			International Conference of}, pages 312--318. IEEE, 2014.
+
+% 	\bibitem{hadash2018estimate}
+% 	Guy Hadash, Einat Kermany, Boaz Carmeli, Ofer Lavi, George Kour, and Alon
+% 	Jacovi.
+% 	\newblock Estimate and replace: A novel approach to integrating deep neural
+% 	networks with existing applications.
+% 	\newblock {\em arXiv preprint arXiv:1804.09028}, 2018.
+
+% \end{thebibliography}
+
+
+\end{document}
