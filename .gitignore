@@ -171,3 +171,7 @@ mysql
 *.mtc1
 *.out
 *.synctex.gz
+
+# Add lsp stuff
+.idea/
+tags
