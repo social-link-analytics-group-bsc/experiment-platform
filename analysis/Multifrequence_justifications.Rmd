@@ -1,0 +1,283 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+
+library(tidyverse, quiet=TRUE) # data wrangling and visualization
+library(lme4, quiet=TRUE)     # "golden standard" for mixed-effects modelling in R (no p-values)
+library(lmerTest, quiet=TRUE)  # p-values for MEMs based on the Satterthwaite approximation
+library(psycho, quiet=TRUE)   # mainly for an "analyze()" function
+library(broom, quiet=TRUE)     # for tidy results
+library(knitr, quiet=TRUE)     # beautifying tables
+library(sjPlot, quiet=TRUE)    # for visualising MEMs
+library(effects, quiet=TRUE)   # for visualising MEMs
+library(report, quiet=TRUE)    # for describing models
+library(emmeans, quiet=TRUE)   # for post-hoc analysis
+library(equatiomatic, quiet=TRUE) # for extracting the equation
+library(gridExtra) # for grid.arrange() to print plots side-by-side
+library(ufs, quiet=TRUE) # For multiple choices questions analysis
+library(afex, quiet=TRUE) # For automatic likelihood Ratio Test
+```
+
+```{r}
+# Knowing package and R version
+packageVersion('lme4')
+citation('lme4')
+```
+
+```{r}
+# Set up the script folder as working directory
+library(rstudioapi)
+
+# Getting the path of your current open file
+current_path = rstudioapi::getActiveDocumentContext()$path 
+setwd(dirname(current_path ))
+print( getwd() )
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path="./plots/")
+```
+
+# Load the full dataset
+```{r}
+df_all = read_csv('../data/cleaned_dataset_per_news.csv')
+```
+
+# Function to test overdispersion (not needed for logistic function)
+source: http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#overdispersion
+
+```{r}
+
+overdisp_fun <- function(model) {
+  rdf <- df.residual(model)
+  rp <- residuals(model,type="pearson")
+  Pearson.chisq <- sum(rp^2)
+  prat <- Pearson.chisq/rdf
+  pval <- pchisq(Pearson.chisq, df=rdf, lower.tail=FALSE)
+  c(chisq=Pearson.chisq,ratio=prat,rdf=rdf,p=pval)
+  }
+
+```
+
+
+### Subsetting the df
+
+```{r}
+
+fixed_effects <- c('Political', 'type_news', 'Education2', 'Education',
+                   'Technological', 'Religion', 'Gender', 'Age')
+random_effects <- c('id_sondea', 'news_title')
+dep_var <- c('answer')
+all_var <- c(fixed_effects, random_effects, dep_var)
+
+df_education <- df_all[,all_var] 
+
+df_education[sapply(df_education, is.character)] <- lapply(df_education[sapply(df_education, is.character)], 
+                                                           as.factor)
+
+# If want to predict the Right, need to ref "Wrong". No idea why, it is just how it works!
+df_education$answer = relevel(df_education$answer, ref="Wrong")
+df_education$type_news = relevel(df_education$type_news, ref="true_news")
+
+
+df_education$Education= relevel(df_education$Education, ref="No university studies")
+df_education$Education2= factor(df_education$Education2, levels= c("Secondary", 'College', "University"))
+
+df_education$Technological = factor(df_education$Technological
+                                    , levels= c("Basic", "Intermediate", "Advanced"))
+
+df_education$Political = relevel(df_education$Political, ref="Right")
+df_education$Religion = relevel(df_education$Religion, ref="Religious")
+df_education$Age = factor(df_education$Age, levels=c("<=18-34", "35-54", ">55" ))
+df_education$Gender = relevel(df_education$Gender, ref='Male')
+
+
+df_education <- df_education %>% drop_na()
+
+df_education$answer.num = as.numeric(df_education$answer)-1
+```
+
+
+```{r}
+var_just_fake <- c("Previously_read_debunked",
+                 "Source_unknown",
+                 "Media_unreliable",
+                 "Cited_sources_unknown",
+                 "Cited_sources_unreliable",
+                 "Without_sources",
+                 "Unprofessional_style",
+                 "No_coherent",
+                 "Headline_sensationalist",
+                 "Image_sensationalist",
+                 "Different_belief",
+                 "Different_ideology",
+                 "Other")
+
+var_just_true <- c("Previously_read_the_information",
+                 "Known_media",
+                 "Reliable_media",
+                 "Source_known",
+                 "Source_Reliable",
+                 "Professional_style",
+                 "Coherent",
+                 "Same_belief",
+                 "Same_ideology",
+                 "Other")
+
+
+```
+
+# Analysis for justifications
+
+## Justification thinking it is a Legitimate news
+
+### Multi frequency table for: Justification, people getting wrong on Misinformation
+
+```{r}  
+df_fake_wrong <- df_all[str_detect(df_all$type_news, 'fake_news') | str_detect(df_all$answer, 'Wrong')  , ]
+
+all_var <- c(var_just_true)
+
+df_fake_wrong <- df_fake_wrong[,all_var] 
+
+multiFreq_fake_wrong <- multiResponse(df_fake_wrong, var_just_true)
+write.csv(multiFreq_fake_wrong, "./tables/justification_fake_wrong.csv", row.names = FALSE)
+
+multiFreq_fake_wrong
+```
+
+
+### Multifrequency table for Justifications, people getting Right on Legitimate information
+
+```{r}  
+df_true_right <- df_all[str_detect(df_all$type_news, 'true_news') | str_detect(df_all$answer, 'Right')  , ]
+
+all_var <- c(var_just_true)
+
+df_true_right <- df_true_right[,all_var] 
+
+multiFreq_true_right <- as.data.frame(multiResponse(df_true_right, var_just_true))
+write.csv(multiFreq_true_right, "./tables/justification_true_right.csv", row.names = FALSE)
+
+multiFreq_true_right
+
+```
+
+### Z-Test for frequency per proposition accross group
+
+
+```{r}
+# Get the Option into rowname for retrieving the value easily
+rownames(multiFreq_true_right) <- multiFreq_true_right$Option
+rownames(multiFreq_fake_wrong) <- multiFreq_fake_wrong$Option
+
+# Getting the sample size for both populations
+pop_fake_wrong_size = 302
+pop_true_right_size = 570
+
+
+
+df_all_z_test = NULL
+
+for (Justification in var_just_true)
+  {
+  
+  print(Justification)
+
+  Frequency_False_Wrong = multiFreq_fake_wrong[Justification, 'Frequency']
+  Frequency_Legitimate_Right = multiFreq_true_right[Justification, 'Frequency']
+
+
+  z_test_results <- prop.test(x = c(Frequency_False_Wrong, Frequency_Legitimate_Right),n= c(pop_fake_wrong_size, pop_true_right_size))
+  
+
+  
+
+  # For populating df
+
+  
+  z_test = z_test_results$statistic
+  p_value = z_test_results$p.value
+  df_all_z_test = rbind(df_all_z_test, data.frame(Justification, Frequency_False_Wrong, Frequency_Legitimate_Right, z_test,p_value ))
+
+
+rownames(df_all_z_test) <- NULL
+
+}
+
+
+df_all_z_test
+```
+
+## Justificaiton for when people think it is a False information
+
+### Multi frequency table for:  Justification, people getting Right on Misinformation information
+
+```{r}
+df_fake_right <- df_all[str_detect(df_all$type_news, 'fake_news') | str_detect(df_all$answer, 'Right')  , ]
+
+all_var <- c(var_just_fake)
+
+df_fake_right <- df_fake_right[,all_var] 
+
+multiFreq_fake_right <- as.data.frame(multiResponse(df_fake_right, var_just_fake))
+write.csv(multiFreq_fake_right, "./tables/justification_fake_right.csv", row.names = FALSE)
+
+multiFreq_fake_right
+
+```
+
+
+### Multi frequency table for: Justification, people getting Wrong on Legitimate information
+
+```{r}
+df_true_wrong <- df_all[str_detect(df_all$type_news, 'true_news') | str_detect(df_all$answer, 'Wrong')  , ]
+
+all_var <- c(var_just_fake)
+
+df_true_wrong <- df_true_wrong[,all_var] 
+
+multiFreq_true_wrong <- as.data.frame(multiResponse(df_true_wrong, var_just_fake))
+write.csv(multiFreq_true_wrong, "./tables/justification_true_wrong.csv", row.names = FALSE)
+
+multiFreq_true_wrong
+
+```
+
+### Z-Test for frequency per proposition accross group
+
+
+```{r}
+# Get the Option into rowname for retrieving the value easily
+rownames(multiFreq_fake_right) <- multiFreq_fake_right$Option
+rownames(multiFreq_true_wrong) <- multiFreq_true_wrong$Option
+
+# Getting the sample size for both populations
+pop_true_wrong_size = 198
+pop_fake_right_size = 198
+
+
+df_all_z_test = NULL
+for (val in var_just_fake)
+  {
+  print(val)
+
+  val_true_wrong = multiFreq_true_wrong[val, 'Frequency']
+  val_fake_right = multiFreq_fake_right[val, 'Frequency']
+
+  z_test_results <- prop.test(x = c(val_true_wrong, val_fake_right), n = c(pop_true_wrong_size, pop_fake_right_size))
+  # For populating df
+  Justification = val
+  Frequency_Wrong = val_true_wrong
+  Frequency_Right = val_fake_right
+  z_test = z_test_results$statistic
+  p_value = z_test_results$p.value
+  df_all_z_test = rbind(df_all_z_test, data.frame(Justification, Frequency_Wrong, Frequncy_Right, z_test,p_value ))
+}
+#rownames(df_all_z_test) <- df_all_z_test$Justification
+rownames(df_all_z_test) <- NULL
+df_all_z_test
+```

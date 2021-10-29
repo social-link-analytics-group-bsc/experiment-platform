@@ -119,7 +119,7 @@ The list of the news can be found in \ref{tab:list_news}
 During an online experiment, hosted on Google form, participants were asked to judge if a news was legitmate or a misinformation. 
 
 After they answered, a list of multiple choice questions asked them what were the reasons that led to the decision. The questions were different in case of the subject answered True \ref{table:q_after_true} or False \ref{table:q_after_false}.
-In the case they considered the news as True, another serie of multiple choices questions asked them about their intentions of actions \ref{table:q_actions}. 
+In the case they considered the news as True, another series of multiple choices questions asked them about their intentions of actions \ref{table:q_actions}. 
 
 
 % \begin{table}[htb!]
@@ -146,7 +146,6 @@ In the case they considered the news as True, another serie of multiple choices 
 
 Each participants read a legitimate news and a misinformation news presented in random order. After that questions were asked about their age, gender, political affiliation, education, religion and technological level.
 
-
 \subsection{Subjects}
 \label{ssec:subjects}
 
@@ -161,8 +160,33 @@ From the total of subjects (N=1063), subjects that completed the survey under 2 
 
 
 \subsection{Recoding the answers}
+Some answers were recoded to facilitate further analysis.
+
+\subsection{Results}
+\label{ssec:results}
+
+The design of the study implies a pseudo replication, all subject have been asked to answer to two news and only 20 news have been selected. To control for this effect, a General Linear Mixed Model has been fitted to the data using R and the libray glmr from the R packages lme4 \cite{bates_fitting_2015}
+
+Overall, neither the condition of Misinformation or Legitimate news seems to have significant impact on the subject capacity to recognise the type of news ({$\chi^2= 2.54,  \textit{df}=1, N=1680, \rho=.11 $}; see Fig. \ref{fig:prop_right_wrong_type} and Table \ref{tab:prop_right_wrong_type}).
+
+Random effect
 
 
+\begin{figure}[hbt]
+    \centering
+    \includegraphics[width=8cm]{plots/right_wrong_per_type.png
+    }
+    \caption{Proportion of right and wrong answers for each type of news.}
+    \label{fig:prop_right_wrong_type}
+\end{figure}
+
+
+\begin{table}[htb!]
+    \centering
+    \csvautobooktabular{./tables/type_news_answer_count.csv}
+    \caption{Proportion of right and wrong answers for each type of news.}
+    \label{tab:prop_right_wrong_type}
+\end{table}
 
 \appendix
 
@@ -227,7 +251,7 @@ From the total of subjects (N=1063), subjects that completed the survey under 2 
 \end{equation}
 
 \bibliographystyle{unsrtnat}
-\bibliography{references}  %%% Uncomment this line and comment out the ``thebibliography'' section below to use the external .bib file (using bibtex) .
+\bibliography{./rrssalut_experiment}  %%% Uncomment this line and comment out the ``thebibliography'' section below to use the external .bib file (using bibtex) .
 
 
 %%% Uncomment this section and comment out the \bibliography{references} line above to use inline references.

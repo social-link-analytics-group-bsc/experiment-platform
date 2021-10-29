@@ -1,0 +1,285 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+## Analysis for actions
+
+```{r}
+
+library(tidyverse, quiet=TRUE) # data wrangling and visualization
+library(lme4, quiet=TRUE)     # "golden standard" for mixed-effects modelling in R (no p-values)
+library(lmerTest, quiet=TRUE)  # p-values for MEMs based on the Satterthwaite approximation
+library(psycho, quiet=TRUE)   # mainly for an "analyze()" function
+library(broom, quiet=TRUE)     # for tidy results
+library(knitr, quiet=TRUE)     # beautifying tables
+library(sjPlot, quiet=TRUE)    # for visualising MEMs
+library(effects, quiet=TRUE)   # for visualising MEMs
+library(report, quiet=TRUE)    # for describing models
+library(emmeans, quiet=TRUE)   # for post-hoc analysis
+library(equatiomatic, quiet=TRUE) # for extracting the equation
+library(gridExtra) # for grid.arrange() to print plots side-by-side
+library(ufs, quiet=TRUE) # For multiple choices questions analysis
+library(afex, quiet=TRUE) # For automatic likelihood Ratio Test
+```
+
+```{r}
+# Knowing package and R version
+packageVersion('lme4')
+citation('lme4')
+```
+
+```{r}
+# Set up the script folder as working directory
+library(rstudioapi)
+
+# Getting the path of your current open file
+current_path = rstudioapi::getActiveDocumentContext()$path 
+setwd(dirname(current_path ))
+print( getwd() )
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path="./plots/")
+```
+
+# Load the full dataset
+```{r}
+df_all = read_csv('../data/cleaned_dataset_per_news.csv')
+```
+
+### Subsetting the df
+
+```{r}
+
+fixed_effects <- c('Political', 'type_news', 'Education2', 'Education',
+                   'Technological', 'Religion', 'Gender', 'Age')
+random_effects <- c('id_sondea', 'news_title')
+dep_var <- c('answer')
+all_var <- c(fixed_effects, random_effects, dep_var)
+
+df_education <- df_all[,all_var] 
+
+df_education[sapply(df_education, is.character)] <- lapply(df_education[sapply(df_education, is.character)], 
+                                                           as.factor)
+
+# If want to predict the Right, need to ref "Wrong". No idea why, it is just how it works!
+df_education$answer = relevel(df_education$answer, ref="Wrong")
+df_education$type_news = relevel(df_education$type_news, ref="true_news")
+
+
+df_education$Education= relevel(df_education$Education, ref="No university studies")
+df_education$Education2= factor(df_education$Education2, levels= c("Secondary", 'College', "University"))
+
+df_education$Technological = factor(df_education$Technological
+                                    , levels= c("Basic", "Intermediate", "Advanced"))
+
+df_education$Political = relevel(df_education$Political, ref="Right")
+df_education$Religion = relevel(df_education$Religion, ref="Religious")
+df_education$Age = factor(df_education$Age, levels=c("<=18-34", "35-54", ">55" ))
+df_education$Gender = relevel(df_education$Gender, ref='Male')
+
+
+df_education <- df_education %>% drop_na()
+
+df_education$answer.num = as.numeric(df_education$answer)-1
+```
+
+
+
+
+```{r}
+
+action_var <- c('share_friends_and_family', 'share_online', 'verify_source', "apply_learning", 'no_action')
+fixed_effects <- c('Political', 'type_news', 'Education2', 'Education',
+                   'Technological', 'Religion', 'Gender', 'Age', 'answer')
+random_effects <- c('id_sondea', 'news_title')
+all_var <- c(action_var, fixed_effects,  random_effects)
+
+df_actions <- df_all[,all_var] 
+
+df_actions[sapply(df_actions, is.character)] <- lapply(df_actions[sapply(df_actions, is.character)], 
+                                                           as.factor)
+# If want to predict the Right, need to ref "Wrong". No idea why, it is just how it works!
+df_actions$answer = relevel(df_actions$answer, ref="Wrong")
+df_actions$type_news = relevel(df_actions$type_news, ref="true_news")
+
+
+
+
+df_actions$answer = relevel(df_actions$answer, ref="Wrong")
+df_actions$type_news = relevel(df_actions$type_news, ref="true_news")
+
+
+df_actions$Education= relevel(df_actions$Education, ref="No university studies")
+df_actions$Education2= factor(df_actions$Education2, levels= c("Secondary", 'College', "University"))
+
+df_actions$Technological = factor(df_actions$Technological
+                                    , levels= c("Basic", "Intermediate", "Advanced"))
+
+df_actions$Political = relevel(df_actions$Political, ref="Right")
+df_actions$Religion = relevel(df_actions$Religion, ref="Religious")
+df_actions$Age = factor(df_actions$Age, levels=c("<=18-34", "35-54", ">55" ))
+df_actions$Gender = relevel(df_actions$Gender, ref='Male')
+
+df_actions <- df_actions[!is.na(df_actions$answer),]
+```
+
+
+```{r}
+#for (i in action_var) {
+ 
+  #model_equation <- paste0(i, ' ~ answer + Age + Technological +(1 | news_title) + (1 | id_sondea)')
+  
+ # print(model_equation)
+  
+#  model <- glmer(model_equation,
+     #         data=df_actions, 
+    #          family="binomial", 
+   #           control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+  #print(summary(model, corr=FALSE))
+  
+ # plot_effect_name <- paste0('./plots/action_', i, '_effects.jpg')
+ # jpeg(file=plot_effect_name, width = 350, height = 350)
+  
+  #plot(allEffects(model))
+  #dev.off()
+  
+ # plot_odds_name <- paste0('./plots/action_', i, '_odds.jpg')
+#  jpeg(file=plot_odds_name, width = 350, height = 350)
+  
+  #plot_model(model, vline.color = "red", sort.est = TRUE, show.values = TRUE, value.offset = .3)
+  #dev.off()}
+```
+
+
+### share_friends_and_family
+```{r}
+
+df_mod <- df_actions[!is.na(df_actions$share_friends_and_family),]
+
+model_equation <- paste0('share_friends_and_family', ' ~ answer + Age + Technological +(1 | news_title) + (1 | id_sondea)')
+model <- glmer(model_equation,
+              data=df_mod, 
+              family="binomial", 
+              control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+print(summary(model, corr=FALSE))
+```
+
+```{r actions_share_friends_and_family_effects, fig.width = 7, fig.height = 5}
+plot(allEffects(model))
+```
+
+```{r actions_share_friends_and_family_odd_ratios, fig.width = 4, fig.height = 4}
+plot_model(model, vline.color = "red", sort.est = TRUE, show.values = TRUE, value.offset = .3)
+
+```
+
+### share_online
+```{r}
+
+df_mod <- df_actions[!is.na(df_actions$share_online),]
+
+model_equation <- paste0('share_online', ' ~ answer + Age + Technological +(1 | news_title) + (1 | id_sondea)')
+model <- glmer(model_equation,
+              data=df_mod, 
+              family="binomial", 
+              control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+print(summary(model, corr=FALSE))
+```
+
+```{r actions_share_online_effects, fig.width = 7, fig.height = 5}
+plot(allEffects(model))
+```
+
+```{r actions_share_online_odd_ratios, fig.width = 4, fig.height = 4}
+
+plot_model(model, vline.color = "red", sort.est = TRUE, show.values = TRUE, value.offset = .3)
+
+```
+
+### verify_source
+
+```{r}
+df_mod <- df_actions[!is.na(df_actions$verify_source),]
+
+model_equation <- paste0('verify_source', ' ~ answer + Age + Technological +(1 | news_title) + (1 | id_sondea)')
+model <- glmer(model_equation,
+              data=df_mod, 
+              family="binomial", 
+              control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+print(summary(model, corr=FALSE))
+```
+
+```{r actions_verify_source_effects, fig.width = 7, fig.height = 5}
+plot(allEffects(model))
+```
+
+```{r actions_verify_source_odd_ratios, fig.width = 4, fig.height = 4}
+
+plot_model(model, vline.color = "red", sort.est = TRUE, show.values = TRUE, value.offset = .3)
+
+```
+
+### apply_learning
+```{r}
+df_mod <- df_actions[!is.na(df_actions$apply_learning),]
+
+model_equation <- paste0('apply_learning', ' ~ answer + Age + Technological +(1 | news_title) + (1 | id_sondea)')
+model <- glmer(model_equation,
+              data=df_mod, 
+              family="binomial", 
+              control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+print(summary(model, corr=FALSE))
+```
+
+```{r actions_apply_learning_effects, fig.width = 7, fig.height = 5}
+plot(allEffects(model))
+```
+
+```{r actions_apply_learning_odd_ratios, fig.width = 4, fig.height = 4}
+plot_model(model, vline.color = "red", sort.est = TRUE, show.values = TRUE, value.offset = .3)
+
+```
+
+### no_action
+
+```{r}
+df_mod <- df_actions[!is.na(df_actions$no_action),]
+
+model_equation <- paste0('no_action', ' ~ answer + Age + Technological +(1 | news_title) + (1 | id_sondea)')
+model <- glmer(model_equation,
+              data=df_mod, 
+              family="binomial", 
+              control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+print(summary(model, corr=FALSE))
+```
+
+```{r actions_no_action_effects, fig.width = 7, fig.height = 5}
+plot(allEffects(model))
+```
+
+```{r actions_no_action_odd_ratios, fig.width = 4, fig.height = 4}
+
+plot_model(model, vline.color = "red", sort.est = TRUE, show.values = TRUE, value.offset = .3)
+
+```
+
+
+
+

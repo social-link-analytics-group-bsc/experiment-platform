@@ -1,0 +1,790 @@
+---
+title: "R Notebook"
+output: html_document
+---
+
+```{r}
+
+library(tidyverse, quiet=TRUE) # data wrangling and visualization
+library(lme4, quiet=TRUE)     # "golden standard" for mixed-effects modelling in R (no p-values)
+library(lmerTest, quiet=TRUE)  # p-values for MEMs based on the Satterthwaite approximation
+library(psycho, quiet=TRUE)   # mainly for an "analyze()" function
+library(broom, quiet=TRUE)     # for tidy results
+library(knitr, quiet=TRUE)     # beautifying tables
+library(sjPlot, quiet=TRUE)    # for visualising MEMs
+library(effects, quiet=TRUE)   # for visualising MEMs
+library(report, quiet=TRUE)    # for describing models
+library(emmeans, quiet=TRUE)   # for post-hoc analysis
+library(equatiomatic, quiet=TRUE) # for extracting the equation
+library(gridExtra) # for grid.arrange() to print plots side-by-side
+library(ufs, quiet=TRUE) # For multiple choices questions analysis
+library(afex, quiet=TRUE) # For automatic likelihood Ratio Test
+```
+
+```{r}
+# Knowing package and R version
+packageVersion('lme4')
+citation('lme4')
+```
+
+```{r}
+# Set up the script folder as working directory
+library(rstudioapi)
+
+# Getting the path of your current open file
+current_path = rstudioapi::getActiveDocumentContext()$path 
+setwd(dirname(current_path ))
+print( getwd() )
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path="./plots/")
+```
+
+# Load the full dataset
+```{r}
+df_all = read_csv('../data/cleaned_dataset_per_news.csv')
+```
+
+# Function to test overdispersion (not needed for logistic function)
+source: http://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#overdispersion
+
+```{r}
+
+overdisp_fun <- function(model) {
+  rdf <- df.residual(model)
+  rp <- residuals(model,type="pearson")
+  Pearson.chisq <- sum(rp^2)
+  prat <- Pearson.chisq/rdf
+  pval <- pchisq(Pearson.chisq, df=rdf, lower.tail=FALSE)
+  c(chisq=Pearson.chisq,ratio=prat,rdf=rdf,p=pval)
+  }
+
+```
+
+
+### Subsetting the df
+
+```{r}
+
+fixed_effects <- c('Political', 'type_news', 'Education2', 'Education',
+                   'Technological', 'Religion', 'Gender', 'Age')
+random_effects <- c('id_sondea', 'news_title')
+dep_var <- c('answer')
+all_var <- c(fixed_effects, random_effects, dep_var)
+
+df_education <- df_all[,all_var] 
+
+df_education[sapply(df_education, is.character)] <- lapply(df_education[sapply(df_education, is.character)], 
+                                                           as.factor)
+
+# If want to predict the Right, need to ref "Wrong". No idea why, it is just how it works!
+df_education$answer = relevel(df_education$answer, ref="Wrong")
+df_education$type_news = relevel(df_education$type_news, ref="true_news")
+
+
+df_education$Education= relevel(df_education$Education, ref="No university studies")
+df_education$Education2= factor(df_education$Education2, levels= c("Secondary", 'College', "University"))
+
+df_education$Technological = factor(df_education$Technological
+                                    , levels= c("Basic", "Intermediate", "Advanced"))
+
+df_education$Political = relevel(df_education$Political, ref="Right")
+df_education$Religion = relevel(df_education$Religion, ref="Religious")
+df_education$Age = factor(df_education$Age, levels=c("<=18-34", "35-54", ">55" ))
+df_education$Gender = relevel(df_education$Gender, ref='Male')
+
+
+df_education <- df_education %>% drop_na()
+
+df_education$answer.num = as.numeric(df_education$answer)-1
+```
+
+
+
+## Plotting the EDA on the random effects
+```{r}
+
+day19Plot1 <- ggplot(aes(x=type_news, y=answer.num), data=df_education) + 
+  stat_summary(fun.data="mean_cl_boot", geom='line', aes(group=news_title)) +
+  coord_cartesian(ylim=c(0,0.6)) + 
+  ylab("% Answer by Title") 
+
+day19Plot2 <- ggplot(aes(x=type_news, y=answer.num), data=df_education) + 
+  stat_summary(fun.data="mean_cl_boot", geom='line', aes(group=id_sondea)) + 
+  coord_cartesian(ylim=c(0,0.6)) + 
+  ylab("% Answer by Subject") 
+
+grid.arrange(day19Plot1, day19Plot2, ncol = 2)
+```
+
+# Analysis
+
+
+```{r}
+
+m0_equation = paste0("answer ~ ",
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m0 <- glmer(m0_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+
+m1_equation = paste0("answer ~ ",
+                     "+ type_news",
+
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m1 <- glmer(m1_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+
+```{r}
+
+m2_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m2 <- glmer(m2_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+
+```{r}
+
+m3_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m3 <- glmer(m3_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+
+```{r}
+
+m4_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m4 <- glmer(m4_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+
+m5_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m5 <- glmer(m5_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+
+```{r}
+
+m6_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+                     "+ Political",
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m6 <- glmer(m6_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+
+m7_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+                     "+ Political",
+                     "+ Religion",
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m7 <- glmer(m7_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+```{r}
+
+m8_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+                     "+ Political",
+                     "+ Religion",
+                     
+                     "+ type_news*Education2",
+                     "+ type_news*Age",
+                     "+ type_news*Religion",
+                     "+ type_news*Technological",
+                     "+ type_news*Political",
+                     "+ type_news*Gender",
+                     
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m8 <- glmer(m8_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+## Selection of the model
+
+```{r}
+anov <- anova(m1,m2, m3, m4, m5, m6, m7, m8)
+capture.output(summary(anov),file="./tables/anova_model_selection.txt")
+anov
+```
+
+```{r}
+
+m9_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+                     "+ Political",
+                     "+ Religion",
+                     
+                     "+ Education2*Age",
+                     "+ Education2*Religion", 
+                     "+ Education2*Technological",
+                     "+ Education2*Political",
+                     "+ Education2*Gender",
+                     "+ Education2*type_news",
+
+                     
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m9 <- glmer(m9_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+
+```{r}
+
+m10_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+                     "+ Political",
+                     "+ Religion",
+                     
+                     "+ Age*Religion",
+                     "+ Age*Technological",
+                     "+ Age*Political",
+                     "+ Age*Gender",
+                     "+ Age*type_news",
+                     "+ Age*Education2",
+                     
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m10 <- glmer(m10_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+
+```{r}
+
+m11_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+                     "+ Political",
+                     "+ Religion",
+                     
+                     "+ Religion*Technological",
+                     "+ Religion*Political",
+                     "+ Religion*Gender",
+                     "+ Religion*type_news",
+                     "+ Religion*Education2",
+                     "+ Religion*Age", 
+                     
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m11 <- glmer(m11_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+
+m12_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+                     "+ Political",
+                     "+ Religion",
+                     
+                     "+ Technological*Political",
+                     "+ Technological*Gender",
+                     "+ Technological*type_news",
+                     "+ Technological*Education2",
+                     "+ Technological*Age",
+                     "+ Technological*Religion",
+                     
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m12 <- glmer(m12_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+
+```{r}
+
+m13_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+                     "+ Political",
+                     "+ Religion",
+                     
+                     "+ Political*Gender",
+                     "+ Political*Education2",
+                     "+ Political*type_news",
+                     "+ Political*Age",
+                     "+ Political*Technological",
+                     "+ Political*Religion",
+                     
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m13 <- glmer(m13_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+
+```{r}
+
+m9_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+                     "+ Political",
+                     "+ Religion",
+                     
+                     "+ type_news*Education2",
+                     "+ type_news*Age",
+                     "+ type_news*Religion",
+                     "+ type_news*Technological",
+                     "+ type_news*Political",
+                     "+ type_news*Gender",
+
+                     
+                     "+ Education2*Age",
+                     "+ Education2*Religion", 
+                     "+ Education2*Technological",
+                     "+ Education2*Political",
+                     "+ Education2*Gender",
+                     
+                     "+ Age*Religion",
+                     "+ Age*Technological",
+                     "+ Age*Political",
+                     "+ Age*Gender",
+                     
+                     "+ Religion*Technological",
+                     "+ Religion*Political",
+                     "+ Religion*Gender",
+
+                     "+ Technological*Political",
+                     "+ Technological*Gender",
+                     
+                     "+ Political*Gender",
+                     
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+                     )
+
+m9 <- glmer(m9_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+
+
+
+
+
+
+```{r}
+summary(m7, corr=FALSE)
+```
+
+```{r m1_effects, fig.width = 8, fig.height = 7}
+plot(allEffects(m1))
+```
+
+```{r m1_odd_ratios, fig.width = 5, fig.height = 5}
+plot_model(m1, vline.color = "red", sort.est = TRUE , show.values = TRUE, value.offset = .3)
+```
+
+
+## Model with interaction terms on the type_news, technology and education
+```{r}
+m_int_equation = paste0("answer ~ ",
+                     "+ Education2",
+                     "+ Age",
+                     "+ Religion",
+                     "+ Technological",
+                     "+ type_news",
+                     "+ Political",
+                     "+ Gender",
+                     
+                     "+ Education2*type_news",
+                     "+ Education2*Political",
+                     "+ Education2*Gender",
+                     
+                     "+ Age*Religion",
+                     "+ Age*Technological",
+                     "+ Age*type_news",
+                     "+ Age*Political",
+                     "+ Age*Gender",
+                     "+ Education2*Age",
+
+                     
+                     "+ Religion*Technological",
+                     "+ Religion*type_news",
+                     "+ Religion*Political",
+                     "+ Religion*Gender",
+                     "+ Education2*Religion", 
+
+
+                     "+ Technological*type_news",
+                     "+ Technological*Political",
+                     "+ Technological*Gender",
+                     "+ Education2*Technological",
+                     
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)")
+
+
+
+# Model with all interactions
+m_int <- glmer(m_int_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+
+```
+
+```{r}
+summary(m_int, corr=FALSE)
+```
+
+```{r m2_effects, fig.width = 18, fig.height =15}
+plot(allEffects(m2), multiline=TRUE,confint=TRUE,ci.style="bars")
+```
+
+```{r m2_odd_ratios, fig.width = 15, fig.height = 20}
+
+plot_model(m2, vline.color = "red", sort.est = TRUE , show.values = TRUE, value.offset = .3)
+```
+
+```{r}
+tab_model(m2)
+```
+
+
+## Model all interactions
+
+
+```{r}
+
+m_int_equation = paste0("answer ~ ",
+                     "+ Education2",
+                     "* Age",
+                     "* Religion",
+                     "* Technological",
+                     "* type_news",
+                     "* Political",
+                     "* Gender",
+                     
+   
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)")
+
+
+
+# Model with all interactions
+m_int <- glmer(m_int_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+
+
+
+
+```
+
+## Model with selected interactions and main effects
+```{r}
+m3_equation = paste0("answer ~ ",
+                     "+ Education2",
+                     "+ Age",
+                     "+ Religion",
+                     "+ Technological",
+                     "+ type_news",
+                     "+ Political",
+
+                     "+ Age*Education2",
+                     "+ Education2*type_news",
+                     #"+ Education2*Political",
+
+                     
+                     "+ Age*type_news",
+                     "+ Age*Political",
+                     
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)")
+
+
+
+
+m3 <- glmer(m3_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+capture.output(summary(m3, corr=FALSE),file="./tables/parc_sum.txt")
+summary(m3, corr=FALSE)
+
+```
+
+```{r m3_effects, fig.width = 15, fig.height = 8}
+plot(allEffects(m3), multiline=TRUE,confint=TRUE)#,ci.style="bars")
+```
+
+```{r m3_odd_ratios, fig.width = 8, fig.height = 7}
+plot_model(m3, vline.color = "red", sort.est = TRUE , show.values = TRUE, value.offset = .3)
+```
+
+
+```{r}
+tab_model(m3)
+```
+
+
+## Selection of the model
+
+```{r}
+anov <- anova(m2,m3, m1)
+capture.output(summary(anov),file="./tables/anova_model_selection.txt")
+anov
+```
+
+## Doing simple Logistic regression without any random effects
+```{r}
+log_equation  = paste0("answer ~ ",
+                       "Political",
+                                    "+ Education",
+                                    "+ Gender",
+                                    "+ Age",
+                                    "+ Religion",
+                                    "+ Technological",
+                                    "+ type_news",
+                                    "+ Education*type_news",
+                                    "+ Gender*type_news",
+                                    "+ Age*type_news",
+                                    "+ Religion*type_news",
+                                    "+ Technological*type_news",
+                                    "+ Political*type_news"
+                       )
+            
+log1= glm(log_equation,
+          data=df_education, 
+          family="binomial")
+
+```
+
+```{r}
+summary(log1, corr=FALSE)
+```
+
+```{r log1_effects}
+plot(allEffects(log1))
+```
+
+```{r log1_odd_ratios}
+
+plot_model(log1, vline.color = "red", sort.est = TRUE , show.values = TRUE, value.offset = .3)
+```
+
+```{r}
+tab_model(log1)
+```
+
+# Likelihood Ratio Test
+
+```{r}
+
+mixed_lrt_equation = paste0("answer ~ ",
+                     " type_news",
+                     "+ Gender",
+                     "+ Age",
+                     "+ Education2",
+                     "+ Technological",
+                     "+ Political",
+                     "+ Religion",
+                     "+ type_news*Political",
+                     "+ type_news*Education2",
+                     "+ type_news*Gender",
+                     "+ type_news*Age",
+                     "+ type_news*Religion",
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)"
+
+                     )
+
+mixed_lrt <- mixed(mixed_lrt_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)), method='LRT')
+```
+
+```{r}
+nice(mixed_lrt)
+```
+## Selected model
+
+```{r}
+m_final_equation = paste0("answer ~ ",
+                     "+ type_news",
+                     "+ Age",
+                     "+ Religion",
+                     "+ Technological",
+                     "+ type_news:Age",
+                     "+ (1 | news_title)",
+                     "+ (1 | id_sondea)")
+
+
+
+
+m_final <- glmer(m_final_equation,
+            data=df_education, 
+            family="binomial", 
+            control=glmerControl(optimizer = "bobyqa", optCtrl=list(maxfun=2e5)))
+```
+
+```{r}
+summary(m_final, corr=FALSE)
+```
+
+```{r log1_effects}
+plot(allEffects(m_final))
+```
+
+```{r log1_odd_ratios}
+
+plot_model(m_final, vline.color = "red", sort.est = TRUE , show.values = TRUE, value.offset = .3)
+```
+
+```{r}
+tab_model(m_final)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
